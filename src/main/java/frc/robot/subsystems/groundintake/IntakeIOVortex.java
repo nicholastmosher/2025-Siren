@@ -4,44 +4,44 @@
 
 package frc.robot.subsystems.groundintake;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.wpilibj.CAN;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.groundintake.IntakeIO.IntakeIOInputs;
 
 /** Add your docs here. */
-public class IntakeIOVortex implements IntakeIO{
+public class IntakeIOVortex implements IntakeIO {
 
-    private final SparkFlex tiltMotor;
-    private final SparkFlex spinMotor;
+  private final SparkFlex tiltMotor;
+  private final SparkFlex spinMotor;
 
-    private final SparkClosedLoopController tiltController;
+  private final SparkClosedLoopController tiltController;
 
-    // Connection debouncers
-    private final Debouncer tiltConnectedDebounce = new Debouncer(0.5);
-    private final Debouncer spinConnectedDebounce = new Debouncer(0.5);
+  // Connection debouncers
+  private final Debouncer tiltConnectedDebounce = new Debouncer(0.5);
+  private final Debouncer spinConnectedDebounce = new Debouncer(0.5);
 
-    public IntakeIOVortex() {
-        tiltMotor = new SparkFlex(RobotConstants.Intake.tiltMotorID, MotorType.fromId(RobotConstants.Intake.tiltMotorID));
-        spinMotor = new SparkFlex(RobotConstants.Intake.spinMotorID, MotorType.fromId(RobotConstants.Intake.spinMotorID));
+  public IntakeIOVortex() {
+    tiltMotor =
+        new SparkFlex(
+            RobotConstants.Intake.tiltMotorID, MotorType.fromId(RobotConstants.Intake.tiltMotorID));
+    spinMotor =
+        new SparkFlex(
+            RobotConstants.Intake.spinMotorID, MotorType.fromId(RobotConstants.Intake.spinMotorID));
 
-        tiltController = tiltMotor.getClosedLoopController();
+    tiltController = tiltMotor.getClosedLoopController();
+  }
 
-    }
+  @Override
+  public void updateInputs(IntakeIOInputs inputs) {
+    // Refresh all signals
+    var tiltMotorStatus = true;
+    var spinMotorStatus =
+        true; // BaseStatusSignal.refreshAll(turnPosition, turnVelocity, turnAppliedVolts,
+    // turnCurrent);
 
-    @Override
-    public void updateInputs(IntakeIOInputs inputs) {
-        // Refresh all signals
-        var tiltMotorStatus =
-            true;
-        var spinMotorStatus =
-            true;//BaseStatusSignal.refreshAll(turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
-
-        inputs.tiltMotorConnected = tiltConnectedDebounce.calculate(tiltMotorStatus);
-    }
+    inputs.tiltMotorConnected = tiltConnectedDebounce.calculate(tiltMotorStatus);
+  }
 }
