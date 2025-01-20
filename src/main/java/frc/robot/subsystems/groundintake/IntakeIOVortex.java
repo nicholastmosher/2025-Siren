@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.filter.Debouncer;
-import frc.robot.RobotConstants;
 import frc.robot.subsystems.groundintake.IntakeIO.IntakeIOInputs;
 
 /** Add your docs here. */
@@ -25,11 +24,9 @@ public class IntakeIOVortex implements IntakeIO {
 
   public IntakeIOVortex() {
     tiltMotor =
-        new SparkFlex(
-            RobotConstants.Intake.tiltMotorID, MotorType.fromId(RobotConstants.Intake.tiltMotorID));
+        new SparkFlex(IntakeConstants.tiltMotorID, MotorType.fromId(IntakeConstants.tiltMotorID));
     spinMotor =
-        new SparkFlex(
-            RobotConstants.Intake.spinMotorID, MotorType.fromId(RobotConstants.Intake.spinMotorID));
+        new SparkFlex(IntakeConstants.spinMotorID, MotorType.fromId(IntakeConstants.spinMotorID));
 
     tiltController = tiltMotor.getClosedLoopController();
   }
