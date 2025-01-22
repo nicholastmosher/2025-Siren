@@ -28,7 +28,8 @@ import org.photonvision.PhotonCamera;
 public class VisionIOPhotonVision implements VisionIO {
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
-
+  protected final TargetObservation emptyTargetObservation =
+      new TargetObservation(new Rotation2d(), new Rotation2d());
   /**
    * Creates a new VisionIOPhotonVision.
    *
@@ -55,7 +56,7 @@ public class VisionIOPhotonVision implements VisionIO {
                 Rotation2d.fromDegrees(result.getBestTarget().getYaw()),
                 Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
       } else {
-        inputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
+        inputs.latestTargetObservation = emptyTargetObservation;
       }
 
       // Add pose observation

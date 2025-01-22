@@ -74,9 +74,10 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                new VisionIOPhotonVision(camera2Name, robotToCamera2),
-                new VisionIOPhotonVision(camera3Name, robotToCamera3),
-                new VisionIOPhotonVision(camera4Name, robotToCamera4));
+                new VisionIOPhotonVision(camera2Name, robotToCamera2) // ,
+                // new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                // new VisionIOPhotonVision(camera4Name, robotToCamera4)
+                );
         break;
 
       case SIM:

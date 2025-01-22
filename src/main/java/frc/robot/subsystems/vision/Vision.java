@@ -164,7 +164,13 @@ public class Vision extends SubsystemBase {
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
     }
-
+    // System.out.println(
+    //     String.format(
+    //         "%d %d %d %d",
+    //         allTagPoses.size(),
+    //         allRobotPoses.size(),
+    //         allRobotPosesAccepted.size(),
+    //         allRobotPosesRejected.size()));
     // Log summary data
     Logger.recordOutput(
         "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
