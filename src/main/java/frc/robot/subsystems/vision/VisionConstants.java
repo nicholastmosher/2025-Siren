@@ -17,6 +17,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
   // AprilTag layout
@@ -34,9 +35,19 @@ public class VisionConstants {
   public static Transform3d robotToCamera1 =
       new Transform3d(0.2, 0.2, 0.2, new Rotation3d(0.0, 25, 45));
   public static Transform3d robotToCamera2 =
-      new Transform3d(-0.2, -0.2, 0.2, new Rotation3d(0.0, 25, -45));
+      new Transform3d(
+          Units.inchesToMeters(9.875),
+          Units.inchesToMeters(9.55),
+          Units.inchesToMeters(6.752) + Units.inchesToMeters(2),
+          new Rotation3d(0.0, Units.degreesToRadians(-28.125), 0.0)
+              .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(-35.0))));
   public static Transform3d robotToCamera3 =
-      new Transform3d(0.2, -0.2, 0.2, new Rotation3d(0.0, 25, 135));
+      new Transform3d(
+          Units.inchesToMeters(-10.375),
+          Units.inchesToMeters(-10.242),
+          Units.inchesToMeters(7.252) + Units.inchesToMeters(2),
+          new Rotation3d(0.0, Units.degreesToRadians(-28.125), 0.0)
+              .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(-82.829))));
   public static Transform3d robotToCamera4 =
       new Transform3d(-0.2, 0.2, 0.2, new Rotation3d(0.0, 25, -135));
 

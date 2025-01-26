@@ -35,7 +35,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -70,13 +69,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        vision =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                new VisionIOPhotonVision(camera2Name, robotToCamera2),
-                new VisionIOPhotonVision(camera3Name, robotToCamera3),
-                new VisionIOPhotonVision(camera4Name, robotToCamera4));
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
+        // new VisionIOPhotonVision(camera1Name, robotToCamera1),
+        // new VisionIOPhotonVision(camera2Name, robotToCamera2),
+        // new VisionIOPhotonVision(camera3Name, robotToCamera3));
+        // new VisionIOPhotonVision(camera4Name, robotToCamera4));
         break;
 
       case SIM:
@@ -188,6 +185,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Example Auto");
+    return new PathPlannerAuto("cauto1");
   }
 }
