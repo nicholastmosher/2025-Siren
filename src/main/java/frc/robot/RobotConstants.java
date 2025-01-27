@@ -12,4 +12,10 @@ public class RobotConstants {
     public static final Rotation2d activeAngle = Rotation2d.fromDegrees(0);
     public static final Rotation2d holdAngle = Rotation2d.fromDegrees(0);
   }
+
+  public static class EndEffector {
+
+    public static int wristmotorID = 1;
+
+  }
 }
