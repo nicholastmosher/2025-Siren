@@ -10,6 +10,7 @@ import frc.robot.RobotConstants;
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private final ElevatorIO elevator;
+
   private ElevatorIOInputsAutoLogged elevatorinputs;
 
   private elevatorState state = elevatorState.DEFAULT;
