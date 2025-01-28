@@ -29,7 +29,7 @@ public class VisionConstants {
   public static String camera1Name = "alarmcamera2";
   public static String camera2Name = "alarmcamera3";
   public static String camera3Name = "alarmcamera4";
-  public static String limelightName = "frontll";
+  public static String limelightName = "limelight-front";
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
