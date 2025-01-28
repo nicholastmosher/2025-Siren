@@ -71,15 +71,15 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        vision = new Vision(
-            drive::addVisionMeasurement, 
-            new VisionIOPhotonVision(camera0Name, robotToCamera0),
-            new VisionIOPhotonVision(camera1Name, robotToCamera1),
-            new VisionIOPhotonVision(camera2Name, robotToCamera2),
-            new VisionIOPhotonVision(camera3Name, robotToCamera3),
-            new VisionIOLimelight(limelightName, drive::getRotation)
-        );
-        
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVision(camera0Name, robotToCamera0),
+                new VisionIOPhotonVision(camera1Name, robotToCamera1),
+                new VisionIOPhotonVision(camera2Name, robotToCamera2),
+                new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                new VisionIOLimelight(limelightName, drive::getRotation));
+
         break;
 
       case SIM:
@@ -98,8 +98,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose)
-                );
+                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose));
         break;
 
       default:
@@ -120,8 +119,7 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {},
                 new VisionIO() {},
-                new VisionIO() {}
-                );
+                new VisionIO() {});
         break;
     }
 
@@ -186,6 +184,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller
+        .rightBumper()
+        .whileTrue(
+            new PathPlannerAuto("lua")
+        );
   }
 
   /**
