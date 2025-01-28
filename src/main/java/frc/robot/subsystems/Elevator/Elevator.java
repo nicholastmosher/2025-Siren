@@ -9,7 +9,8 @@ import frc.robot.RobotConstants;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
-  private final ElevatorIONeo elevator;
+  private final ElevatorIO elevator;
+  private ElevatorIOInputsAutoLogged elevatorinputs;
 
   private elevatorState state = elevatorState.DEFAULT;
   ;
@@ -25,6 +26,7 @@ public class Elevator extends SubsystemBase {
 
   public Elevator() {
     elevator = new ElevatorIONeo();
+    elevatorinputs = new ElevatorIOInputsAutoLogged();
   }
 
   public void setStateIntake() {
@@ -79,5 +81,7 @@ public class Elevator extends SubsystemBase {
         elevator.moveToPoint(RobotConstants.Elevator.defaultheight);
         break;
     }
+
+    elevator.updateInputs(elevatorinputs);
   }
 }

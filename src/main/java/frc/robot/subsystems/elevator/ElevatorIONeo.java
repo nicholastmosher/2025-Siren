@@ -52,6 +52,7 @@ public class ElevatorIONeo implements ElevatorIO {
         followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
+  @Override
   public void moveToPoint(double value) {
     pid.setReference(value, ControlType.kMAXMotionPositionControl);
   }

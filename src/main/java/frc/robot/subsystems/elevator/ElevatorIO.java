@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems.Elevator;
 
+import org.littletonrobotics.junction.AutoLog;
+
 /** Add your docs here. */
 public interface ElevatorIO {
-
+  @AutoLog
   public static class ElevatorIOInputs {}
+
+  public void moveToPoint(double value);
 
   public default void updateInputs(ElevatorIOInputs inputs) {}
 }
