@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotConstants;
 
 public class ElevatorIONeo implements ElevatorIO {
@@ -23,10 +24,14 @@ public class ElevatorIONeo implements ElevatorIO {
   private final SparkMaxConfig leadConfig;
   private final SparkMaxConfig followerConfig;
 
+  private final DigitalInput limitswitchBottom;
+
   public ElevatorIONeo() {
 
     leadMotor = new SparkMax(RobotConstants.Elevator.leadMotorID, MotorType.kBrushless);
     followerMotor = new SparkMax(RobotConstants.Elevator.leadMotorID, MotorType.kBrushless);
+    limitswitchBottom = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
+
     encoder = leadMotor.getAbsoluteEncoder();
     pid = leadMotor.getClosedLoopController();
 
@@ -53,9 +58,38 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   @Override
-  public void moveToPoint(double value) {
-    pid.setReference(value, ControlType.kMAXMotionPositionControl);
+  public void moveToPoint(RobotConstants.Elevator.elevatorState state) {
+    switch (state) {
+      case DEFAULT:
+        pid.setReference(
+            RobotConstants.Elevator.defaultheight, ControlType.kMAXMotionPositionControl);
+        break;
+
+      case INTAKE:
+        pid.setReference(
+            RobotConstants.Elevator.intakeheight, ControlType.kMAXMotionPositionControl);
+        break;
+
+      case L1:
+        pid.setReference(RobotConstants.Elevator.L1height, ControlType.kMAXMotionPositionControl);
+        break;
+
+      case L2:
+        pid.setReference(RobotConstants.Elevator.L2height, ControlType.kMAXMotionPositionControl);
+        break;
+
+      case L3:
+        pid.setReference(RobotConstants.Elevator.L3height, ControlType.kMAXMotionPositionControl);
+        break;
+
+      case L4:
+        pid.setReference(RobotConstants.Elevator.L4height, ControlType.kMAXMotionPositionControl);
+        break;
+    }
   }
+
+  @Override
+  public void stopElevator() {}
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {}

@@ -16,6 +16,7 @@ public class RobotConstants {
   public static class Elevator {
     public static final int leadMotorID = 1;
     public static final int followerMotorID = 2;
+    public static final int bottomlimitswitchID = 1;
 
     public static final double defaultheight = 0;
     public static final double intakeheight = 0;
@@ -23,5 +24,14 @@ public class RobotConstants {
     public static final double L2height = 0;
     public static final double L3height = 0;
     public static final double L4height = 0;
+
+    public static enum elevatorState {
+      DEFAULT,
+      INTAKE,
+      L1,
+      L2,
+      L3,
+      L4
+    }
   }
 }
