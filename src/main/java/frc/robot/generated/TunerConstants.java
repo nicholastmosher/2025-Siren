@@ -24,8 +24,8 @@ public class TunerConstants {
   private static final Slot0Configs steerGains =
       new Slot0Configs()
           .withKP(100)
-          .withKI(0.01)
-          .withKD(0.5)
+          .withKI(0.1)
+          .withKD(0)
           .withKS(0.1)
           .withKV(1.91)
           .withKA(0)
@@ -65,6 +65,15 @@ public class TunerConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimit(40)
                   .withSupplyCurrentLimitEnable(true));
+
+  //   private static final MotionMagicConfigs driveMotionMagicConfigs =
+  //       driveInitialConfigs
+  //           .MotionMagic
+  //           .withMotionMagicAcceleration(10400)
+  //           .withMotionMagicCruiseVelocity(5200)
+  //           .withMotionMagicJerk(104000);
+  //   //   .withMotionMagicExpo_kA(null)
+  //   //   .withMotionMagicExpo_kV(null);
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
@@ -72,7 +81,7 @@ public class TunerConstants {
                   // Swerve azimuth does not require much torque output, so we can set a relatively
                   // low
                   // stator current limit to help avoid brownouts without impacting performance.
-                  .withStatorCurrentLimit(Amps.of(60))
+                  .withStatorCurrentLimit(Amps.of(20))
                   .withStatorCurrentLimitEnable(true));
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
