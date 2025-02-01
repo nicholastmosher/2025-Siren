@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle to closest"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "closest to intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Intake To Furthest"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Furthest to Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Intake2 to next"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": true
+}
