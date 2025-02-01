@@ -25,52 +25,54 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "alarmcamera1";
-  public static String camera1Name = "alarmcamera2";
-  public static String camera2Name = "alarmcamera3";
-  public static String camera3Name = "alarmcamera4";
+  public static String camera1Name = "alarmcamera1";
+  public static String camera2Name = "alarmcamera2";
+  public static String camera3Name = "alarmcamera3";
+  public static String camera4Name = "alarmcamera4";
   public static String limelightName = "limelight-front";
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
 
-  // front right camera
-  public static Transform3d robotToCamera0 =
-      new Transform3d(
-          Units.inchesToMeters(11.375),
-          Units.inchesToMeters(11.55),
-          Units.inchesToMeters(7) + Units.inchesToMeters(2), // TODO
-          new Rotation3d(
-              Units.degreesToRadians(0.0), Units.degreesToRadians(25), Units.degreesToRadians(45)));
-
   // front left camera
   public static Transform3d robotToCamera1 =
       new Transform3d(
           Units.inchesToMeters(-11.375),
-          Units.inchesToMeters(11.55),
-          Units.inchesToMeters(7) + Units.inchesToMeters(2), // TODO
+          Units.inchesToMeters(11.375),
+          Units.inchesToMeters(7.862) + Units.inchesToMeters(0), // TODO
           new Rotation3d(
               Units.degreesToRadians(0.0),
-              Units.degreesToRadians(25),
+              Units.degreesToRadians(15),
               Units.degreesToRadians(-45)));
+
+  // front right camera
   public static Transform3d robotToCamera2 =
       new Transform3d(
           Units.inchesToMeters(11.375),
-          Units.inchesToMeters(-11.55),
-          Units.inchesToMeters(7) + Units.inchesToMeters(2), // TODO
+          Units.inchesToMeters(11.375),
+          Units.inchesToMeters(7.862) + Units.inchesToMeters(0), // TODO
           new Rotation3d(
-              Units.degreesToRadians(0.0),
-              Units.degreesToRadians(25),
-              Units.degreesToRadians(135)));
+              Units.degreesToRadians(0.0), Units.degreesToRadians(15), Units.degreesToRadians(45)));
+  // rear left camera
   public static Transform3d robotToCamera3 =
       new Transform3d(
           Units.inchesToMeters(-11.375),
-          Units.inchesToMeters(-11.55),
-          Units.inchesToMeters(7) + Units.inchesToMeters(2), // TODO
+          Units.inchesToMeters(-11.375),
+          Units.inchesToMeters(7.862) + Units.inchesToMeters(0), // TODO
           new Rotation3d(
               Units.degreesToRadians(0.0),
-              Units.degreesToRadians(25),
+              Units.degreesToRadians(15),
               Units.degreesToRadians(-135)));
+  // rear right camera
+  public static Transform3d robotToCamera4 =
+      new Transform3d(
+          Units.inchesToMeters(11.375),
+          Units.inchesToMeters(-11.55),
+          Units.inchesToMeters(7.862) + Units.inchesToMeters(0), // TODO
+          new Rotation3d(
+              Units.degreesToRadians(0.0),
+              Units.degreesToRadians(15),
+              Units.degreesToRadians(135)));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
