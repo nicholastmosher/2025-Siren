@@ -9,12 +9,6 @@
           "data": {
             "pathName": "middle to closest.0"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "closest to intake.0"
-          }
         }
       ]
     }
