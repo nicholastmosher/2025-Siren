@@ -11,7 +11,6 @@ public class EndEffector extends SubsystemBase {
   private final ClawIO claw;
   private final WristIO wrist;
 
-
   /** Creates a new EndEffector. */
   public EndEffector(ClawIO clawimpl, WristIO wristimpl) {
     this.claw = clawimpl;

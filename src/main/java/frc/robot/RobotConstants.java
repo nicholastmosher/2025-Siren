@@ -17,6 +17,5 @@ public class RobotConstants {
 
     public static int wristmotorID = 1;
     public static int clawmotorID = 1;
-
   }
 }

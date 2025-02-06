@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -71,15 +71,15 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        vision = new Vision(
-            drive::addVisionMeasurement, 
-            new VisionIOPhotonVision(camera0Name, robotToCamera0),
-            new VisionIOPhotonVision(camera1Name, robotToCamera1),
-            new VisionIOPhotonVision(camera2Name, robotToCamera2),
-            new VisionIOPhotonVision(camera3Name, robotToCamera3),
-            new VisionIOLimelight(limelightName, drive::getRotation)
-        );
-        
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVision(camera0Name, robotToCamera0),
+                new VisionIOPhotonVision(camera1Name, robotToCamera1),
+                new VisionIOPhotonVision(camera2Name, robotToCamera2),
+                new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                new VisionIOLimelight(limelightName, drive::getRotation));
+
         break;
 
       case SIM:
@@ -98,8 +98,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose)
-                );
+                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose));
         break;
 
       default:
@@ -120,8 +119,7 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {},
                 new VisionIO() {},
-                new VisionIO() {}
-                );
+                new VisionIO() {});
         break;
     }
 
