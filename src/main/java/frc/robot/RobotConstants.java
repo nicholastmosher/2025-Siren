@@ -17,13 +17,15 @@ public class RobotConstants {
     public static final int leadMotorID = 1;
     public static final int followerMotorID = 2;
     public static final int bottomlimitswitchID = 1;
+    public static final int toplimitswitchID = 1;
 
-    public static final double defaultheight = 0;
-    public static final double intakeheight = 0;
-    public static final double L1height = 0;
-    public static final double L2height = 0;
-    public static final double L3height = 0;
-    public static final double L4height = 0;
+    public static final Rotation2d defaultheight = new Rotation2d();
+    public static final Rotation2d intakeheight = new Rotation2d();
+    public static final Rotation2d L1height = new Rotation2d();
+    public static final Rotation2d L2height = new Rotation2d();
+    public static final Rotation2d L3height = new Rotation2d();
+    public static final Rotation2d L4height = new Rotation2d();
+
 
     public static enum elevatorState {
       DEFAULT,
