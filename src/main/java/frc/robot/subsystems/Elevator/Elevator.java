@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotConstants.Elevator.elevatorState;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -12,16 +13,28 @@ public class Elevator extends SubsystemBase {
 
   private ElevatorIOInputsAutoLogged elevatorinputs;
 
-  private elevatorState state = elevatorState.DEFAULT;
+  private elevatorState state;
 
   public Elevator() {
-    elevator = new ElevatorIONeo();
+    this.elevator = new ElevatorIONeo();
     elevatorinputs = new ElevatorIOInputsAutoLogged();
+    this.state = elevatorState.DEFAULT;
+  }
+
+  public void setGoalState(elevatorState givenstate) {
+    this.state = givenstate;
+  }
+  public elevatorState getGoalState() {
+    return this.state;
+  }
+
+  public void stopElevator() {
+    elevator.stopElevator();
   }
 
   @Override
   public void periodic() {
-
+    elevator.moveToState(state);
     elevator.updateInputs(elevatorinputs);
   }
 }

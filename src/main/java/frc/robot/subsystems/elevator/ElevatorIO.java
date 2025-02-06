@@ -19,7 +19,7 @@ public interface ElevatorIO {
     String enumState;
   }
 
-  public void moveToPoint(RobotConstants.Elevator.elevatorState state);
+  public void moveToState(RobotConstants.Elevator.elevatorState state);
 
   public void stopElevator();
 
