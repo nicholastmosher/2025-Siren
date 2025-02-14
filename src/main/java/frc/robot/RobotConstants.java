@@ -26,14 +26,23 @@ public class RobotConstants {
     public static final Rotation2d L3height = new Rotation2d();
     public static final Rotation2d L4height = new Rotation2d();
 
-
     public static enum elevatorState {
-      DEFAULT,
-      INTAKE,
-      L1,
-      L2,
-      L3,
-      L4
+      DEFAULT(defaultheight),
+      INTAKE(intakeheight),
+      L1(L1height),
+      L2(L2height),
+      L3(L3height),
+      L4(L4height);
+
+      private final Rotation2d target;
+
+      elevatorState(Rotation2d rotation2d) {
+        this.target = rotation2d;
+      }
+
+      public Rotation2d getTargetRotation2d() {
+        return target;
+      }
     }
   }
 }

@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotConstants;
@@ -31,6 +30,8 @@ public class ElevatorIONeo implements ElevatorIO {
 
   private final DigitalInput bottomLimitSwitch;
   private final DigitalInput topLimitSwitch;
+
+  private elevatorState state = elevatorState.DEFAULT;
 
   public ElevatorIONeo() {
 
@@ -76,38 +77,17 @@ public class ElevatorIONeo implements ElevatorIO {
     if (topLimitSwitch.get()) {
       atHighestPoint = true;
     }
-    switch (state) {
-      case DEFAULT:
-        moveToPoint(RobotConstants.Elevator.defaultheight);
-        break;
-
-      case INTAKE:
-        moveToPoint(RobotConstants.Elevator.intakeheight);
-        break;
-
-      case L1:
-        moveToPoint(RobotConstants.Elevator.L1height);
-        break;
-
-      case L2:
-        moveToPoint(RobotConstants.Elevator.L2height);
-        break;
-
-      case L3:
-        moveToPoint(RobotConstants.Elevator.L3height);
-        break;
-
-      case L4:
-        moveToPoint(RobotConstants.Elevator.L4height);
-        break;
-    }
+    this.state = state;
+    moveToPoint(state.getTargetRotation2d());
   }
 
   public void moveToPoint(Rotation2d targetRot) {
-    if (bottomLimitSwitch.get() && targetRot.getDegrees() < Rotation2d.fromRotations(encoder.getPosition()).getDegrees()) {
+    if (bottomLimitSwitch.get()
+        && targetRot.getDegrees() < Rotation2d.fromRotations(encoder.getPosition()).getDegrees()) {
       stopElevator();
     }
-    if (topLimitSwitch.get() && targetRot.getDegrees() > Rotation2d.fromRotations(encoder.getPosition()).getDegrees()) {
+    if (topLimitSwitch.get()
+        && targetRot.getDegrees() > Rotation2d.fromRotations(encoder.getPosition()).getDegrees()) {
       stopElevator();
     }
     pid.setReference(targetRot.getDegrees(), ControlType.kMAXMotionPositionControl);
@@ -119,5 +99,8 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   @Override
-  public void updateInputs(ElevatorIOInputs inputs) {}
+  public void updateInputs(ElevatorIOInputs inputs) {
+
+    inputs.enumState = state.name();
+  }
 }

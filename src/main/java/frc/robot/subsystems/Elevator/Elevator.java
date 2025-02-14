@@ -24,6 +24,7 @@ public class Elevator extends SubsystemBase {
   public void setGoalState(elevatorState givenstate) {
     this.state = givenstate;
   }
+
   public elevatorState getGoalState() {
     return this.state;
   }
