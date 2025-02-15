@@ -81,6 +81,8 @@ public class ElevatorIONeo implements ElevatorIO {
     moveToPoint(state.getTargetRotation2d());
   }
 
+
+  @Override
   public void moveToPoint(Rotation2d targetRot) {
     if (bottomLimitSwitch.get()
         && targetRot.getDegrees() < Rotation2d.fromRotations(encoder.getPosition()).getDegrees()) {
@@ -91,6 +93,12 @@ public class ElevatorIONeo implements ElevatorIO {
       stopElevator();
     }
     pid.setReference(targetRot.getDegrees(), ControlType.kMAXMotionPositionControl);
+  }
+
+
+  @Override
+  public double getEncoder() {
+    return encoder.getPosition();
   }
 
   @Override

@@ -23,5 +23,10 @@ public interface ElevatorIO {
 
   public void stopElevator();
 
+  public double getEncoder();
+
+  public void moveToPoint(Rotation2d targetRot);
+
   public default void updateInputs(ElevatorIOInputs inputs) {}
+
 }
