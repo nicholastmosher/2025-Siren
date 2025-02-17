@@ -92,7 +92,7 @@ public class RobotContainer {
                 new VisionIOPhotonVision(camera3Name, robotToCamera3),
                 new VisionIOLimelight(limelightName, drive::getRotation));
 
-        endEffector = new EndEffector(new ClawIOVortex(20), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
@@ -117,7 +117,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
                 new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose));
 
-        endEffector = new EndEffector(new ClawIOVortex(20), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
@@ -145,7 +145,7 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {});
 
-        endEffector = new EndEffector(new ClawIOVortex(20), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);

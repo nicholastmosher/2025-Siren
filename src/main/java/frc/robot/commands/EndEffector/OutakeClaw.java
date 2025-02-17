@@ -31,7 +31,6 @@ public class OutakeClaw extends Command {
   @Override
   public void execute() {
     endeffector.outEndEffector(-0.3);
-    System.out.println("CALLING COMMAND");
   }
 
   // Called once the command ends or is interrupted.

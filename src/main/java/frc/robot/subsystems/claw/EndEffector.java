@@ -12,10 +12,16 @@ public class EndEffector extends SubsystemBase {
   private final ClawIO claw;
   private final WristIO wrist;
 
+  private WristIOInputsAutoLogged wristIOInputsAutoLogged;
+  private ClawIOInputsAutoLogged clawIOInputsAutoLogged;
+
   /** Creates a new EndEffector. */
   public EndEffector(ClawIO clawimpl, WristIO wristimpl) {
     this.claw = clawimpl;
     this.wrist = wristimpl;
+
+    this.wristIOInputsAutoLogged = new WristIOInputsAutoLogged();
+    this.clawIOInputsAutoLogged = new ClawIOInputsAutoLogged();
   }
 
   public void outEndEffector(double speed) {

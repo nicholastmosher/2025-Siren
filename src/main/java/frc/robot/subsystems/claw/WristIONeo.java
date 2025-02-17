@@ -1,47 +1,50 @@
 package frc.robot.subsystems.claw;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
-import org.littletonrobotics.junction.Logger;
 
 public class WristIONeo implements WristIO {
   private final SparkMax motor;
   private final SparkClosedLoopController pidController;
   private final RelativeEncoder encoder;
-  private final PIDController controller = new PIDController(1, 0, 0);
 
   // Desired angle for the wrist
   private double desiredAngle = 0.0;
 
   // Constructor
   public WristIONeo() {
-    SparkMaxConfig config = new SparkMaxConfig();
 
-    config.closedLoop.maxMotion.maxAcceleration(300).maxVelocity(1000);
-
-    config.closedLoop.p(1).i(0).d(0);
-
-    config.alternateEncoder.positionConversionFactor(1);
-
-    motor = new SparkMax(RobotConstants.EndEffector.wristmotorID, MotorType.kBrushless);
+    motor = new SparkMax(RobotConstants.EndEffectorConstants.wristmotorID, MotorType.kBrushless);
+    encoder = motor.getEncoder();
     pidController = motor.getClosedLoopController();
-    encoder = motor.getAlternateEncoder();
-    encoder.setPosition(0);
+
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
+        .closedLoop
+        .pid(0.0025, 0, 2)
+        .minOutput(-1)
+        .maxOutput(1)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .maxMotion
+        .allowedClosedLoopError(0.5)
+        .maxAcceleration(30000)
+        .maxVelocity(5600);
+
+    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
-  /// NEEDS TO BE CONFIGURED LOOP
+
   @Override
   public void setAngle(Rotation2d angle) {
-    System.out.println("called");
-    motor.set(angle.getDegrees());
-    // pidController.setReference(angle.getRotations(),
-    // SparkBase.ControlType.kMAXMotionPositionControl);
-    Logger.recordOutput("wrist/angle", getAngle().getDegrees());
+    pidController.setReference(angle.getRotations(), ControlType.kMAXMotionPositionControl);
   }
 
   public Rotation2d getAngle() {
@@ -56,7 +59,6 @@ public class WristIONeo implements WristIO {
   }
 
   public void updateInputs(WristIOInputs inputs) {
-    Logger.recordOutput("wrist/angle", getAngle().getDegrees());
     inputs.angle = getAngle().getDegrees();
   }
 }
