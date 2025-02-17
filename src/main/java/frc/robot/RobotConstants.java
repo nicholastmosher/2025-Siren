@@ -14,13 +14,13 @@ public class RobotConstants {
   }
 
   public static class Elevator {
-    public static final int leadMotorID = 1;
-    public static final int followerMotorID = 2;
+    public static final int leadMotorID = 30;
+    public static final int followerMotorID = 31;
     public static final int bottomlimitswitchID = 1;
     public static final int toplimitswitchID = 1;
 
     public static final Rotation2d defaultheight = new Rotation2d();
-    public static final Rotation2d intakeheight = new Rotation2d();
+    public static final Rotation2d intakeheight = new Rotation2d().fromRotations(-40);
     public static final Rotation2d L1height = new Rotation2d();
     public static final Rotation2d L2height = new Rotation2d();
     public static final Rotation2d L3height = new Rotation2d();

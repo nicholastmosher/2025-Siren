@@ -20,24 +20,26 @@ public class elevatorSetHeightIntake extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    this.elevator.setGoalState(RobotConstants.Elevator.elevatorState.INTAKE);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    this.elevator.setGoalState(RobotConstants.Elevator.elevatorState.INTAKE);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    this.elevator.stopElevator();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (this.elevator.getGoalState() == RobotConstants.Elevator.elevatorState.INTAKE) {
-      return true;
-    }
+    // if (this.elevator.getGoalState() == RobotConstants.Elevator.elevatorState.INTAKE) {
+    //   return true;
+    // }
     return false;
   }
 }

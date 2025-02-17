@@ -21,12 +21,15 @@ public interface ElevatorIO {
 
   public void moveToState(RobotConstants.Elevator.elevatorState state);
 
+  public void move(double input);
+
   public void stopElevator();
 
   public double getEncoder();
 
+  public void resetEncoder();
+
   public void moveToPoint(Rotation2d targetRot);
 
   public default void updateInputs(ElevatorIOInputs inputs) {}
-
 }

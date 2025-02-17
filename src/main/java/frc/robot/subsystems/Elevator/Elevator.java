@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.Elevator;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotConstants.Elevator.elevatorState;
 
@@ -23,15 +22,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void moveElevator(double input) {
-    double currentState = this.elevator.getEncoder();
-
-    double targetState = currentState+(input*2);
-
-    this.elevator.moveToPoint(Rotation2d.fromDegrees(targetState));
+    this.elevator.move(input);
   }
 
   public void setGoalState(elevatorState givenstate) {
-    this.state = givenstate;
+    elevator.moveToState(givenstate);
   }
 
   public elevatorState getGoalState() {
@@ -46,9 +41,13 @@ public class Elevator extends SubsystemBase {
     return this.elevator;
   }
 
+  public void resetEncoder() {
+    this.elevator.resetEncoder();
+  }
+
   @Override
   public void periodic() {
-    elevator.moveToState(state);
+
     elevator.updateInputs(elevatorinputs);
   }
 }
