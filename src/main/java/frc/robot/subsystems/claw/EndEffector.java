@@ -30,7 +30,9 @@ public class EndEffector extends SubsystemBase {
     this.wrist.setAngle(angle);
   }
 
-  public void stopWrist() {}
+  public void stopWrist() {
+    this.wrist.stopMotor();
+  }
 
   public void stopClaw() {
     this.claw.stopMotor();
