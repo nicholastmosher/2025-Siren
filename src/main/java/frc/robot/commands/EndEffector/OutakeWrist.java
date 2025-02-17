@@ -15,13 +15,13 @@ package frc.robot.commands.EndEffector;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.claw.WristIONeo;
+import frc.robot.subsystems.claw.EndEffector;
 
 public class OutakeWrist extends Command {
-  private WristIONeo m_wrist;
+  private EndEffector endEffector;
 
-  public OutakeWrist(WristIONeo w) {
-    this.m_wrist = w;
+  public OutakeWrist(EndEffector w) {
+    this.endEffector = w;
   }
 
   // Called when the command is initially scheduled.
@@ -31,13 +31,13 @@ public class OutakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_wrist.setAngle(Rotation2d.fromDegrees(-45));
+    endEffector.setWristAngle(Rotation2d.fromDegrees(10));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wrist.stopMotor();
+    endEffector.stopWrist();
   }
 
   // Returns true when the command should end.

@@ -15,7 +15,7 @@ public class RobotConstants {
 
   public static class EndEffector {
 
-    public static int wristmotorID = 1;
-    public static int clawmotorID = 1;
+    public static int wristmotorID = 47;
+    public static int clawmotorID = 20;
   }
 }

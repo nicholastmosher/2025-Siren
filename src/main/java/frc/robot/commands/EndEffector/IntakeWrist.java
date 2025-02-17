@@ -15,12 +15,12 @@ package frc.robot.commands.EndEffector;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.claw.WristIONeo;
+import frc.robot.subsystems.claw.EndEffector;
 
 public class IntakeWrist extends Command {
-  private WristIONeo m_wrist;
+  private EndEffector m_wrist;
 
-  public IntakeWrist(WristIONeo w) {
+  public IntakeWrist(EndEffector w) {
     this.m_wrist = w;
   }
 
@@ -31,13 +31,13 @@ public class IntakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_wrist.setAngle(Rotation2d.fromDegrees(45));
+    m_wrist.setWristAngle(Rotation2d.fromDegrees(30));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wrist.stopMotor();
+    m_wrist.stopWrist();
   }
 
   // Returns true when the command should end.
