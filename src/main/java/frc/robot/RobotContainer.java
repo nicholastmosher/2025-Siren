@@ -80,12 +80,12 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVision(camera0Name, robotToCamera0),
                 new VisionIOPhotonVision(camera1Name, robotToCamera1),
                 new VisionIOPhotonVision(camera2Name, robotToCamera2),
                 new VisionIOPhotonVision(camera3Name, robotToCamera3),
-                new VisionIOLimelight(llName, drive::getRotation));
-
+                new VisionIOPhotonVision(camera4Name, robotToCamera4),
+                new VisionIOLimelight(limelightName, drive::getRotation));
+        
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
 
@@ -104,11 +104,10 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose));
-
+                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
+                new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
         break;
@@ -133,8 +132,10 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {});
 
+
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+
         break;
     }
 
@@ -169,42 +170,30 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> controller.getLeftY(),
-    //         () -> controller.getLeftX(),
-    //         () -> -controller.getRightX()));
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getRightX()));
 
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
-    // Lock to 0° when A button is held
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
-    //             drive,
-    //             () -> controller.getLeftY(),
-    //             () -> controller.getLeftX(),
-    //             () -> new Rotation2d()));
-
-    // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // // Reset gyro to 0° when B button is pressed
-    // controller
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
-
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
     copilot.rightBumper().whileTrue(iElevatorSetHeightIntake);
+    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // Reset gyro to 0° when B button is pressed
+    controller
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
   }
 
   /**
@@ -213,6 +202,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Example Auto");
+    return new PathPlannerAuto("cauto1");
   }
 }
