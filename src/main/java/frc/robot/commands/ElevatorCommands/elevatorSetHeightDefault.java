@@ -21,7 +21,7 @@ public class elevatorSetHeightDefault extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.elevator.setGoalState(RobotConstants.Elevator.elevatorState.DEFAULT);
+    this.elevator.setGoalState(RobotConstants.ElevatorConstants.elevatorState.DEFAULT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +35,7 @@ public class elevatorSetHeightDefault extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (this.elevator.getGoalState() == RobotConstants.Elevator.elevatorState.DEFAULT) {
+    if (this.elevator.getGoalState() == RobotConstants.ElevatorConstants.elevatorState.DEFAULT) {
       return true;
     }
     return false;

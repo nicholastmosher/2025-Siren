@@ -11,7 +11,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.Elevator.elevatorState;
+import frc.robot.RobotConstants.ElevatorConstants.elevatorState;
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIONeo implements ElevatorIO {
@@ -38,8 +38,9 @@ public class ElevatorIONeo implements ElevatorIO {
     // bottomLimitSwitch = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
     // topLimitSwitch = new DigitalInput(RobotConstants.Elevator.toplimitswitchID);
 
-    leadMotor = new SparkMax(RobotConstants.Elevator.leadMotorID, MotorType.kBrushless);
-    followerMotor = new SparkMax(RobotConstants.Elevator.followerMotorID, MotorType.kBrushless);
+    leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
+    followerMotor =
+        new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
     // limitswitchBottom = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
 
     encoder = leadMotor.getEncoder();
@@ -63,13 +64,13 @@ public class ElevatorIONeo implements ElevatorIO {
 
     followerConfig = new SparkMaxConfig();
     followerConfig.apply(leadConfig);
-    followerConfig.follow(RobotConstants.Elevator.leadMotorID, true);
+    followerConfig.follow(RobotConstants.ElevatorConstants.leadMotorID, true);
     followerMotor.configure(
         followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
-  public void moveToState(RobotConstants.Elevator.elevatorState state) {
+  public void moveToState(RobotConstants.ElevatorConstants.elevatorState state) {
     boolean atLowestPoint = false;
     boolean atHighestPoint = false;
     // if (bottomLimitSwitch.get()) {

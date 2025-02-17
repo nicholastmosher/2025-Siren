@@ -21,7 +21,7 @@ public class elevatorSetHeightL4 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.elevator.setGoalState(RobotConstants.Elevator.elevatorState.L4);
+    this.elevator.setGoalState(RobotConstants.ElevatorConstants.elevatorState.L4);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +35,7 @@ public class elevatorSetHeightL4 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (this.elevator.getGoalState() == RobotConstants.Elevator.elevatorState.L4) {
+    if (this.elevator.getGoalState() == RobotConstants.ElevatorConstants.elevatorState.L4) {
       return true;
     }
     return false;

@@ -5,7 +5,7 @@
 package frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotConstants.Elevator.elevatorState;
+import frc.robot.RobotConstants.ElevatorConstants.elevatorState;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */

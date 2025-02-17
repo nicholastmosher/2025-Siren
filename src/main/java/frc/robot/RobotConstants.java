@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public class RobotConstants {
 
-  public static class Intake {
+  public static class IntakeConstants {
     public static final int tiltMotorID = 1;
     public static final int spinMotorID = 2;
 
@@ -13,7 +13,7 @@ public class RobotConstants {
     public static final Rotation2d holdAngle = Rotation2d.fromDegrees(0);
   }
 
-  public static class Elevator {
+  public static class ElevatorConstants {
     public static final int leadMotorID = 30;
     public static final int followerMotorID = 31;
     public static final int bottomlimitswitchID = 1;

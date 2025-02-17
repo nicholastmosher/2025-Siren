@@ -25,7 +25,7 @@ public class elevatorSetHeightIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.elevator.setGoalState(RobotConstants.Elevator.elevatorState.INTAKE);
+    this.elevator.setGoalState(RobotConstants.ElevatorConstants.elevatorState.INTAKE);
   }
 
   // Called once the command ends or is interrupted.

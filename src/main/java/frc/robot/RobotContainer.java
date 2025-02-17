@@ -17,9 +17,12 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -85,7 +88,7 @@ public class RobotContainer {
                 new VisionIOPhotonVision(camera3Name, robotToCamera3),
                 new VisionIOPhotonVision(camera4Name, robotToCamera4),
                 new VisionIOLimelight(limelightName, drive::getRotation));
-        
+
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
 
@@ -131,7 +134,6 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {},
                 new VisionIO() {});
-
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
@@ -182,7 +184,7 @@ public class RobotContainer {
 
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
     copilot.rightBumper().whileTrue(iElevatorSetHeightIntake);
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
     controller
