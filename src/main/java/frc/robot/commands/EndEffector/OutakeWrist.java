@@ -31,7 +31,7 @@ public class OutakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    endEffector.setWristAngle(Rotation2d.fromDegrees(0));
+    endEffector.setWristAngle(Rotation2d.fromRotations(6));
   }
 
   // Called once the command ends or is interrupted.
