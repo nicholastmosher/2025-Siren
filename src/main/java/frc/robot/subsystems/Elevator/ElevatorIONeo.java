@@ -17,14 +17,15 @@ import org.littletonrobotics.junction.Logger;
 public class ElevatorIONeo implements ElevatorIO {
 
   private final SparkMax leadMotor;
-  private final SparkMax followerMotor;
+  private final SparkMax motor2;
 
   private final RelativeEncoder encoder;
 
-  private final SparkClosedLoopController pid;
+  private final SparkClosedLoopController leadpid;
+  private final SparkClosedLoopController pid2;
 
   private final SparkMaxConfig leadConfig;
-  private final SparkMaxConfig followerConfig;
+  private final SparkMaxConfig motor2config;
 
   // private final DigitalInput limitswitchBottom;
 
@@ -39,13 +40,13 @@ public class ElevatorIONeo implements ElevatorIO {
     // topLimitSwitch = new DigitalInput(RobotConstants.Elevator.toplimitswitchID);
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
-    followerMotor =
-        new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
+    motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
     // limitswitchBottom = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
 
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
-    pid = leadMotor.getClosedLoopController();
+    leadpid = leadMotor.getClosedLoopController();
+    pid2 = motor2.getClosedLoopController();
 
     leadConfig = new SparkMaxConfig();
 
@@ -62,11 +63,10 @@ public class ElevatorIONeo implements ElevatorIO {
 
     leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    followerConfig = new SparkMaxConfig();
-    followerConfig.apply(leadConfig);
-    followerConfig.follow(RobotConstants.ElevatorConstants.leadMotorID, true);
-    followerMotor.configure(
-        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    motor2config = new SparkMaxConfig();
+    motor2config.apply(leadConfig);
+    motor2config.follow(leadMotor, true);
+    motor2.configure(motor2config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -95,7 +95,8 @@ public class ElevatorIONeo implements ElevatorIO {
     // {
     //   stopElevator();
     // }
-    pid.setReference(targetRot.getRotations(), ControlType.kMAXMotionPositionControl);
+    leadpid.setReference(targetRot.getRotations(), ControlType.kMAXMotionPositionControl);
+    // pid2.setReference((-getEncoder()), ControlType.kMAXMotionPositionControl);
   }
 
   @Override

@@ -27,7 +27,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightDefault;
 import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightL1;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightL2;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightL3;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightL4;
 import frc.robot.commands.EndEffector.DefaultWrist;
 import frc.robot.commands.EndEffector.IntakeClaw;
 import frc.robot.commands.EndEffector.IntakeWrist;
@@ -77,8 +82,14 @@ public class RobotContainer {
   public final IntakeClaw intakeClaw;
   public final OutakeClaw outakeClaw;
   public final IntakeWrist intakeWrist;
+
   public final DefaultWrist defaultWrist;
-  public final elevatorSetHeightIntake iElevatorSetHeightIntake;
+  public final elevatorSetHeightIntake elevatorintake;
+  public final elevatorSetHeightDefault elevatordefault;
+  public final elevatorSetHeightL1 elevatorl1;
+  public final elevatorSetHeightL2 elevatorl2;
+  public final elevatorSetHeightL3 elevatorl3;
+  public final elevatorSetHeightL4 elevatorl4;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -103,7 +114,12 @@ public class RobotContainer {
                 new VisionIOLimelight(limelightName, drive::getRotation));
 
         elevator = new Elevator(new ElevatorIONeo());
-        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+        elevatordefault = new elevatorSetHeightDefault(elevator);
+        elevatorintake = new elevatorSetHeightIntake(elevator);
+        elevatorl1 = new elevatorSetHeightL1(elevator);
+        elevatorl2 = new elevatorSetHeightL2(elevator);
+        elevatorl3 = new elevatorSetHeightL3(elevator);
+        elevatorl4 = new elevatorSetHeightL4(elevator);
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         intakeClaw = new IntakeClaw(endEffector);
@@ -139,7 +155,12 @@ public class RobotContainer {
         defaultWrist = new DefaultWrist(endEffector);
 
         elevator = new Elevator(new ElevatorIONeo());
-        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+        elevatordefault = new elevatorSetHeightDefault(elevator);
+        elevatorintake = new elevatorSetHeightIntake(elevator);
+        elevatorl1 = new elevatorSetHeightL1(elevator);
+        elevatorl2 = new elevatorSetHeightL2(elevator);
+        elevatorl3 = new elevatorSetHeightL3(elevator);
+        elevatorl4 = new elevatorSetHeightL4(elevator);
         break;
 
       default:
@@ -170,7 +191,12 @@ public class RobotContainer {
         defaultWrist = new DefaultWrist(endEffector);
 
         elevator = new Elevator(new ElevatorIONeo());
-        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+        elevatordefault = new elevatorSetHeightDefault(elevator);
+        elevatorintake = new elevatorSetHeightIntake(elevator);
+        elevatorl1 = new elevatorSetHeightL1(elevator);
+        elevatorl2 = new elevatorSetHeightL2(elevator);
+        elevatorl3 = new elevatorSetHeightL3(elevator);
+        elevatorl4 = new elevatorSetHeightL4(elevator);
 
         break;
     }
@@ -217,7 +243,6 @@ public class RobotContainer {
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
-    copilot.y().whileTrue(iElevatorSetHeightIntake);
 
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
@@ -231,14 +256,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-
-    copilot.rightBumper().whileTrue(intakeClaw);
-    copilot.leftBumper().whileTrue(outakeClaw);
-    copilot.rightTrigger().onTrue(new InstantCommand(endEffector::resetWristEncoder));
-
-    copilot.a().whileTrue(intakeWrist);
-    // copilot.b
-    // ().whileTrue(defaultWrist);
   }
 
   /**
