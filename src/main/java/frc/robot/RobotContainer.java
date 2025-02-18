@@ -32,6 +32,15 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.claw.ClawIOVortex;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.claw.WristIONeo;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorIONeo;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -57,11 +66,11 @@ public class RobotContainer {
 
   private final Vision vision;
 
-  private final EndEffector endEffector;
+  private final Elevator elevator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandXboxController controller1 = new CommandXboxController(1);
+  private final CommandXboxController copilot = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -70,6 +79,7 @@ public class RobotContainer {
   public final OutakeClaw outakeClaw;
   public final IntakeWrist intakeWrist;
   public final OutakeWrist outakeWrist;
+  public final elevatorSetHeightIntake iElevatorSetHeightIntake;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -87,17 +97,21 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVision(camera0Name, robotToCamera0),
                 new VisionIOPhotonVision(camera1Name, robotToCamera1),
                 new VisionIOPhotonVision(camera2Name, robotToCamera2),
                 new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                new VisionIOPhotonVision(camera4Name, robotToCamera4),
                 new VisionIOLimelight(limelightName, drive::getRotation));
 
+        elevator = new Elevator(new ElevatorIONeo());
+        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+        
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
         outakeWrist = new OutakeWrist(endEffector);
+
         break;
 
       case SIM:
@@ -113,10 +127,10 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera0Name, robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose));
+                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
+                new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
@@ -124,6 +138,9 @@ public class RobotContainer {
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
         outakeWrist = new OutakeWrist(endEffector);
+                
+        elevator = new Elevator(new ElevatorIONeo());
+        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
         break;
 
       default:
@@ -152,6 +169,11 @@ public class RobotContainer {
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
         outakeWrist = new OutakeWrist(endEffector);
+
+        elevator = new Elevator(new ElevatorIONeo());
+        iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+
+
         break;
     }
 
@@ -186,42 +208,37 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> controller.getLeftY(),
-    //         () -> controller.getLeftX(),
-    //         () -> -controller.getRightX()));
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getRightX()));
 
-    // // Lock to 0° when A button is held
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
-    //             drive,
-    //             () -> controller.getLeftY(),
-    //             () -> controller.getLeftX(),
-    //             () -> new Rotation2d()));
+    elevator.setDefaultCommand(
+        new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
-    // // Switch to X pattern when X button is pressed
+    copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
+    copilot.y().whileTrue(iElevatorSetHeightIntake);
+
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
-    // controller
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-    //                 drive)
-    //             .ignoringDisable(true));
+    controller
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
 
-    controller1.rightBumper().whileTrue(intakeClaw);
-    controller1.leftBumper().whileTrue(outakeClaw);
-    controller1.rightTrigger().whileTrue(intakeWrist);
-    controller1.leftTrigger().whileTrue(outakeWrist);
-    controller1.a().onTrue(new InstantCommand(endEffector::resetWristEncoder));
+    copilot.rightBumper().whileTrue(intakeClaw);
+    copilot.leftBumper().whileTrue(outakeClaw);
+    copilot.rightTrigger().whileTrue(intakeWrist);
+    copilot.leftTrigger().whileTrue(outakeWrist);
+    copilot.x().onTrue(new InstantCommand(endEffector::resetWristEncoder));
   }
 
   /**
