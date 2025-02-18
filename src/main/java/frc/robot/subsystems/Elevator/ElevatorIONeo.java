@@ -65,6 +65,7 @@ public class ElevatorIONeo implements ElevatorIO {
 
     motor2config = new SparkMaxConfig();
     motor2config.apply(leadConfig);
+    motor2config.follow(leadMotor, true);
     motor2.configure(motor2config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -95,7 +96,7 @@ public class ElevatorIONeo implements ElevatorIO {
     //   stopElevator();
     // }
     leadpid.setReference(targetRot.getRotations(), ControlType.kMAXMotionPositionControl);
-    pid2.setReference((-getEncoder()), ControlType.kMAXMotionPositionControl);
+    // pid2.setReference((-getEncoder()), ControlType.kMAXMotionPositionControl);
   }
 
   @Override
