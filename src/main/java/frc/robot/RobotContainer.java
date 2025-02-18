@@ -26,16 +26,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.CommandGroups.IntakeCG;
+import frc.robot.commands.CommandGroups.scorel2;
+import frc.robot.commands.CommandGroups.scorel3;
+import frc.robot.commands.CommandGroups.scorel4;
 import frc.robot.commands.Drive.DriveCommands;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightDefault;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightL1;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightL2;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightL3;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightL4;
-import frc.robot.commands.EndEffector.DefaultWrist;
-import frc.robot.commands.EndEffector.IntakeClaw;
-import frc.robot.commands.EndEffector.IntakeWrist;
 import frc.robot.commands.EndEffector.OutakeClaw;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -79,17 +74,11 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  public final IntakeClaw intakeClaw;
-  public final OutakeClaw outakeClaw;
-  public final IntakeWrist intakeWrist;
-
-  public final DefaultWrist defaultWrist;
-  public final elevatorSetHeightIntake elevatorintake;
-  public final elevatorSetHeightDefault elevatordefault;
-  public final elevatorSetHeightL1 elevatorl1;
-  public final elevatorSetHeightL2 elevatorl2;
-  public final elevatorSetHeightL3 elevatorl3;
-  public final elevatorSetHeightL4 elevatorl4;
+  public final IntakeCG intakecommand;
+  public final scorel2 l2command;
+  public final scorel3 l3command;
+  public final scorel4 l4command;
+  public final OutakeClaw drop;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -114,18 +103,14 @@ public class RobotContainer {
                 new VisionIOLimelight(limelightName, drive::getRotation));
 
         elevator = new Elevator(new ElevatorIONeo());
-        elevatordefault = new elevatorSetHeightDefault(elevator);
-        elevatorintake = new elevatorSetHeightIntake(elevator);
-        elevatorl1 = new elevatorSetHeightL1(elevator);
-        elevatorl2 = new elevatorSetHeightL2(elevator);
-        elevatorl3 = new elevatorSetHeightL3(elevator);
-        elevatorl4 = new elevatorSetHeightL4(elevator);
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
-        intakeClaw = new IntakeClaw(endEffector);
-        outakeClaw = new OutakeClaw(endEffector);
-        intakeWrist = new IntakeWrist(endEffector);
-        defaultWrist = new DefaultWrist(endEffector);
+
+        intakecommand = new IntakeCG(elevator, endEffector);
+        l2command = new scorel2(elevator, endEffector);
+        l3command = new scorel3(elevator, endEffector);
+        l4command = new scorel4(elevator, endEffector);
+        drop = new OutakeClaw(endEffector);
 
         break;
 
@@ -148,19 +133,13 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
-
-        intakeClaw = new IntakeClaw(endEffector);
-        outakeClaw = new OutakeClaw(endEffector);
-        intakeWrist = new IntakeWrist(endEffector);
-        defaultWrist = new DefaultWrist(endEffector);
-
         elevator = new Elevator(new ElevatorIONeo());
-        elevatordefault = new elevatorSetHeightDefault(elevator);
-        elevatorintake = new elevatorSetHeightIntake(elevator);
-        elevatorl1 = new elevatorSetHeightL1(elevator);
-        elevatorl2 = new elevatorSetHeightL2(elevator);
-        elevatorl3 = new elevatorSetHeightL3(elevator);
-        elevatorl4 = new elevatorSetHeightL4(elevator);
+
+        intakecommand = new IntakeCG(elevator, endEffector);
+        l2command = new scorel2(elevator, endEffector);
+        l3command = new scorel3(elevator, endEffector);
+        l4command = new scorel4(elevator, endEffector);
+        drop = new OutakeClaw(endEffector);
         break;
 
       default:
@@ -185,18 +164,13 @@ public class RobotContainer {
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
-        intakeClaw = new IntakeClaw(endEffector);
-        outakeClaw = new OutakeClaw(endEffector);
-        intakeWrist = new IntakeWrist(endEffector);
-        defaultWrist = new DefaultWrist(endEffector);
-
         elevator = new Elevator(new ElevatorIONeo());
-        elevatordefault = new elevatorSetHeightDefault(elevator);
-        elevatorintake = new elevatorSetHeightIntake(elevator);
-        elevatorl1 = new elevatorSetHeightL1(elevator);
-        elevatorl2 = new elevatorSetHeightL2(elevator);
-        elevatorl3 = new elevatorSetHeightL3(elevator);
-        elevatorl4 = new elevatorSetHeightL4(elevator);
+
+        intakecommand = new IntakeCG(elevator, endEffector);
+        l2command = new scorel2(elevator, endEffector);
+        l3command = new scorel3(elevator, endEffector);
+        l4command = new scorel4(elevator, endEffector);
+        drop = new OutakeClaw(endEffector);
 
         break;
     }
@@ -256,6 +230,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    controller.leftTrigger().whileTrue(intakecommand);
+    controller.leftBumper().whileTrue(l2command);
+    controller.x().whileTrue(l3command);
+    controller.a().whileTrue(l4command);
+    controller.rightBumper().onTrue(drop.withTimeout(1));
   }
 
   /**

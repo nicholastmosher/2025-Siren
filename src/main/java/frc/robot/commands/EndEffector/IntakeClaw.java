@@ -30,7 +30,7 @@ public class IntakeClaw extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    endeffector.inEndEffector(0.3);
+    endeffector.inEndEffector(0.5);
   }
 
   // Called once the command ends or is interrupted.

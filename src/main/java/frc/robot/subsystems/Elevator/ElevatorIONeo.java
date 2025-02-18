@@ -57,7 +57,7 @@ public class ElevatorIONeo implements ElevatorIO {
         .maxOutput(1)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .maxMotion
-        .allowedClosedLoopError(0.5)
+        .allowedClosedLoopError(0.3)
         .maxAcceleration(56000)
         .maxVelocity(5600);
 

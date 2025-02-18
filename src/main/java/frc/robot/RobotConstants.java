@@ -19,7 +19,7 @@ public class RobotConstants {
     public static int clawmotorID = 20;
 
     public static final Rotation2d defaultrot = new Rotation2d().fromRotations(19);
-    public static final Rotation2d intakerot = new Rotation2d().fromRotations(15.5);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(18.7);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(4);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(3);
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(2);
@@ -33,11 +33,11 @@ public class RobotConstants {
     public static final int toplimitswitchID = 1;
 
     public static final Rotation2d defaultheight = new Rotation2d().fromRotations(0);
-    public static final Rotation2d intakeheight = new Rotation2d().fromRotations(0);
-    public static final Rotation2d L1height = new Rotation2d().fromRotations(-20);
-    public static final Rotation2d L2height = new Rotation2d().fromRotations(-30);
-    public static final Rotation2d L3height = new Rotation2d().fromRotations(-40);
-    public static final Rotation2d L4height = new Rotation2d().fromRotations(-50);
+    public static final Rotation2d intakeheight = new Rotation2d().fromRotations(-4.6);
+    public static final Rotation2d L1height = new Rotation2d().fromRotations(0);
+    public static final Rotation2d L2height = new Rotation2d().fromRotations(-15);
+    public static final Rotation2d L3height = new Rotation2d().fromRotations(-37.5);
+    public static final Rotation2d L4height = new Rotation2d().fromRotations(-69.25);
 
     public static enum elevatorState {
       DEFAULT(defaultheight),
