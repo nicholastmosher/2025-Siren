@@ -17,11 +17,21 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.commands.EndEffector.IntakeClaw;
+import frc.robot.commands.EndEffector.IntakeWrist;
+import frc.robot.commands.EndEffector.OutakeClaw;
+import frc.robot.commands.EndEffector.OutakeWrist;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.claw.ClawIOVortex;
+import frc.robot.subsystems.claw.EndEffector;
+import frc.robot.subsystems.claw.WristIONeo;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -65,6 +75,10 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  public final IntakeClaw intakeClaw;
+  public final OutakeClaw outakeClaw;
+  public final IntakeWrist intakeWrist;
+  public final OutakeWrist outakeWrist;
   public final elevatorSetHeightIntake iElevatorSetHeightIntake;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -91,6 +105,12 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+        
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+        intakeClaw = new IntakeClaw(endEffector);
+        outakeClaw = new OutakeClaw(endEffector);
+        intakeWrist = new IntakeWrist(endEffector);
+        outakeWrist = new OutakeWrist(endEffector);
 
         break;
 
@@ -111,6 +131,14 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
                 new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
                 new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
+
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+
+        intakeClaw = new IntakeClaw(endEffector);
+        outakeClaw = new OutakeClaw(endEffector);
+        intakeWrist = new IntakeWrist(endEffector);
+        outakeWrist = new OutakeWrist(endEffector);
+                
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
         break;
@@ -135,8 +163,16 @@ public class RobotContainer {
                 new VisionIO() {},
                 new VisionIO() {});
 
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+
+        intakeClaw = new IntakeClaw(endEffector);
+        outakeClaw = new OutakeClaw(endEffector);
+        intakeWrist = new IntakeWrist(endEffector);
+        outakeWrist = new OutakeWrist(endEffector);
+
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
+
 
         break;
     }
@@ -183,7 +219,8 @@ public class RobotContainer {
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
-    copilot.rightBumper().whileTrue(iElevatorSetHeightIntake);
+    copilot.y().whileTrue(iElevatorSetHeightIntake);
+
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
@@ -196,6 +233,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    copilot.rightBumper().whileTrue(intakeClaw);
+    copilot.leftBumper().whileTrue(outakeClaw);
+    copilot.rightTrigger().whileTrue(intakeWrist);
+    copilot.leftTrigger().whileTrue(outakeWrist);
+    copilot.x().onTrue(new InstantCommand(endEffector::resetWristEncoder));
   }
 
   /**
