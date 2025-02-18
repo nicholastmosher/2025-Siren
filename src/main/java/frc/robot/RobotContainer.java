@@ -17,30 +17,27 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
 import frc.robot.commands.EndEffector.IntakeClaw;
 import frc.robot.commands.EndEffector.IntakeWrist;
 import frc.robot.commands.EndEffector.OutakeClaw;
 import frc.robot.commands.EndEffector.OutakeWrist;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorIONeo;
 import frc.robot.subsystems.claw.ClawIOVortex;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.claw.WristIONeo;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorIONeo;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -67,6 +64,8 @@ public class RobotContainer {
   private final Vision vision;
 
   private final Elevator elevator;
+
+  private final EndEffector endEffector;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -105,7 +104,7 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
-        
+
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
@@ -138,7 +137,7 @@ public class RobotContainer {
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
         outakeWrist = new OutakeWrist(endEffector);
-                
+
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
         break;
@@ -172,7 +171,6 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
-
 
         break;
     }
