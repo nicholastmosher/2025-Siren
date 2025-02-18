@@ -211,7 +211,7 @@ public class RobotContainer {
             drive,
             () -> controller.getLeftY(),
             () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> controller.getRightX()));
 
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
