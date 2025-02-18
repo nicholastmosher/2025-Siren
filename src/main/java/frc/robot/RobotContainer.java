@@ -28,10 +28,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
+import frc.robot.commands.EndEffector.DefaultWrist;
 import frc.robot.commands.EndEffector.IntakeClaw;
 import frc.robot.commands.EndEffector.IntakeWrist;
 import frc.robot.commands.EndEffector.OutakeClaw;
-import frc.robot.commands.EndEffector.OutakeWrist;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorIONeo;
@@ -77,7 +77,7 @@ public class RobotContainer {
   public final IntakeClaw intakeClaw;
   public final OutakeClaw outakeClaw;
   public final IntakeWrist intakeWrist;
-  public final OutakeWrist outakeWrist;
+  public final DefaultWrist defaultWrist;
   public final elevatorSetHeightIntake iElevatorSetHeightIntake;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -109,7 +109,7 @@ public class RobotContainer {
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
-        outakeWrist = new OutakeWrist(endEffector);
+        defaultWrist = new DefaultWrist(endEffector);
 
         break;
 
@@ -136,7 +136,7 @@ public class RobotContainer {
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
-        outakeWrist = new OutakeWrist(endEffector);
+        defaultWrist = new DefaultWrist(endEffector);
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
@@ -167,7 +167,7 @@ public class RobotContainer {
         intakeClaw = new IntakeClaw(endEffector);
         outakeClaw = new OutakeClaw(endEffector);
         intakeWrist = new IntakeWrist(endEffector);
-        outakeWrist = new OutakeWrist(endEffector);
+        defaultWrist = new DefaultWrist(endEffector);
 
         elevator = new Elevator(new ElevatorIONeo());
         iElevatorSetHeightIntake = new elevatorSetHeightIntake(elevator);
@@ -234,9 +234,11 @@ public class RobotContainer {
 
     copilot.rightBumper().whileTrue(intakeClaw);
     copilot.leftBumper().whileTrue(outakeClaw);
-    copilot.rightTrigger().whileTrue(intakeWrist);
-    copilot.leftTrigger().whileTrue(outakeWrist);
-    copilot.x().onTrue(new InstantCommand(endEffector::resetWristEncoder));
+    copilot.rightTrigger().onTrue(new InstantCommand(endEffector::resetWristEncoder));
+
+    copilot.a().whileTrue(intakeWrist);
+    // copilot.b
+    // ().whileTrue(defaultWrist);
   }
 
   /**

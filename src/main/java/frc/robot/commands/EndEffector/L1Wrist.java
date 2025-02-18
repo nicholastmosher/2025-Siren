@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.claw.EndEffector;
 
-public class IntakeWrist extends Command {
-  private EndEffector m_wrist;
+public class L1Wrist extends Command {
+  private EndEffector endEffector;
 
-  public IntakeWrist(EndEffector w) {
-    this.m_wrist = w;
+  public L1Wrist(EndEffector w) {
+    this.endEffector = w;
   }
 
   // Called when the command is initially scheduled.
@@ -31,13 +31,13 @@ public class IntakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_wrist.setWristAngle(RobotConstants.EndEffectorConstants.intakerot);
+    endEffector.setWristAngle(RobotConstants.EndEffectorConstants.L1rot);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wrist.stopWrist();
+    endEffector.stopWrist();
   }
 
   // Returns true when the command should end.

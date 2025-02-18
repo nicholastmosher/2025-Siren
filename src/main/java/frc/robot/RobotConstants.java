@@ -17,6 +17,13 @@ public class RobotConstants {
 
     public static int wristmotorID = 19;
     public static int clawmotorID = 20;
+
+    public static final Rotation2d defaultrot = new Rotation2d().fromRotations(19);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(15.5);
+    public static final Rotation2d L1rot = new Rotation2d().fromRotations(4);
+    public static final Rotation2d L2rot = new Rotation2d().fromRotations(3);
+    public static final Rotation2d L3rot = new Rotation2d().fromRotations(2);
+    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0);
   }
 
   public static class ElevatorConstants {
