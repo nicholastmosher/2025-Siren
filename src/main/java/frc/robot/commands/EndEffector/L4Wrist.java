@@ -13,14 +13,14 @@
 
 package frc.robot.commands.EndEffector;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.claw.EndEffector;
 
-public class OutakeWrist extends Command {
+public class L4Wrist extends Command {
   private EndEffector endEffector;
 
-  public OutakeWrist(EndEffector w) {
+  public L4Wrist(EndEffector w) {
     this.endEffector = w;
   }
 
@@ -31,7 +31,7 @@ public class OutakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    endEffector.setWristAngle(Rotation2d.fromRotations(6));
+    endEffector.setWristAngle(RobotConstants.EndEffectorConstants.L4rot);
   }
 
   // Called once the command ends or is interrupted.
