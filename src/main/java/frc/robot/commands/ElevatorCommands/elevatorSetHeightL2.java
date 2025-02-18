@@ -20,24 +20,26 @@ public class elevatorSetHeightL2 extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    this.elevator.setGoalState(RobotConstants.ElevatorConstants.elevatorState.L2);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    this.elevator.setGoalState(RobotConstants.ElevatorConstants.elevatorState.L2);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    this.elevator.stopElevator();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (this.elevator.getGoalState() == RobotConstants.ElevatorConstants.elevatorState.L2) {
-      return true;
-    }
+    // if (this.elevator.getGoalState() == RobotConstants.ElevatorConstants.elevatorState.L2) {
+    //   return true;
+    // }
     return false;
   }
 }
