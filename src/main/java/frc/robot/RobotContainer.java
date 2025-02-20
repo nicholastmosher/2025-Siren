@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.CommandGroups.IntakeCG;
+import frc.robot.commands.CommandGroups.dealgify;
 import frc.robot.commands.CommandGroups.scorel2;
 import frc.robot.commands.CommandGroups.scorel3;
 import frc.robot.commands.CommandGroups.scorel4;
@@ -78,6 +79,7 @@ public class RobotContainer {
   public final scorel2 l2command;
   public final scorel3 l3command;
   public final scorel4 l4command;
+  public final dealgify dealgifycommand;
   public final OutakeClaw drop;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -110,6 +112,7 @@ public class RobotContainer {
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
+        dealgifycommand = new dealgify(elevator, endEffector);
         drop = new OutakeClaw(endEffector);
 
         break;
@@ -139,6 +142,7 @@ public class RobotContainer {
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
+        dealgifycommand = new dealgify(elevator, endEffector);
         drop = new OutakeClaw(endEffector);
         break;
 
@@ -170,6 +174,7 @@ public class RobotContainer {
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
+        dealgifycommand = new dealgify(elevator, endEffector);
         drop = new OutakeClaw(endEffector);
 
         break;
@@ -236,6 +241,7 @@ public class RobotContainer {
     controller.x().whileTrue(l3command);
     controller.a().whileTrue(l4command);
     controller.rightBumper().onTrue(drop.withTimeout(1));
+    controller.rightTrigger().whileTrue(dealgifycommand);
   }
 
   /**
