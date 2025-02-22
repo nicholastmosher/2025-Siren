@@ -23,7 +23,7 @@ public class RobotConstants {
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(4);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(3);
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(2);
-    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0);
+    public static final Rotation2d L4rot = new Rotation2d().fromRotations(4);
   }
 
   public static class ElevatorConstants {

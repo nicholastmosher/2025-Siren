@@ -52,13 +52,13 @@ public class ElevatorIONeo implements ElevatorIO {
 
     leadConfig
         .closedLoop
-        .pid(0.0025, 0, 0)
+        .pid(0.00375, 0, 0.375)
         .minOutput(-1)
         .maxOutput(1)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .maxMotion
-        .allowedClosedLoopError(0.3)
-        .maxAcceleration(56000)
+        .allowedClosedLoopError(0.5)
+        .maxAcceleration(50000)
         .maxVelocity(5600);
 
     leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
