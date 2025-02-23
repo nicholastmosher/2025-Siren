@@ -50,14 +50,10 @@ public class ElevatorIONeo implements ElevatorIO {
     leadConfig = new SparkMaxConfig();
     leadConfig
         .closedLoop
-        .pid(0.00375, 0, 0.375)
+        .pid(0.075, 0, 0)
         .minOutput(-1)
         .maxOutput(1)
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .maxMotion
-        .allowedClosedLoopError(0.5)
-        .maxAcceleration(50000)
-        .maxVelocity(5600);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

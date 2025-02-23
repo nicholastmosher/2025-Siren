@@ -19,6 +19,7 @@ public interface ClawIO {
   public boolean getIntakeIntaked();
 
   // Periodic updates for logging and other state handling
-  public default void updateInputs() {}
+  public default void updateInputs(ClawIOInputs inputs) {}
+  ;
   ;
 }

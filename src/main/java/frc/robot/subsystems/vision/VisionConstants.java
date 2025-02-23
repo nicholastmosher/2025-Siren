@@ -48,7 +48,7 @@ public class VisionConstants {
           xMeters,
           yMeters,
           zMeters + Units.inchesToMeters(2), // TODO
-          new Rotation3d(rollRadians, pitchRadians, Units.degreesToRadians(45)));
+          new Rotation3d(rollRadians, pitchRadians, Units.degreesToRadians(0)));
 
   // front right camera
   public static Transform3d robotToCamera2 =
@@ -56,7 +56,7 @@ public class VisionConstants {
           xMeters,
           -yMeters,
           zMeters + Units.inchesToMeters(2), // TODO
-          new Rotation3d(rollRadians, pitchRadians, Units.degreesToRadians(-45)));
+          new Rotation3d(rollRadians, pitchRadians, Units.degreesToRadians(0)));
   // rear left camera
   public static Transform3d robotToCamera3 =
       new Transform3d(

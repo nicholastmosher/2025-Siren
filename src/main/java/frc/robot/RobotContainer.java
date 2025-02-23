@@ -17,7 +17,6 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -216,12 +215,12 @@ public class RobotContainer {
     double reduction = Math.pow(elevator.getPercentRaised(), 2);
     double cappedreduction = Math.min(reduction, 0.70);
 
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> (controller.getLeftY() * cappedreduction),
-            () -> (controller.getLeftX() * cappedreduction),
-            () -> (controller.getRightX() * cappedreduction)));
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> (controller.getLeftY() * cappedreduction),
+    //         () -> (controller.getLeftX() * cappedreduction),
+    //         () -> (controller.getRightX() * cappedreduction)));
 
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
@@ -246,10 +245,11 @@ public class RobotContainer {
     controller.x().whileTrue(l3command);
     controller.a().whileTrue(l4command);
     controller.rightBumper().onTrue(drop.withTimeout(1));
-    controller
-        .rightTrigger()
-        .whileTrue(
-            AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null, null)));
+    // controller
+    //     .rightTrigger()
+    //     .whileTrue(
+    //         AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null,
+    // null)));
   }
 
   /**

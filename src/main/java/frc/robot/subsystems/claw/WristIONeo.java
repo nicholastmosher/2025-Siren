@@ -56,6 +56,7 @@ public class WristIONeo implements WristIO {
     motor.stopMotor();
   }
 
+  @Override
   public void updateInputs(WristIOInputs inputs) {
     inputs.angle = getAngle().getDegrees();
     Logger.recordOutput("Wrist/angle", encoder.getPosition());

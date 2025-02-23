@@ -54,7 +54,7 @@ public class EndEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.claw.updateInputs();
-    this.wrist.updateInputs();
+    this.claw.updateInputs(this.clawIOInputsAutoLogged);
+    this.wrist.updateInputs(this.wristIOInputsAutoLogged);
   }
 }
