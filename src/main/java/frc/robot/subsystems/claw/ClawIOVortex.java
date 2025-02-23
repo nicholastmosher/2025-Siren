@@ -7,7 +7,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.RobotConstants;
+import frc.lib.constants.RobotConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class ClawIOVortex implements ClawIO {

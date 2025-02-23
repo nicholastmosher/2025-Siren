@@ -44,8 +44,12 @@ public class EndEffector extends SubsystemBase {
     this.claw.stopMotor();
   }
 
-  public boolean getIntaked() {
-    return this.claw.getIntaked();
+  public boolean getfrontIntaked() {
+    return claw.getFrontIntaked();
+  }
+
+  public boolean getbackIntaked() {
+    return claw.getIntakeIntaked();
   }
 
   @Override

@@ -15,6 +15,7 @@ public interface ClawIO {
   public void stopMotor();
 
   public boolean getFrontIntaked();
+
   public boolean getIntakeIntaked();
 
   // Periodic updates for logging and other state handling

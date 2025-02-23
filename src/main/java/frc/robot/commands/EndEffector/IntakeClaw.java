@@ -43,6 +43,6 @@ public class IntakeClaw extends Command {
   @Override
   public boolean isFinished() {
 
-    return endeffector.getIntaked();
+    return endeffector.getfrontIntaked();
   }
 }

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Elevator;
+package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -9,8 +9,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.ElevatorConstants.elevatorState;
+import frc.lib.constants.RobotConstants;
+import frc.lib.constants.RobotConstants.ElevatorConstants.elevatorState;
 import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIONeo implements ElevatorIO {
@@ -21,8 +21,6 @@ public class ElevatorIONeo implements ElevatorIO {
   private final RelativeEncoder encoder;
 
   private final SparkClosedLoopController leadpid;
-  private final SparkClosedLoopController pid2;
-
   private final SparkMaxConfig leadConfig;
   private final SparkMaxConfig motor2config;
 
@@ -30,6 +28,8 @@ public class ElevatorIONeo implements ElevatorIO {
 
   // private final DigitalInput bottomLimitSwitch;
   // private final DigitalInput topLimitSwitch;
+
+  private final double rotationstoInches = 0.0;
 
   private elevatorState state = elevatorState.DEFAULT;
 
@@ -45,10 +45,8 @@ public class ElevatorIONeo implements ElevatorIO {
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
     leadpid = leadMotor.getClosedLoopController();
-    pid2 = motor2.getClosedLoopController();
 
     leadConfig = new SparkMaxConfig();
-
     leadConfig
         .closedLoop
         .pid(0.00375, 0, 0.375)
@@ -114,8 +112,8 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   @Override
-  public double getEncoder() {
-    return encoder.getPosition();
+  public RelativeEncoder getEncoder() {
+    return encoder;
   }
 
   @Override
@@ -129,8 +127,14 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   @Override
+  public double getPercentRaised() {
+
+    return (getEncoder().getPosition() / elevatorState.L4.getTargetRotation2d().getRotations());
+  }
+
+  @Override
   public void updateInputs(ElevatorIOInputs inputs) {
-    Logger.recordOutput("elevator/encoder", getEncoder());
+    Logger.recordOutput("elevator/encoder", getEncoder().getPosition());
     inputs.enumState = state.name();
   }
 }

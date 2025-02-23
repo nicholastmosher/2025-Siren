@@ -14,7 +14,7 @@
 package frc.robot.commands.EndEffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotConstants;
+import frc.lib.constants.RobotConstants;
 import frc.robot.subsystems.claw.EndEffector;
 
 public class L1Wrist extends Command {

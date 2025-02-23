@@ -2,10 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Elevator;
+package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotConstants.ElevatorConstants.elevatorState;
+import frc.lib.constants.RobotConstants.ElevatorConstants.elevatorState;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -15,10 +21,19 @@ public class Elevator extends SubsystemBase {
 
   private elevatorState state;
 
+  private TrapezoidProfile profile;
+  private ElevatorFeedforward feedforward;
+  private Timer profileTimer;
+
   public Elevator(ElevatorIO elevator) {
     this.elevator = elevator;
     elevatorinputs = new ElevatorIOInputsAutoLogged();
     this.state = elevatorState.DEFAULT;
+
+    profile = new TrapezoidProfile(new Constraints(0, 0));
+    feedforward = new ElevatorFeedforward(0, 0, 0);
+    profileTimer = new Timer();
+    profileTimer.start();
   }
 
   public void moveElevator(double input) {
@@ -26,7 +41,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setGoalState(elevatorState givenstate) {
-    elevator.moveToState(givenstate);
+    if (givenstate != this.state) {
+      this.state = givenstate;
+      profileTimer.reset();
+      profileTimer.start();
+    }
   }
 
   public elevatorState getGoalState() {
@@ -35,6 +54,7 @@ public class Elevator extends SubsystemBase {
 
   public void stopElevator() {
     elevator.stopElevator();
+    profileTimer.stop();
   }
 
   public ElevatorIO getElevatorInstance() {
@@ -45,9 +65,23 @@ public class Elevator extends SubsystemBase {
     this.elevator.resetEncoder();
   }
 
+  public double getPercentRaised() {
+    return elevator.getPercentRaised();
+  }
+
   @Override
   public void periodic() {
 
+    elevator.moveToPoint(
+        Rotation2d.fromRotations(
+            profile.calculate(
+                    profileTimer.getTimestamp(),
+                    new State(
+                        this.elevator.getEncoder().getPosition(),
+                        this.elevator.getEncoder().getVelocity()),
+                    new State(this.state.getTargetRotation2d().getRotations(), 0))
+                .position)
+                );
     elevator.updateInputs(elevatorinputs);
   }
 }

@@ -4,20 +4,19 @@
 
 package frc.robot.commands.commandgroups;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.ElevatorCommands.elevatorSetHeightL2;
-import frc.robot.commands.EndEffector.L2Wrist;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.ElevatorCommands.elevatorSetHeightIntake;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.elevator.Elevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class scorel2 extends SequentialCommandGroup {
-  /** Creates a new scorel2. */
-  public scorel2(Elevator elevator, EndEffector endEffector) {
+public class IntakeFull extends ParallelCommandGroup {
+  /** Creates a new Intake. */
+  public IntakeFull(Elevator elevator, EndEffector endEffector) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new elevatorSetHeightL2(elevator), new L2Wrist(endEffector));
+    addCommands(new elevatorSetHeightIntake(elevator), new Intakewc(endEffector));
   }
 }

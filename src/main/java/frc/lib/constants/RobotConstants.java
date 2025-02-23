@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.lib.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 

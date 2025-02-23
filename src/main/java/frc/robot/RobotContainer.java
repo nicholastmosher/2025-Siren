@@ -26,16 +26,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.CommandGroups.IntakeCG;
-import frc.robot.commands.CommandGroups.dealgify;
-import frc.robot.commands.CommandGroups.scorel2;
-import frc.robot.commands.CommandGroups.scorel3;
-import frc.robot.commands.CommandGroups.scorel4;
+import frc.lib.constants.SwerveConstants;
 import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.commands.EndEffector.OutakeClaw;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorIONeo;
+import frc.robot.commands.commandgroups.IntakeFull;
+import frc.robot.commands.commandgroups.dealgify;
+import frc.robot.commands.commandgroups.scorel2;
+import frc.robot.commands.commandgroups.scorel3;
+import frc.robot.commands.commandgroups.scorel4;
 import frc.robot.subsystems.claw.ClawIOVortex;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.claw.WristIONeo;
@@ -45,6 +43,8 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIONeo;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -75,7 +75,7 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  public final IntakeCG intakecommand;
+  public final IntakeFull intakecommand;
   public final scorel2 l2command;
   public final scorel3 l3command;
   public final scorel4 l4command;
@@ -90,10 +90,10 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+                new ModuleIOTalonFX(SwerveConstants.FrontLeft),
+                new ModuleIOTalonFX(SwerveConstants.FrontRight),
+                new ModuleIOTalonFX(SwerveConstants.BackLeft),
+                new ModuleIOTalonFX(SwerveConstants.BackRight));
 
         vision =
             new Vision(
@@ -108,7 +108,7 @@ public class RobotContainer {
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
-        intakecommand = new IntakeCG(elevator, endEffector);
+        intakecommand = new IntakeFull(elevator, endEffector);
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
@@ -122,10 +122,10 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+                new ModuleIOSim(SwerveConstants.FrontLeft),
+                new ModuleIOSim(SwerveConstants.FrontRight),
+                new ModuleIOSim(SwerveConstants.BackLeft),
+                new ModuleIOSim(SwerveConstants.BackRight));
 
         vision =
             new Vision(
@@ -138,7 +138,7 @@ public class RobotContainer {
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         elevator = new Elevator(new ElevatorIONeo());
 
-        intakecommand = new IntakeCG(elevator, endEffector);
+        intakecommand = new IntakeFull(elevator, endEffector);
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
@@ -170,7 +170,7 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo());
 
-        intakecommand = new IntakeCG(elevator, endEffector);
+        intakecommand = new IntakeFull(elevator, endEffector);
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
         l4command = new scorel4(elevator, endEffector);
@@ -211,12 +211,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+
+    double reduction = Math.pow(elevator.getPercentRaised(), 2);
+    double cappedreduction = Math.min(reduction, 0.70);
+
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> controller.getRightX()));
+            () -> (controller.getLeftY() * cappedreduction),
+            () -> (controller.getLeftX() * cappedreduction),
+            () -> (controller.getRightX() * cappedreduction)));
 
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
