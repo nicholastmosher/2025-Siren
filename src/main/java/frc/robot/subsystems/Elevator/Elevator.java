@@ -75,13 +75,13 @@ public class Elevator extends SubsystemBase {
     elevator.moveToPoint(
         Rotation2d.fromRotations(
             profile.calculate(
-                    profileTimer.getTimestamp(),
-                    new State(
-                        this.elevator.getEncoder().getPosition(),
-                        this.elevator.getEncoder().getVelocity()),
-                    new State(this.state.getTargetRotation2d().getRotations(), 0))
-                .position)
-                );
+                        profileTimer.getTimestamp(),
+                        new State(
+                            this.elevator.getEncoder().getPosition(),
+                            this.elevator.getEncoder().getVelocity()),
+                        new State(this.state.getTargetRotation2d().getRotations(), 0))
+                    .position
+                + feedforward.calculate(elevator.getEncoder().getVelocity())));
     elevator.updateInputs(elevatorinputs);
   }
 }
