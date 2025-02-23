@@ -1,6 +1,6 @@
 package frc.robot.subsystems.claw;
 
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -16,17 +16,13 @@ import org.littletonrobotics.junction.Logger;
 public class WristIONeo implements WristIO {
   private final SparkMax motor;
   private final SparkClosedLoopController pidController;
-  private final RelativeEncoder encoder;
-
-  // Desired angle for the wrist
-  private double desiredAngle = 0.0;
+  private final AbsoluteEncoder encoder;
 
   // Constructor
   public WristIONeo() {
 
     motor = new SparkMax(RobotConstants.EndEffectorConstants.wristmotorID, MotorType.kBrushless);
-    encoder = motor.getEncoder();
-    encoder.setPosition(0);
+    encoder = motor.getAbsoluteEncoder();
     pidController = motor.getClosedLoopController();
 
     SparkMaxConfig config = new SparkMaxConfig();
@@ -35,9 +31,9 @@ public class WristIONeo implements WristIO {
         .pid(0.5, 0, 0)
         .minOutput(-0.3)
         .maxOutput(0.3)
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .maxMotion
-        .allowedClosedLoopError(0.3)
+        .allowedClosedLoopError(0.1)
         .maxAcceleration(30000)
         .maxVelocity(5600);
 
@@ -58,11 +54,6 @@ public class WristIONeo implements WristIO {
   @Override
   public void stopMotor() {
     motor.stopMotor();
-  }
-
-  @Override
-  public void resetEncoder() {
-    encoder.setPosition(0);
   }
 
   @Override

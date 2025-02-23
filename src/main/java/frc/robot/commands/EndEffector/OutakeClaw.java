@@ -30,7 +30,7 @@ public class OutakeClaw extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    endeffector.outEndEffector(-0.3);
+    endeffector.outEndEffector(-0.5);
   }
 
   // Called once the command ends or is interrupted.

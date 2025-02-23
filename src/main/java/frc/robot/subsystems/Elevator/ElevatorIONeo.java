@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Elevator;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -95,7 +94,7 @@ public class ElevatorIONeo implements ElevatorIO {
     // {
     //   stopElevator();
     // }
-    leadpid.setReference(targetRot.getRotations(), ControlType.kMAXMotionPositionControl);
+    // leadpid.setReference(targetRot.getRotations(), ControlType.kMAXMotionPositionControl);
     // pid2.setReference((-getEncoder()), ControlType.kMAXMotionPositionControl);
   }
 

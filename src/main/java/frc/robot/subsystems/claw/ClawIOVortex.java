@@ -1,16 +1,22 @@
 package frc.robot.subsystems.claw;
 
+import com.ctre.phoenix6.configs.ProximityParamsConfigs;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.RobotConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ClawIOVortex implements ClawIO {
 
   private final SparkFlex motor;
   private final SparkClosedLoopController m_controller;
+
+  private final CANrange frontCaNrange;
+  private final CANrange intakeCaNrange;
 
   // Constructor
   public ClawIOVortex() {
@@ -27,6 +33,16 @@ public class ClawIOVortex implements ClawIO {
         .allowedClosedLoopError(0.5);
 
     m_controller = motor.getClosedLoopController();
+
+    frontCaNrange = new CANrange(RobotConstants.EndEffectorConstants.frontcanrange);
+    frontCaNrange
+        .getConfigurator()
+        .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
+
+    intakeCaNrange = new CANrange(RobotConstants.EndEffectorConstants.frontcanrange);
+    intakeCaNrange
+        .getConfigurator()
+        .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
   }
 
   @Override
@@ -42,6 +58,14 @@ public class ClawIOVortex implements ClawIO {
   @Override
   public double getPosition() {
     return motor.getEncoder().getPosition();
+  }
+
+  @Override
+  public boolean getIntaked() {
+    Logger.recordOutput("claw/canrangefront", frontCaNrange.getDistance().getValueAsDouble());
+    Logger.recordOutput("claw/canrangefrontbool", frontCaNrange.getIsDetected().getValue());
+
+    return frontCaNrange.getIsDetected().getValue();
   }
 
   @Override

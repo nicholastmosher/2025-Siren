@@ -44,14 +44,13 @@ public class EndEffector extends SubsystemBase {
     this.claw.stopMotor();
   }
 
-  public void resetWristEncoder() {
-    this.wrist.resetEncoder();
+  public boolean getIntaked() {
+    return this.claw.getIntaked();
   }
 
   @Override
   public void periodic() {
     this.claw.updateInputs();
     this.wrist.updateInputs();
-    this.wrist.log();
   }
 }

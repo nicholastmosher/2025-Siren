@@ -16,8 +16,6 @@ public interface WristIO {
 
   public void log();
 
-  public void resetEncoder();
-
   // Updates any periodic logging or state
   public default void updateInputs() {}
   ;
