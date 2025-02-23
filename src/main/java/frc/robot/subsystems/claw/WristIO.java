@@ -14,8 +14,6 @@ public interface WristIO {
 
   public void stopMotor();
 
-  public void log();
-
   // Updates any periodic logging or state
   public default void updateInputs() {}
   ;
