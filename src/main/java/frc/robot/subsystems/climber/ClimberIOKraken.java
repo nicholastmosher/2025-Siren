@@ -1,7 +1,6 @@
 package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.constants.RobotConstants;
 
 public class ClimberIOKraken implements ClimberIO {
@@ -13,8 +12,8 @@ public class ClimberIOKraken implements ClimberIO {
   }
 
   @Override
-  public void setAngle(Rotation2d angle) {
-    motor.setPosition(angle.getDegrees());
+  public void move(double input) {
+    motor.set(input);
   }
 
   public double getAngle() {

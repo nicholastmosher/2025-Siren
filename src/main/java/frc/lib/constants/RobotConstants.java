@@ -25,12 +25,31 @@ public class RobotConstants {
     public static int frontcanrange = 40;
     public static int intakecanrange = 41;
 
-    public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0);
-    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.124);
-    public static final Rotation2d L1rot = new Rotation2d().fromRotations(0);
-    public static final Rotation2d L2rot = new Rotation2d().fromRotations(0);
-    public static final Rotation2d L3rot = new Rotation2d().fromRotations(0);
-    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0);
+    public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.7);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.805);
+    public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.7);
+    public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.7);
+    public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.7);
+    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.7);
+
+    public static enum WristState {
+      DEFAULT(defaultrot),
+      INTAKE(intakerot),
+      L1(L1rot),
+      L2(L2rot),
+      L3(L3rot),
+      L4(L4rot);
+
+      private final Rotation2d target;
+
+      WristState(Rotation2d rotation2d) {
+        this.target = rotation2d;
+      }
+
+      public Rotation2d getTargetRotation2d() {
+        return target;
+      }
+    }
   }
 
   public static class ElevatorConstants {
@@ -45,7 +64,7 @@ public class RobotConstants {
     public static final Rotation2d L2height = new Rotation2d().fromRotations(-15);
     public static final Rotation2d dealgifyheight = new Rotation2d().fromRotations(-(17.5));
     public static final Rotation2d L3height = new Rotation2d().fromRotations(-37.5);
-    public static final Rotation2d L4height = new Rotation2d().fromRotations(-69.25);
+    public static final Rotation2d L4height = new Rotation2d().fromRotations(-70);
 
     public static enum elevatorState {
       DEFAULT(defaultheight),

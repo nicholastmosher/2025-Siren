@@ -31,7 +31,7 @@ public class Elevator extends SubsystemBase {
     this.state = elevatorState.DEFAULT;
 
     profile = new TrapezoidProfile(new Constraints(5000, 50000));
-    feedforward = new ElevatorFeedforward(0, 0.15, 0);
+    feedforward = new ElevatorFeedforward(0, 0.0, 0);
     profileTimer = new Timer();
     profileTimer.start();
   }
@@ -71,17 +71,18 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    elevator.moveToPoint(
-        Rotation2d.fromRotations(
-            profile.calculate(
-                        profileTimer.getTimestamp(),
-                        new State(
-                            this.elevator.getEncoder().getPosition(),
-                            this.elevator.getEncoder().getVelocity()),
-                        new State(this.state.getTargetRotation2d().getRotations(), 0))
-                    .position
-                + feedforward.calculate(elevator.getEncoder().getVelocity())));
+    if (profileTimer.isRunning()) {
+      elevator.moveToPoint(
+          Rotation2d.fromRotations(
+              profile.calculate(
+                          profileTimer.getTimestamp(),
+                          new State(
+                              this.elevator.getEncoder().getPosition(),
+                              this.elevator.getEncoder().getVelocity()),
+                          new State(this.state.getTargetRotation2d().getRotations(), 0))
+                      .position
+                  + feedforward.calculate(elevator.getEncoder().getVelocity())));
+    }
 
     elevator.updateInputs(elevatorinputs);
   }

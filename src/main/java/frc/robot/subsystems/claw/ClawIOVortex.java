@@ -39,7 +39,7 @@ public class ClawIOVortex implements ClawIO {
         .getConfigurator()
         .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
 
-    intakeCaNrange = new CANrange(RobotConstants.EndEffectorConstants.frontcanrange);
+    intakeCaNrange = new CANrange(RobotConstants.EndEffectorConstants.intakecanrange);
     intakeCaNrange
         .getConfigurator()
         .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
@@ -62,16 +62,12 @@ public class ClawIOVortex implements ClawIO {
 
   @Override
   public boolean getFrontIntaked() {
-    Logger.recordOutput("claw/canrangefront", frontCaNrange.getDistance().getValueAsDouble());
-    Logger.recordOutput("claw/canrangefrontbool", frontCaNrange.getIsDetected().getValue());
 
     return frontCaNrange.getIsDetected().getValue();
   }
 
   @Override
   public boolean getIntakeIntaked() {
-    Logger.recordOutput("claw/canrangefront", intakeCaNrange.getDistance().getValueAsDouble());
-    Logger.recordOutput("claw/canrangefrontbool", intakeCaNrange.getIsDetected().getValue());
 
     return intakeCaNrange.getIsDetected().getValue();
   }
@@ -79,5 +75,13 @@ public class ClawIOVortex implements ClawIO {
   @Override
   public void stopMotor() {
     motor.stopMotor();
+  }
+
+  @Override
+  public void updateInputs(ClawIOInputs inputs) {
+    Logger.recordOutput("claw/canrangefront", frontCaNrange.getDistance().getValueAsDouble());
+    Logger.recordOutput("claw/canrangefrontbool", frontCaNrange.getIsDetected().getValue());
+    Logger.recordOutput("claw/canrangeintake", intakeCaNrange.getDistance().getValueAsDouble());
+    Logger.recordOutput("claw/canrangeintakebool", intakeCaNrange.getIsDetected().getValue());
   }
 }

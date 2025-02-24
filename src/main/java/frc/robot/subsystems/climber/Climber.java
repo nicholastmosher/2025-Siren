@@ -18,6 +18,10 @@ public class Climber extends SubsystemBase {
     inputs = new ClimberIOInputsAutoLogged();
   }
 
+  public void driveClimber(double input) {
+    climber.move(input);
+  }
+
   @Override
   public void periodic() {
 

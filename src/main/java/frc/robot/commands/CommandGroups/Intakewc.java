@@ -4,11 +4,13 @@
 
 package frc.robot.commands.commandgroups;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.EndEffector.Clawbackwardcenter;
 import frc.robot.commands.EndEffector.Clawforwardcenter;
 import frc.robot.commands.EndEffector.DefaultWrist;
 import frc.robot.commands.EndEffector.IntakeClaw;
+import frc.robot.commands.EndEffector.IntakeWrist;
 import frc.robot.subsystems.claw.EndEffector;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,7 +24,7 @@ public class Intakewc extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new IntakeClaw(ee),
+        new ParallelDeadlineGroup(new IntakeClaw(ee), new IntakeWrist(ee)),
         new Clawforwardcenter(ee),
         new Clawbackwardcenter(ee),
         new DefaultWrist(ee));

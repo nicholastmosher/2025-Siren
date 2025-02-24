@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimberIO {
@@ -14,7 +13,7 @@ public interface ClimberIO {
     ;
   }
 
-  public void setAngle(Rotation2d angle);
+  public void move(double movement);
 
   public void stopMotor();
 

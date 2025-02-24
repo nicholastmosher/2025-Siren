@@ -30,7 +30,7 @@ public class Clawforwardcenter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    endeffector.inEndEffector(-0.15);
+    endeffector.inEndEffector(-0.1);
   }
 
   // Called once the command ends or is interrupted.

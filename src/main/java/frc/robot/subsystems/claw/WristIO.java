@@ -14,8 +14,10 @@ public interface WristIO {
 
   public void stopMotor();
 
+  public double getRotation();
+
+  public double getVelocity();
+
   // Updates any periodic logging or state
   public default void updateInputs(WristIOInputs inputs) {}
-  ;
-  ;
 }

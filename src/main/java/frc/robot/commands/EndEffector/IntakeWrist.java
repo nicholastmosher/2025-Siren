@@ -14,7 +14,7 @@
 package frc.robot.commands.EndEffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.constants.RobotConstants;
+import frc.lib.constants.RobotConstants.EndEffectorConstants.WristState;
 import frc.robot.subsystems.claw.EndEffector;
 
 public class IntakeWrist extends Command {
@@ -31,7 +31,7 @@ public class IntakeWrist extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_wrist.setWristAngle(RobotConstants.EndEffectorConstants.intakerot);
+    m_wrist.setWristAngle(WristState.INTAKE);
   }
 
   // Called once the command ends or is interrupted.

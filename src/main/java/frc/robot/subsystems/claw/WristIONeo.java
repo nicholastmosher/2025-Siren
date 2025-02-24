@@ -26,9 +26,10 @@ public class WristIONeo implements WristIO {
     pidController = motor.getClosedLoopController();
 
     SparkMaxConfig config = new SparkMaxConfig();
+    config.absoluteEncoder.zeroOffset(0.2926049 + 0.3);
     config
         .closedLoop
-        .pid(0.5, 0, 0)
+        .pid(0.6, 0, 0)
         .minOutput(-0.3)
         .maxOutput(0.3)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -42,13 +43,18 @@ public class WristIONeo implements WristIO {
 
   @Override
   public void setAngle(Rotation2d angle) {
-    pidController.setReference(angle.getRotations(), ControlType.kMAXMotionPositionControl);
+    pidController.setReference(angle.getRotations(), ControlType.kPosition);
   }
 
-  public Rotation2d getAngle() {
+  @Override
+  public double getRotation() {
 
-    return Rotation2d.fromRotations(
-        encoder.getPosition()); // Adjust based on your encoder configuration
+    return encoder.getPosition();
+  }
+
+  @Override
+  public double getVelocity() {
+    return encoder.getVelocity();
   }
 
   @Override
@@ -58,7 +64,7 @@ public class WristIONeo implements WristIO {
 
   @Override
   public void updateInputs(WristIOInputs inputs) {
-    inputs.angle = getAngle().getDegrees();
+    inputs.angle = getRotation();
     Logger.recordOutput("Wrist/angle", encoder.getPosition());
   }
 }

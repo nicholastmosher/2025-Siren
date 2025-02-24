@@ -37,6 +37,8 @@ import frc.robot.commands.commandgroups.scorel4;
 import frc.robot.subsystems.claw.ClawIOVortex;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.claw.WristIONeo;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIOKraken;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -67,6 +69,8 @@ public class RobotContainer {
   private final Elevator elevator;
 
   private final EndEffector endEffector;
+
+  private final Climber climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -106,6 +110,8 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo());
 
+        climber = new Climber(new ClimberIOKraken());
+
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
         intakecommand = new IntakeFull(elevator, endEffector);
@@ -138,6 +144,8 @@ public class RobotContainer {
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         elevator = new Elevator(new ElevatorIONeo());
 
+        climber = new Climber(new ClimberIOKraken());
+
         intakecommand = new IntakeFull(elevator, endEffector);
         l2command = new scorel2(elevator, endEffector);
         l3command = new scorel3(elevator, endEffector);
@@ -169,6 +177,8 @@ public class RobotContainer {
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
         elevator = new Elevator(new ElevatorIONeo());
+
+        climber = new Climber(new ClimberIOKraken());
 
         intakecommand = new IntakeFull(elevator, endEffector);
         l2command = new scorel2(elevator, endEffector);
@@ -225,6 +235,9 @@ public class RobotContainer {
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
+    // climber.setDefaultCommand(
+    //     new InstantCommand(() -> climber.driveClimber(controller.getLeftY()), climber));
+
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
 
     // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -240,10 +253,10 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().whileTrue(intakecommand);
-    controller.leftBumper().whileTrue(l2command);
-    controller.x().whileTrue(l3command);
-    controller.a().whileTrue(l4command);
+    controller.leftTrigger().onTrue(intakecommand);
+    controller.leftBumper().onTrue(l2command);
+    controller.x().onTrue(l3command);
+    controller.a().onTrue(l4command);
     controller.rightBumper().onTrue(drop.withTimeout(1));
     // controller
     //     .rightTrigger()
