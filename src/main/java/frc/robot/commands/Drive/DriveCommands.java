@@ -13,6 +13,11 @@
 
 package frc.robot.commands.Drive;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -286,6 +291,27 @@ public class DriveCommands {
                               + formatter.format(Units.metersToInches(wheelRadius))
                               + " inches");
                     })));
+  }
+
+  public static Command PathToOrigin() {
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses();
+    PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints,
+            constraints,
+            null, // The ideal starting state, this is only relevant for pre-planned paths, so can
+            // be null for on-the-fly paths.
+            new GoalEndState(
+                0.0,
+                Rotation2d.fromDegrees(
+                    0)) // Goal end state. You can set a holonomic rotation here. If using a
+            // differential drivetrain, the rotation will have no effect.
+            );
+
+    return AutoBuilder.followPath(path);
   }
 
   private static class WheelRadiusCharacterizationState {

@@ -48,10 +48,6 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -101,12 +97,13 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                new VisionIOPhotonVision(camera2Name, robotToCamera2),
-                new VisionIOPhotonVision(camera3Name, robotToCamera3),
-                new VisionIOPhotonVision(camera4Name, robotToCamera4),
-                new VisionIOLimelight(limelightName, drive::getRotation));
+                drive::addVisionMeasurement // ,
+                // new VisionIOPhotonVision(camera1Name, robotToCamera1),
+                // new VisionIOPhotonVision(camera2Name, robotToCamera2),
+                // new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                // new VisionIOPhotonVision(camera4Name, robotToCamera4),
+                // new VisionIOLimelight(limelightName, drive::getRotation)
+                );
 
         elevator = new Elevator(new ElevatorIONeo());
 
@@ -135,11 +132,12 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
-                new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
-                new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
+                drive::addVisionMeasurement // ,
+                // new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
+                // new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
+                // new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
+                // new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose)
+                );
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
         elevator = new Elevator(new ElevatorIONeo());
@@ -167,12 +165,13 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement,
-                new VisionIO() {},
-                new VisionIO() {},
-                new VisionIO() {},
-                new VisionIO() {},
-                new VisionIO() {});
+                drive::addVisionMeasurement // ,
+                // new VisionIO() {},
+                // new VisionIO() {},
+                // new VisionIO() {},
+                // new VisionIO() {},
+                // new VisionIO() {}
+                );
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
 
@@ -225,12 +224,12 @@ public class RobotContainer {
     double reduction = Math.pow(elevator.getPercentRaised(), 2);
     double cappedreduction = Math.min(reduction, 0.70);
 
-    // drive.setDefaultCommand(
-    //     DriveCommands.joystickDrive(
-    //         drive,
-    //         () -> (controller.getLeftY() * cappedreduction),
-    //         () -> (controller.getLeftX() * cappedreduction),
-    //         () -> (controller.getRightX() * cappedreduction)));
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> (controller.getLeftY() * cappedreduction),
+            () -> (controller.getLeftX() * cappedreduction),
+            () -> (controller.getRightX() * cappedreduction)));
 
     elevator.setDefaultCommand(
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
@@ -253,22 +252,25 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.leftTrigger().onTrue(intakecommand);
-    controller.leftBumper().onTrue(l2command);
-    controller.x().onTrue(l3command);
-    controller.a().onTrue(l4command);
-    controller.rightBumper().onTrue(drop.withTimeout(1));
+    // controller.leftTrigger().onTrue(intakecommand);
+    // controller.leftBumper().onTrue(l2command);
+    // controller.x().onTrue(l3command);
+    // controller.a().onTrue(l4command);
+    // controller.rightBumper().onTrue(drop.withTimeout(1));
     // controller
     //     .rightTrigger()
     //     .whileTrue(
     //         AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null,
     // null)));
+
+    controller.rightTrigger().whileTrue(DriveCommands.PathToOrigin());
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
-   * @return the command to run in autonomous
+   * @return the command to ru
+   *     <p>n in autonomous
    */
   public Command getAutonomousCommand() {
     return new PathPlannerAuto("cauto1");
