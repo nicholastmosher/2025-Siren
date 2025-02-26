@@ -17,6 +17,10 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -48,6 +52,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
 import frc.robot.subsystems.vision.Vision;
+import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -67,6 +72,25 @@ public class RobotContainer {
   private final EndEffector endEffector;
 
   private final Climber climber;
+
+  List<Waypoint> waypoints =
+      PathPlannerPath.waypointsFromPoses(
+          new Pose2d(0.1, 0.000, Rotation2d.fromDegrees(0)),
+          new Pose2d(0.05, 0.0000, Rotation2d.fromDegrees(0)));
+  PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+
+  PathPlannerPath path =
+      new PathPlannerPath(
+          waypoints,
+          constraints,
+          null, // The ideal starting state, this is only relevant for pre-planned paths, so can
+          // be null for on-the-fly paths.
+          new GoalEndState(
+              0.0,
+              Rotation2d.fromDegrees(
+                  0)) // Goal end state. You can set a holonomic rotation here. If using a
+          // differential drivetrain, the rotation will have no effect.
+          );
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -222,7 +246,7 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     double reduction = Math.pow(elevator.getPercentRaised(), 2);
-    double cappedreduction = Math.min(reduction, 0.70);
+    double cappedreduction = 1; // Math.min(reduction, 0.70);
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -263,7 +287,7 @@ public class RobotContainer {
     //         AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null,
     // null)));
 
-    controller.rightTrigger().whileTrue(DriveCommands.PathToOrigin());
+    controller.rightTrigger().whileTrue(AutoBuilder.followPath(path));
   }
 
   /**

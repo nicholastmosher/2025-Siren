@@ -293,9 +293,9 @@ public class DriveCommands {
                     })));
   }
 
-  public static Command PathToOrigin() {
+  public Command PathToOrigin() {
 
-    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses();
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(new Pose2d(), new Pose2d());
     PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
 
     PathPlannerPath path =

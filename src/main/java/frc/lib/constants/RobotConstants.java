@@ -26,7 +26,7 @@ public class RobotConstants {
     public static int intakecanrange = 41;
 
     public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.7);
-    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.805);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.815);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.7);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.7);
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.7);

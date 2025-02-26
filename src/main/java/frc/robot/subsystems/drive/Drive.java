@@ -72,7 +72,7 @@ public class Drive extends SubsystemBase {
                   SwerveConstants.BackRight.LocationX, SwerveConstants.BackRight.LocationY)));
 
   // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088;
+  private static final double ROBOT_MASS_KG = 52.163;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 1.2;
   private static final RobotConfig PP_CONFIG =
@@ -119,10 +119,10 @@ public class Drive extends SubsystemBase {
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
-    modules[0] = new Module(frModuleIO, 0, SwerveConstants.FrontRight);
-    modules[2] = new Module(flModuleIO, 1, SwerveConstants.FrontLeft);
-    modules[1] = new Module(brModuleIO, 2, SwerveConstants.BackRight);
-    modules[3] = new Module(blModuleIO, 3, SwerveConstants.BackLeft);
+    modules[0] = new Module(flModuleIO, 0, SwerveConstants.FrontLeft);
+    modules[1] = new Module(frModuleIO, 1, SwerveConstants.FrontRight);
+    modules[2] = new Module(blModuleIO, 2, SwerveConstants.BackLeft);
+    modules[3] = new Module(brModuleIO, 3, SwerveConstants.BackRight);
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -136,8 +136,7 @@ public class Drive extends SubsystemBase {
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
-        new PPHolonomicDriveController(
-            new PIDConstants(15, 0.75, 0.0), new PIDConstants(15, 0.75, 0.0)),
+        new PPHolonomicDriveController(new PIDConstants(5, 0, 0.0), new PIDConstants(2, 0, 0.0)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
