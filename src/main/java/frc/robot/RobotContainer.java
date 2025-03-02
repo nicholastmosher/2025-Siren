@@ -17,10 +17,6 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -32,12 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.constants.SwerveConstants;
 import frc.robot.commands.Drive.DriveCommands;
-import frc.robot.commands.EndEffector.OutakeClaw;
-import frc.robot.commands.commandgroups.IntakeFull;
-import frc.robot.commands.commandgroups.dealgify;
-import frc.robot.commands.commandgroups.scorel2;
-import frc.robot.commands.commandgroups.scorel3;
-import frc.robot.commands.commandgroups.scorel4;
 import frc.robot.subsystems.claw.ClawIOVortex;
 import frc.robot.subsystems.claw.EndEffector;
 import frc.robot.subsystems.claw.WristIONeo;
@@ -51,8 +41,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
+import frc.robot.subsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
-import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -63,34 +53,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
+  private final StateHandler stateHandler = new StateHandler();
   private final Drive drive;
-
   private final Vision vision;
-
   private final Elevator elevator;
-
   private final EndEffector endEffector;
-
   private final Climber climber;
-
-  List<Waypoint> waypoints =
-      PathPlannerPath.waypointsFromPoses(
-          new Pose2d(0.1, 0.000, Rotation2d.fromDegrees(0)),
-          new Pose2d(0.05, 0.0000, Rotation2d.fromDegrees(0)));
-  PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-
-  PathPlannerPath path =
-      new PathPlannerPath(
-          waypoints,
-          constraints,
-          null, // The ideal starting state, this is only relevant for pre-planned paths, so can
-          // be null for on-the-fly paths.
-          new GoalEndState(
-              0.0,
-              Rotation2d.fromDegrees(
-                  180)) // Goal end state. You can set a holonomic rotation here. If using a
-          // differential drivetrain, the rotation will have no effect.
-          );
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -98,13 +66,6 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
-
-  public final IntakeFull intakecommand;
-  public final scorel2 l2command;
-  public final scorel3 l3command;
-  public final scorel4 l4command;
-  public final dealgify dealgifycommand;
-  public final OutakeClaw drop;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -129,18 +90,9 @@ public class RobotContainer {
                 // new VisionIOLimelight(limelightName, drive::getRotation)
                 );
 
-        elevator = new Elevator(new ElevatorIONeo());
-
+        elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
-
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
-
-        intakecommand = new IntakeFull(elevator, endEffector);
-        l2command = new scorel2(elevator, endEffector);
-        l3command = new scorel3(elevator, endEffector);
-        l4command = new scorel4(elevator, endEffector);
-        dealgifycommand = new dealgify(elevator, endEffector);
-        drop = new OutakeClaw(endEffector);
 
         break;
 
@@ -164,16 +116,8 @@ public class RobotContainer {
                 );
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
-        elevator = new Elevator(new ElevatorIONeo());
-
+        elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
-
-        intakecommand = new IntakeFull(elevator, endEffector);
-        l2command = new scorel2(elevator, endEffector);
-        l3command = new scorel3(elevator, endEffector);
-        l4command = new scorel4(elevator, endEffector);
-        dealgifycommand = new dealgify(elevator, endEffector);
-        drop = new OutakeClaw(endEffector);
         break;
 
       default:
@@ -198,17 +142,8 @@ public class RobotContainer {
                 );
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
-
-        elevator = new Elevator(new ElevatorIONeo());
-
+        elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
-
-        intakecommand = new IntakeFull(elevator, endEffector);
-        l2command = new scorel2(elevator, endEffector);
-        l3command = new scorel3(elevator, endEffector);
-        l4command = new scorel4(elevator, endEffector);
-        dealgifycommand = new dealgify(elevator, endEffector);
-        drop = new OutakeClaw(endEffector);
 
         break;
     }
@@ -275,20 +210,6 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
-
-    // controller.leftTrigger().onTrue(intakecommand);
-    // controller.leftBumper().onTrue(l2command);
-    // controller.x().onTrue(l3command);
-    // controller.a().onTrue(l4command);
-    // controller.rightBumper().onTrue(drop.withTimeout(1));
-    // controller
-    //     .rightTrigger()
-    //     .whileTrue(
-    //         AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null,
-    // null)));
-
-    // controller.rightTrigger().whileTrue(AutoBuilder.followPath(path));
-    controller.rightTrigger().whileTrue(DriveCommands.PathToOrigin());
   }
 
   /**

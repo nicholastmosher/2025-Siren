@@ -6,7 +6,6 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.lib.constants.RobotConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
@@ -14,13 +13,12 @@ public interface ElevatorIO {
   @AutoLog
   public static class ElevatorIOInputs {
     Rotation2d axleRotation;
+    Rotation2d motorRotation;
+    double error;
     double height;
     boolean leadisConnected;
     boolean followerisConnected;
-    String enumState;
   }
-
-  public void moveToState(RobotConstants.ElevatorConstants.elevatorState state);
 
   public void move(double input);
 

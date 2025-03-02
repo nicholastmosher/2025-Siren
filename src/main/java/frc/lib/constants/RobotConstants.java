@@ -16,6 +16,7 @@ public class RobotConstants {
   public static class ClimberConstants {
 
     public static final int climberMotorID = 50;
+    public static final int limitSwitchID = 1;
   }
 
   public static class EndEffectorConstants {
@@ -32,24 +33,10 @@ public class RobotConstants {
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.7);
     public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.7);
 
-    public static enum WristState {
-      DEFAULT(defaultrot),
-      INTAKE(intakerot),
-      L1(L1rot),
-      L2(L2rot),
-      L3(L3rot),
-      L4(L4rot);
-
-      private final Rotation2d target;
-
-      WristState(Rotation2d rotation2d) {
-        this.target = rotation2d;
-      }
-
-      public Rotation2d getTargetRotation2d() {
-        return target;
-      }
-    }
+    public static final double staticSpeed = 0.0;
+    public static final double intakeSpeed = 0.0;
+    public static final double centerForwardSpeed = 0.0;
+    public static final double centerBackwardsSpeed = 0.0;
   }
 
   public static class ElevatorConstants {
@@ -65,25 +52,20 @@ public class RobotConstants {
     public static final Rotation2d dealgifyheight = new Rotation2d().fromRotations(-(17.5));
     public static final Rotation2d L3height = new Rotation2d().fromRotations(-37.5);
     public static final Rotation2d L4height = new Rotation2d().fromRotations(-70);
+    public static final Rotation2d maxHeight = new Rotation2d().fromRotations(72);
+  }
 
-    public static enum elevatorState {
-      DEFAULT(defaultheight),
-      INTAKE(intakeheight),
-      L1(L1height),
-      L2(L2height),
-      DEALGIFY(dealgifyheight),
-      L3(L3height),
-      L4(L4height);
+  public static class GroundIntakeConstants {
 
-      private final Rotation2d target;
+    public static final int tiltMotorID = 1;
+    public static final int spinMotorID = 1;
 
-      elevatorState(Rotation2d rotation2d) {
-        this.target = rotation2d;
-      }
+    public static final double staticSpeed = 0.0;
+    public static final double intakeSpeed = 0.0;
+    public static final double holdSpeed = 0.0;
 
-      public Rotation2d getTargetRotation2d() {
-        return target;
-      }
-    }
+    public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(0);
+    public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 }

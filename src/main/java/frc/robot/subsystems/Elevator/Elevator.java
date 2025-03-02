@@ -5,28 +5,31 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.constants.RobotConstants.ElevatorConstants.elevatorState;
+import frc.lib.enums.robotstate;
+import frc.robot.subsystems.statehandler.StateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private final ElevatorIO elevator;
 
   private ElevatorIOInputsAutoLogged elevatorinputs;
-
-  private elevatorState state;
+  private final StateHandler stateHandler;
 
   private TrapezoidProfile profile;
   private ElevatorFeedforward feedforward;
   private Timer profileTimer;
 
-  public Elevator(ElevatorIO elevator) {
+  public Elevator(ElevatorIO elevator, StateHandler handler) {
     this.elevator = elevator;
     elevatorinputs = new ElevatorIOInputsAutoLogged();
-    this.state = elevatorState.DEFAULT;
+    this.stateHandler = handler;
 
     profile = new TrapezoidProfile(new Constraints(5000, 50000));
     feedforward = new ElevatorFeedforward(0, 0.0, 0);
@@ -38,25 +41,9 @@ public class Elevator extends SubsystemBase {
     this.elevator.move(input);
   }
 
-  public void setGoalState(elevatorState givenstate) {
-    if (givenstate != this.state) {
-      this.state = givenstate;
-      profileTimer.reset();
-      profileTimer.start();
-    }
-  }
-
-  public elevatorState getGoalState() {
-    return this.state;
-  }
-
   public void stopElevator() {
     elevator.stopElevator();
     profileTimer.stop();
-  }
-
-  public ElevatorIO getElevatorInstance() {
-    return this.elevator;
   }
 
   public void resetEncoder() {
@@ -69,19 +56,25 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if (profileTimer.isRunning()) {
-    //   elevator.moveToPoint(
-    //       Rotation2d.fromRotations(
-    //           profile.calculate(
-    //                       profileTimer.getTimestamp(),
-    //                       new State(
-    //                           this.elevator.getEncoder().getPosition(),
-    //                           this.elevator.getEncoder().getVelocity()),
-    //                       new State(this.state.getTargetRotation2d().getRotations(), 0))
-    //                   .position
-    //               + feedforward.calculate(elevator.getEncoder().getVelocity())));
-    // }
+    if (stateHandler.getState() == robotstate.STOP) {
+      profileTimer.stop();
+      elevator.stopElevator();
+    }
+    if (profileTimer.isRunning()) {
+      elevator.moveToPoint(
+          Rotation2d.fromRotations(
+              profile.calculate(
+                          profileTimer.getTimestamp(),
+                          new State(
+                              this.elevator.getEncoder().getPosition(),
+                              this.elevator.getEncoder().getVelocity()),
+                          new State(
+                              this.stateHandler.getState().getElevatorTarget().getRotations(), 0))
+                      .position
+                  + feedforward.calculate(elevator.getEncoder().getVelocity())));
+    }
 
     elevator.updateInputs(elevatorinputs);
+    Logger.processInputs("Elevator", elevatorinputs);
   }
 }

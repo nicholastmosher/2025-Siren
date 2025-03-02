@@ -11,8 +11,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.constants.RobotConstants;
-import frc.lib.constants.RobotConstants.ElevatorConstants.elevatorState;
-import org.littletonrobotics.junction.Logger;
+import frc.lib.constants.RobotConstants.ElevatorConstants;
 
 public class ElevatorIONeo implements ElevatorIO {
 
@@ -25,14 +24,10 @@ public class ElevatorIONeo implements ElevatorIO {
   private final SparkMaxConfig leadConfig;
   private final SparkMaxConfig motor2config;
 
-  // private final DigitalInput limitswitchBottom;
-
   // private final DigitalInput bottomLimitSwitch;
   // private final DigitalInput topLimitSwitch;
 
   private final double rotationstoInches = 0.0;
-
-  private elevatorState state = elevatorState.DEFAULT;
 
   public ElevatorIONeo() {
 
@@ -41,7 +36,6 @@ public class ElevatorIONeo implements ElevatorIO {
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
     motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
-    // limitswitchBottom = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
 
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
@@ -61,20 +55,6 @@ public class ElevatorIONeo implements ElevatorIO {
     motor2config.apply(leadConfig);
     motor2config.follow(leadMotor, true);
     motor2.configure(motor2config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
-
-  @Override
-  public void moveToState(RobotConstants.ElevatorConstants.elevatorState state) {
-    boolean atLowestPoint = false;
-    boolean atHighestPoint = false;
-    // if (bottomLimitSwitch.get()) {
-    //   atLowestPoint = true;
-    // }
-    // if (topLimitSwitch.get()) {
-    //   atHighestPoint = true;
-    // }
-    this.state = state;
-    moveToPoint(state.getTargetRotation2d());
   }
 
   @Override
@@ -133,12 +113,9 @@ public class ElevatorIONeo implements ElevatorIO {
   @Override
   public double getPercentRaised() {
 
-    return (getEncoder().getPosition() / elevatorState.L4.getTargetRotation2d().getRotations());
+    return (getEncoder().getPosition() / ElevatorConstants.maxHeight.getRotations());
   }
 
   @Override
-  public void updateInputs(ElevatorIOInputs inputs) {
-    Logger.recordOutput("elevator/encoder", getEncoder().getPosition());
-    inputs.enumState = state.name();
-  }
+  public void updateInputs(ElevatorIOInputs inputs) {}
 }
