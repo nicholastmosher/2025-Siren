@@ -4,8 +4,10 @@
 
 package frc.robot.commands.CommandGroups;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.StateSet.IntakeStates.intakeCenterBackwardState;
@@ -23,6 +25,6 @@ public class Intake extends SequentialCommandGroup {
   public Intake(StateHandler stateHandler, EndEffector ee, Elevator e, CommandXboxController controller) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new intakeState(stateHandler, ee), new InstantCommand(), new intakeCenterForwardState(stateHandler, ee), new intakeCenterBackwardState(stateHandler, ee));
+    addCommands(new intakeState(stateHandler, ee), new ParallelDeadlineGroup(new SequentialCommandGroup(new intakeCenterForwardState(stateHandler, ee), new intakeCenterBackwardState(stateHandler, ee))), new InstantCommand(() -> controller.setRumble(RumbleType.kBothRumble, 0.3)).withTimeout(0.3));
   }
 }
