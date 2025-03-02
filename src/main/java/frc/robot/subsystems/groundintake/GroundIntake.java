@@ -1,0 +1,29 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems.groundintake;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.enums.robotstate;
+import frc.robot.subsystems.statehandler.StateHandler;
+
+public class GroundIntake extends SubsystemBase {
+  private final StateHandler stateHandler;
+  private final GroundIntakeIO gi;
+  /** Creates a new GroundIntake. */
+  public GroundIntake(GroundIntakeIO groundintakeimpl, StateHandler handler) {
+    this.stateHandler = handler;
+    this.gi = groundintakeimpl;
+  }
+
+  @Override
+  public void periodic() {
+    if (this.stateHandler.getState() == robotstate.STOP) {
+      this.gi.stopMotors();
+    }
+
+    this.gi.setAngle(this.stateHandler.getState().getGroundIntakeTarget());
+    this.gi.setSpeed(this.stateHandler.getState().getGroundIntakeSpeedTarget());
+  }
+}

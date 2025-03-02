@@ -59,6 +59,8 @@ public class Elevator extends SubsystemBase {
     if (stateHandler.getState() == robotstate.STOP) {
       profileTimer.stop();
       elevator.stopElevator();
+    } else {
+      profileTimer.start();
     }
     if (profileTimer.isRunning()) {
       elevator.moveToPoint(

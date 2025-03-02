@@ -68,4 +68,6 @@ public class RobotConstants {
     public static final Rotation2d intakingangle = Rotation2d.fromRotations(0);
     public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
+
+  public static class GeneralConstants {}
 }

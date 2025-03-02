@@ -13,7 +13,7 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.lib.constants.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -28,9 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.constants.SwerveConstants;
 import frc.robot.commands.Drive.DriveCommands;
-import frc.robot.subsystems.claw.ClawIOVortex;
-import frc.robot.subsystems.claw.EndEffector;
-import frc.robot.subsystems.claw.WristIONeo;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIOKraken;
 import frc.robot.subsystems.drive.Drive;
@@ -41,6 +38,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
+import frc.robot.subsystems.endeffector.ClawIOVortex;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.WristIONeo;
 import frc.robot.subsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -92,7 +92,7 @@ public class RobotContainer {
 
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
         break;
 
@@ -115,7 +115,7 @@ public class RobotContainer {
                 // new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose)
                 );
 
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
         break;
@@ -141,7 +141,7 @@ public class RobotContainer {
                 // new VisionIO() {}
                 );
 
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
         climber = new Climber(new ClimberIOKraken());
 

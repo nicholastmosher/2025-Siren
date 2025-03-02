@@ -4,5 +4,17 @@
 
 package frc.lib.hardwareconfigs.defaults;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+
 /** Add your docs here. */
-public class KrakenConfig {}
+public class KrakenConfig {
+
+  private TalonFXConfiguration config;
+
+  public KrakenConfig() {
+
+    config = new TalonFXConfiguration();
+    config.CurrentLimits.withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
+    config.TorqueCurrent.withPeakForwardTorqueCurrent(40).withPeakReverseTorqueCurrent(40);
+  }
+}
