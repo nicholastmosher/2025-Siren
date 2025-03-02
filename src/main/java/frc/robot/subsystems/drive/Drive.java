@@ -136,7 +136,8 @@ public class Drive extends SubsystemBase {
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
-        new PPHolonomicDriveController(new PIDConstants(5, 0, 0.0), new PIDConstants(2, 0, 0.0)),
+        new PPHolonomicDriveController(
+            new PIDConstants(40, 0.1, 0.1), new PIDConstants(1.25, 0, 0.6)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -210,6 +211,7 @@ public class Drive extends SubsystemBase {
         rawGyroRotation = gyroInputs.odometryYawPositions[i];
       } else {
         // Use the angle delta from the kinematics and module deltas
+        System.out.println("GYRO ERROR");
         Twist2d twist = kinematics.toTwist2d(moduleDeltas);
         rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
       }

@@ -88,7 +88,7 @@ public class RobotContainer {
           new GoalEndState(
               0.0,
               Rotation2d.fromDegrees(
-                  0)) // Goal end state. You can set a holonomic rotation here. If using a
+                  180)) // Goal end state. You can set a holonomic rotation here. If using a
           // differential drivetrain, the rotation will have no effect.
           );
 
@@ -246,7 +246,7 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     double reduction = Math.pow(elevator.getPercentRaised(), 2);
-    double cappedreduction = 1; // Math.min(reduction, 0.70);
+    double cappedreduction = 1; // Math.max(reduction, 0.70);
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -259,7 +259,7 @@ public class RobotContainer {
         new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
 
     // climber.setDefaultCommand(
-    //     new InstantCommand(() -> climber.driveClimber(controller.getLeftY()), climber));
+    //     new InstantCommand(() -> climber.driveClimber(copilot.getLeftY()), climber));
 
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
 
@@ -287,7 +287,8 @@ public class RobotContainer {
     //         AutoBuilder.pathfindToPose(new Pose2d(), new PathConstraints(null, null, null,
     // null)));
 
-    controller.rightTrigger().whileTrue(AutoBuilder.followPath(path));
+    // controller.rightTrigger().whileTrue(AutoBuilder.followPath(path));
+    controller.rightTrigger().whileTrue(DriveCommands.PathToOrigin());
   }
 
   /**

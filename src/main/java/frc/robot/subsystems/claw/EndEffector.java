@@ -80,6 +80,8 @@ public class EndEffector extends SubsystemBase {
                 .position));
 
     this.claw.updateInputs(this.clawIOInputsAutoLogged);
+    Logger.processInputs("Endeffector/claw", clawIOInputsAutoLogged);
     this.wrist.updateInputs(this.wristIOInputsAutoLogged);
+    Logger.processInputs("Endeffector/wrist", wristIOInputsAutoLogged);
   }
 }

@@ -36,8 +36,8 @@ public class ElevatorIONeo implements ElevatorIO {
 
   public ElevatorIONeo() {
 
-    // bottomLimitSwitch = new DigitalInput(RobotConstants.Elevator.bottomlimitswitchID);
-    // topLimitSwitch = new DigitalInput(RobotConstants.Elevator.toplimitswitchID);
+    // bottomLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.bottomlimitswitchID);
+    // topLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.toplimitswitchID);
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
     motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
@@ -104,6 +104,13 @@ public class ElevatorIONeo implements ElevatorIO {
     if (realinput < -0.15) {
       realinput = -0.15;
     }
+
+    // if (bottomLimitSwitch.get() && realinput < 0) {
+    //   stopElevator();
+    // }
+    // if (topLimitSwitch.get() && realinput > 0) {
+    //   stopElevator();
+    // }
 
     leadMotor.set(realinput);
   }
