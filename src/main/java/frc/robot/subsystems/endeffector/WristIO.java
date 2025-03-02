@@ -7,7 +7,6 @@ public interface WristIO {
   @AutoLog
   public static class WristIOInputs {
     double angle = 0;
-    ;
   }
 
   public void setAngle(Rotation2d angle);

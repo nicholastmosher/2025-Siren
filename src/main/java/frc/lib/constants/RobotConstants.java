@@ -45,6 +45,8 @@ public class RobotConstants {
     public static final int bottomlimitswitchID = 1;
     public static final int toplimitswitchID = 1;
 
+    public static final double closeEnoughPercent = 0.01;
+
     public static final Rotation2d defaultheight = new Rotation2d().fromRotations(0);
     public static final Rotation2d intakeheight = new Rotation2d().fromRotations(0);
     public static final Rotation2d L1height = new Rotation2d().fromRotations(0);

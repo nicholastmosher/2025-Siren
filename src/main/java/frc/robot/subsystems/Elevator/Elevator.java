@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.constants.RobotConstants.ElevatorConstants;
 import frc.lib.enums.robotstate;
 import frc.robot.subsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
@@ -52,6 +53,19 @@ public class Elevator extends SubsystemBase {
 
   public double getPercentRaised() {
     return elevator.getPercentRaised();
+  }
+
+  public boolean isCloseEnough() {
+
+    double encoderposition = elevator.getEncoder().getPosition();
+    double targetposition = this.stateHandler.getState().getElevatorTarget().getRotations();
+
+    if (targetposition < (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))
+        && targetposition > (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))) {
+      return true;
+    }
+
+    return false;
   }
 
   @Override
