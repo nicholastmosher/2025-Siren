@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.lib.constants.RobotConstants;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
 
@@ -24,15 +25,15 @@ public class ElevatorIONeo implements ElevatorIO {
   private final SparkMaxConfig leadConfig;
   private final SparkMaxConfig motor2config;
 
-  // private final DigitalInput bottomLimitSwitch;
-  // private final DigitalInput topLimitSwitch;
+  private final DigitalInput bottomLimitSwitch;
+  private final DigitalInput topLimitSwitch;
 
   private final double rotationstoInches = 0.0;
 
   public ElevatorIONeo() {
 
-    // bottomLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.bottomlimitswitchID);
-    // topLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.toplimitswitchID);
+    bottomLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.bottomlimitswitchID);
+    topLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.toplimitswitchID);
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
     motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
@@ -85,12 +86,12 @@ public class ElevatorIONeo implements ElevatorIO {
       realinput = -0.15;
     }
 
-    // if (bottomLimitSwitch.get() && realinput < 0) {
-    //   stopElevator();
-    // }
-    // if (topLimitSwitch.get() && realinput > 0) {
-    //   stopElevator();
-    // }
+    if (bottomLimitSwitch.get() && realinput < 0) {
+      stopElevator();
+    }
+    if (topLimitSwitch.get() && realinput > 0) {
+      stopElevator();
+    }
 
     leadMotor.set(realinput);
   }

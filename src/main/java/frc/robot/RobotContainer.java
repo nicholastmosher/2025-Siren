@@ -25,11 +25,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.constants.SwerveConstants;
 import frc.robot.commands.Drive.DriveCommands;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIOKraken;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -38,11 +35,16 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
-import frc.robot.subsystems.endeffector.ClawIOVortex;
-import frc.robot.subsystems.endeffector.EndEffector;
-import frc.robot.subsystems.endeffector.WristIONeo;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.groundintake.GroundIntake;
+import frc.robot.subsystems.groundintake.GroundIntakeIOFalconVortex;
+import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
 import frc.robot.subsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -57,11 +59,10 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
   private final Elevator elevator;
-  private final EndEffector endEffector;
-  private final Climber climber;
+  private final GroundIntake groundIntake;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController pilot = new CommandXboxController(0);
   private final CommandXboxController copilot = new CommandXboxController(1);
 
   // Dashboard inputs
@@ -82,17 +83,16 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement // ,
-                // new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                // new VisionIOPhotonVision(camera2Name, robotToCamera2),
-                // new VisionIOPhotonVision(camera3Name, robotToCamera3),
-                // new VisionIOPhotonVision(camera4Name, robotToCamera4),
-                // new VisionIOLimelight(limelightName, drive::getRotation)
-                );
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVision(camera1Name, robotToCamera1),
+                new VisionIOPhotonVision(camera2Name, robotToCamera2),
+                new VisionIOPhotonVision(camera3Name, robotToCamera3),
+                new VisionIOPhotonVision(camera4Name, robotToCamera4),
+                new VisionIOLimelight(limelightName, drive::getRotation));
 
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
-        climber = new Climber(new ClimberIOKraken());
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
+
+        groundIntake = new GroundIntake(new GroundIntakeIOFalconVortex(), stateHandler);
 
         break;
 
@@ -108,16 +108,16 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement // ,
-                // new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
-                // new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
-                // new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
-                // new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose)
-                );
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose),
+                new VisionIOPhotonVisionSim(camera2Name, robotToCamera2, drive::getPose),
+                new VisionIOPhotonVisionSim(camera3Name, robotToCamera3, drive::getPose),
+                new VisionIOPhotonVisionSim(camera4Name, robotToCamera4, drive::getPose));
 
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
-        elevator = new Elevator(new ElevatorIONeo(), stateHandler);
-        climber = new Climber(new ClimberIOKraken());
+        elevator = new Elevator(new ElevatorIOSim(), stateHandler);
+
+        groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
+
         break;
 
       default:
@@ -133,39 +133,22 @@ public class RobotContainer {
 
         vision =
             new Vision(
-                drive::addVisionMeasurement // ,
-                // new VisionIO() {},
-                // new VisionIO() {},
-                // new VisionIO() {},
-                // new VisionIO() {},
-                // new VisionIO() {}
-                );
+                drive::addVisionMeasurement,
+                new VisionIO() {},
+                new VisionIO() {},
+                new VisionIO() {},
+                new VisionIO() {},
+                new VisionIO() {});
 
-        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
-        elevator = new Elevator(new ElevatorIONeo(), stateHandler);
-        climber = new Climber(new ClimberIOKraken());
+        elevator = new Elevator(new ElevatorIOSim(), stateHandler);
+
+        groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
 
         break;
     }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -185,23 +168,12 @@ public class RobotContainer {
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive,
-            () -> (controller.getLeftY() * cappedreduction),
-            () -> (controller.getLeftX() * cappedreduction),
-            () -> (controller.getRightX() * cappedreduction)));
-
-    elevator.setDefaultCommand(
-        new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
-
-    // climber.setDefaultCommand(
-    //     new InstantCommand(() -> climber.driveClimber(copilot.getLeftY()), climber));
+            drive, () -> (pilot.getLeftY()), () -> (pilot.getLeftX()), () -> (pilot.getRightX())));
 
     copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
 
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
     // Reset gyro to 0° when B button is pressed
-    controller
+    pilot
         .b()
         .onTrue(
             Commands.runOnce(

@@ -5,7 +5,6 @@
 package frc.robot.subsystems.groundintake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.enums.robotstate;
 import frc.robot.subsystems.statehandler.StateHandler;
 
 public class GroundIntake extends SubsystemBase {
@@ -18,12 +17,5 @@ public class GroundIntake extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    if (this.stateHandler.getState() == robotstate.STOP) {
-      this.gi.stopMotors();
-    }
-
-    this.gi.setAngle(this.stateHandler.getState().getGroundIntakeTarget());
-    this.gi.setSpeed(this.stateHandler.getState().getGroundIntakeSpeedTarget());
-  }
+  public void periodic() {}
 }

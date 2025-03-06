@@ -42,8 +42,8 @@ public class RobotConstants {
   public static class ElevatorConstants {
     public static final int leadMotorID = 30;
     public static final int followerMotorID = 31;
-    public static final int bottomlimitswitchID = 1;
-    public static final int toplimitswitchID = 1;
+    public static final int bottomlimitswitchID = 4;
+    public static final int toplimitswitchID = 5;
 
     public static final double closeEnoughPercent = 0.01;
 
@@ -71,5 +71,8 @@ public class RobotConstants {
     public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 
-  public static class GeneralConstants {}
+  public static class GeneralConstants {
+
+    public static boolean DEBUG = false;
+  }
 }

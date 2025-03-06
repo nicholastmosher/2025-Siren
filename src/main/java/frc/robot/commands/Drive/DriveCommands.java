@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.statehandler.StateHandler;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -315,6 +316,24 @@ public class DriveCommands {
             );
 
     return AutoBuilder.followPath(path);
+  }
+
+  public static Command driveToPose(Drive drive, Pose2d targetPose) {
+
+    List<Waypoint> waypoints =
+        PathPlannerPath.waypointsFromPoses(
+          drive.getPose().interpolate(targetPose, 0.5),
+          targetPose
+        );
+    PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+
+    // PathPlannerPath path = new PathPlannerPath(
+    //   new List<Waypoint> waypoints(
+    //     new
+    //   )
+    // );
+
+    return AutoBuilder.followPath(null);
   }
 
   private static class WheelRadiusCharacterizationState {

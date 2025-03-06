@@ -12,7 +12,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
-import frc.lib.enums.robotstate;
 import frc.robot.subsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
 
@@ -58,7 +57,7 @@ public class Elevator extends SubsystemBase {
   public boolean isCloseEnough() {
 
     double encoderposition = elevator.getEncoder().getPosition();
-    double targetposition = this.stateHandler.getState().getElevatorTarget().getRotations();
+    double targetposition = this.stateHandler.getState().getElevatorHeight().getRotations();
 
     if (targetposition < (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))
         && targetposition > (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))) {
@@ -70,7 +69,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (stateHandler.getState() == robotstate.STOP) {
+    if (stateHandler.getState().isDisabled()) {
       profileTimer.stop();
       elevator.stopElevator();
     } else {
@@ -85,7 +84,7 @@ public class Elevator extends SubsystemBase {
                               this.elevator.getEncoder().getPosition(),
                               this.elevator.getEncoder().getVelocity()),
                           new State(
-                              this.stateHandler.getState().getElevatorTarget().getRotations(), 0))
+                              this.stateHandler.getState().getElevatorHeight().getRotations(), 0))
                       .position
                   + feedforward.calculate(elevator.getEncoder().getVelocity())));
     }

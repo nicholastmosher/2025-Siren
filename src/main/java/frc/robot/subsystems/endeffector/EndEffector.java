@@ -10,13 +10,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.enums.robotstate;
 import frc.robot.subsystems.statehandler.StateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
 
   private final ClawIO claw;
   private final WristIO wrist;
+
   private final StateHandler stateHandler;
 
   private final TrapezoidProfile profile;
@@ -39,9 +40,18 @@ public class EndEffector extends SubsystemBase {
     timer.start();
   }
 
+  public void setWristAngle(Rotation2d rot) {
+    timer.reset();
+  }
+
+  public void setClawSpeed(double speed) {}
+
   public void stopWrist() {
     this.wrist.stopMotor();
-    this.timer.stop();
+  }
+
+  public void stopClaw() {
+    this.claw.stopMotor();
   }
 
   public boolean getfrontIntaked() {
@@ -54,22 +64,17 @@ public class EndEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
+    wrist.setAngle(
+        Rotation2d.fromRotations(
+            profile.calculate(
+                    timer.getTimestamp(),
+                    new State(this.wrist.getRotation(), this.wrist.getVelocity()),
+                    new State(this.stateHandler.getState().getWristRotation().getRotations(), 0))
+                .position));
 
-    if (this.stateHandler.getState() == robotstate.STOP) {
-      this.claw.stopMotor();
-      stopWrist();
-    } else {
-      timer.start();
-    }
-
-    if (timer.isRunning()) {
-      wrist.setAngle(
-          Rotation2d.fromRotations(
-              profile.calculate(
-                      timer.getTimestamp(),
-                      new State(this.wrist.getRotation(), this.wrist.getVelocity()),
-                      new State(this.stateHandler.getState().getWristTarget().getRotations(), 0))
-                  .position));
-    }
+    this.claw.updateInputs(this.clawIOInputsAutoLogged);
+    Logger.processInputs("Endeffector/claw", clawIOInputsAutoLogged);
+    this.wrist.updateInputs(this.wristIOInputsAutoLogged);
+    Logger.processInputs("Endeffector/wrist", wristIOInputsAutoLogged);
   }
 }
