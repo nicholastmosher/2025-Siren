@@ -18,7 +18,8 @@ public enum robotStates {
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
-          TargetPose.NONE)),
+          TargetPose.NONE,
+              true)),
   RESTING(
       new robotstateconfig(
           ElevatorConstants.defaultheight,
@@ -29,11 +30,11 @@ public enum robotStates {
           TargetPose.NONE)),
   INTAKE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.intakeheight,
+          EndEffectorConstants.intakerot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.intakeSpeed,
           TargetPose.NONE,
           false)),
   INTAKECENTERFORWARD(
@@ -42,7 +43,7 @@ public enum robotStates {
           EndEffectorConstants.defaultrot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.centerForwardSpeed,
           TargetPose.NONE)),
   INTAKECENTERBACKWARD(
       new robotstateconfig(
@@ -50,86 +51,86 @@ public enum robotStates {
           EndEffectorConstants.defaultrot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.centerBackwardsSpeed,
           TargetPose.NONE)),
   L1PREPARE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L1height,
+          EndEffectorConstants.L1rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE)),
   L1SCORE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L1height,
+          EndEffectorConstants.L1rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.placeSpeed,
           TargetPose.NONE)),
   L2PREPARE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L2height,
+          EndEffectorConstants.L2rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE)),
   L2SCORE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L2height,
+          EndEffectorConstants.L2rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.placeSpeed,
           TargetPose.NONE)),
   L3PREPARE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L3height,
+          EndEffectorConstants.L3rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE)),
   L3SCORE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L3height,
+          EndEffectorConstants.L3rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.placeSpeed,
           TargetPose.NONE)),
   L4PREPARE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L4height,
+          EndEffectorConstants.L4rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE)),
   L4SCORE(
       new robotstateconfig(
-          ElevatorConstants.defaultheight,
-          EndEffectorConstants.defaultrot,
+          ElevatorConstants.L4height,
+          EndEffectorConstants.L4rot,
           GroundIntakeConstants.defaultangle,
           GroundIntakeConstants.staticSpeed,
-          EndEffectorConstants.staticSpeed,
+          EndEffectorConstants.placeSpeed,
           TargetPose.NONE)),
   GROUNDINTAKE(
       new robotstateconfig(
           ElevatorConstants.defaultheight,
           EndEffectorConstants.defaultrot,
-          GroundIntakeConstants.defaultangle,
-          GroundIntakeConstants.staticSpeed,
+          GroundIntakeConstants.intakingangle,
+          GroundIntakeConstants.intakeSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE)),
   GROUNDHOLD(
       new robotstateconfig(
           ElevatorConstants.defaultheight,
           EndEffectorConstants.defaultrot,
-          GroundIntakeConstants.defaultangle,
-          GroundIntakeConstants.staticSpeed,
+          GroundIntakeConstants.holdangle,
+          GroundIntakeConstants.holdSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE));
 

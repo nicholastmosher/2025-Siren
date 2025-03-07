@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
 import frc.lib.enums.LevelEnum;
 import frc.robot.commands.CommandGroups.IntakeCommandGroup;
+import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.commands.Drive.DriveToPose;
 import frc.robot.subsystems.drive.Drive;
@@ -76,6 +77,7 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   private final IntakeCommandGroup intake;
+  private final ScoreCommandGroup score;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -167,6 +169,7 @@ public class RobotContainer {
 
 
     intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
+    score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -205,6 +208,8 @@ public class RobotContainer {
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
     copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
     copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+
+    pilot.rightTrigger().whileTrue(score);
   }
 
   /**
@@ -214,6 +219,6 @@ public class RobotContainer {
    *     <p>n in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("cauto1");
+    return new InstantCommand();
   }
 }

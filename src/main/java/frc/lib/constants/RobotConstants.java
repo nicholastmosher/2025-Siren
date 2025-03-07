@@ -39,6 +39,7 @@ public class RobotConstants {
 
     public static final double staticSpeed = 0.0;
     public static final double intakeSpeed = 0.0;
+    public static  final  double placeSpeed = 0.0;
     public static final double centerForwardSpeed = 0.0;
     public static final double centerBackwardsSpeed = 0.0;
   }
