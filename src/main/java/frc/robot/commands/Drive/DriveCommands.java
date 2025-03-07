@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.statehandler.StateHandler;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -52,6 +51,8 @@ public class DriveCommands {
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
+  private static final boolean isBlue =
+      DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
 
   private DriveCommands() {}
 
@@ -322,18 +323,25 @@ public class DriveCommands {
 
     List<Waypoint> waypoints =
         PathPlannerPath.waypointsFromPoses(
-          drive.getPose().interpolate(targetPose, 0.5),
-          targetPose
-        );
+            new Pose2d(
+                new Translation2d(
+                    drive.getPose().interpolate(targetPose, 0.5).getX(),
+                    drive.getPose().interpolate(targetPose, 0.5).getY()),
+                Rotation2d.fromDegrees(
+                    drive.getPose().interpolate(targetPose, 0.5).getRotation().getDegrees())),
+            new Pose2d(
+                new Translation2d(targetPose.getX(), targetPose.getY()),
+                Rotation2d.fromDegrees(targetPose.getRotation().getDegrees())));
     PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
 
-    // PathPlannerPath path = new PathPlannerPath(
-    //   new List<Waypoint> waypoints(
-    //     new
-    //   )
-    // );
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
+    if (isBlue) {
+      path = path.flipPath();
+    }
 
-    return AutoBuilder.followPath(null);
+    return AutoBuilder.followPath(path);
   }
 
   private static class WheelRadiusCharacterizationState {
