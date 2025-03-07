@@ -1,7 +1,6 @@
-package frc.robot.subsystems.leds;
+package frc.robot.subsystems.virtualsubsystems.leds;
 
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.VirtualSubsystem;
 
 public class Leds extends VirtualSubsystem {

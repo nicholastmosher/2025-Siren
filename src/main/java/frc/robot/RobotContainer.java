@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
+import frc.lib.enums.LevelEnum;
+import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.commands.Drive.DriveToPose;
 import frc.robot.subsystems.drive.Drive;
@@ -37,10 +39,13 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIONeo;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
+import frc.robot.subsystems.endeffector.ClawIOVortex;
+import frc.robot.subsystems.endeffector.EndEffector;
+import frc.robot.subsystems.endeffector.WristIONeo;
 import frc.robot.subsystems.groundintake.GroundIntake;
 import frc.robot.subsystems.groundintake.GroundIntakeIOFalconVortex;
 import frc.robot.subsystems.groundintake.GroundIntakeIOSim;
-import frc.robot.subsystems.statehandler.StateHandler;
+import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -60,6 +65,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
   private final Elevator elevator;
+  private final EndEffector endEffector;
   private final GroundIntake groundIntake;
 
   // Controller
@@ -69,7 +75,7 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  private final DriveToPose driveToPose;
+  private final IntakeCommandGroup intake;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -97,7 +103,7 @@ public class RobotContainer {
 
         groundIntake = new GroundIntake(new GroundIntakeIOFalconVortex(), stateHandler);
 
-        driveToPose = new DriveToPose(drive, new Pose2d());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
         break;
 
@@ -123,7 +129,7 @@ public class RobotContainer {
 
         groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
 
-        driveToPose = new DriveToPose(drive, new Pose2d());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
         break;
 
@@ -151,13 +157,16 @@ public class RobotContainer {
 
         groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
 
-        driveToPose = new DriveToPose(drive, new Pose2d());
+        endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
         break;
     }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+
+    intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -173,13 +182,11 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     double reduction = Math.pow(elevator.getPercentRaised(), 2);
-    double cappedreduction = 1; // Math.max(reduction, 0.70);
+    double cappedreduction = Math.max(reduction, 0.70);
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive, () -> (pilot.getLeftY()), () -> (pilot.getLeftX()), () -> (pilot.getRightX())));
-
-    copilot.a().onTrue(new InstantCommand(elevator::resetEncoder));
+            drive, () -> (pilot.getLeftY()*cappedreduction), () -> (pilot.getLeftX()*cappedreduction), () -> (pilot.getRightX()*cappedreduction)));
 
     // Reset gyro to 0° when B button is pressed
     pilot
@@ -192,7 +199,12 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    pilot.rightTrigger().whileTrue(driveToPose);
+    pilot.leftTrigger().toggleOnTrue(intake);
+
+    copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
+    copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
+    copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
+    copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
   }
 
   /**

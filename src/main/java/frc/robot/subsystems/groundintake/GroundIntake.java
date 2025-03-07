@@ -5,7 +5,7 @@
 package frc.robot.subsystems.groundintake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.statehandler.StateHandler;
+import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 
 public class GroundIntake extends SubsystemBase {
   private final StateHandler stateHandler;

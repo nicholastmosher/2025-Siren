@@ -5,4 +5,11 @@
 package frc.lib.enums;
 
 /** Add your docs here. */
-public enum LevelEnum {}
+public enum LevelEnum {
+
+    L1,
+    L2,
+    L3,
+    L4
+
+}

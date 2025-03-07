@@ -10,7 +10,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.statehandler.StateHandler;
+import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
