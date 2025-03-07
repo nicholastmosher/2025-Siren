@@ -51,8 +51,6 @@ public class DriveCommands {
   private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
-  private static final boolean isBlue =
-      DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
 
   private DriveCommands() {}
 
@@ -319,30 +317,24 @@ public class DriveCommands {
     return AutoBuilder.followPath(path);
   }
 
-  public static Command driveToPose(Drive drive, Pose2d targetPose) {
+  // public static Command driveToPose(Drive drive, Pose2d targetPose) {
+  //   if (targetPose == null) {
+  //     return new InstantCommand();
+  //   }
+  //   List<Waypoint> waypoints =
+  //       PathPlannerPath.waypointsFromPoses(
+  //           drive.getPose().interpolate(targetPose, 0.5), targetPose);
+  //   PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
 
-    List<Waypoint> waypoints =
-        PathPlannerPath.waypointsFromPoses(
-            new Pose2d(
-                new Translation2d(
-                    drive.getPose().interpolate(targetPose, 0.5).getX(),
-                    drive.getPose().interpolate(targetPose, 0.5).getY()),
-                Rotation2d.fromDegrees(
-                    drive.getPose().interpolate(targetPose, 0.5).getRotation().getDegrees())),
-            new Pose2d(
-                new Translation2d(targetPose.getX(), targetPose.getY()),
-                Rotation2d.fromDegrees(targetPose.getRotation().getDegrees())));
-    PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+  //   PathPlannerPath path =
+  //       new PathPlannerPath(
+  //           waypoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
+  //   if (isBlue) {
+  //     path = path.flipPath();
+  //   }
 
-    PathPlannerPath path =
-        new PathPlannerPath(
-            waypoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
-    if (isBlue) {
-      path = path.flipPath();
-    }
-
-    return AutoBuilder.followPath(path);
-  }
+  //   return AutoBuilder.followPath(path);
+  // }
 
   private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];

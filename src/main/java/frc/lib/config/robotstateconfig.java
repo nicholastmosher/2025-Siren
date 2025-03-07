@@ -47,6 +47,16 @@ public class robotstateconfig {
         true);
   }
 
+  public robotstateconfig(
+      Rotation2d elevatorRot,
+      Rotation2d wristRot,
+      Rotation2d groundIntakeRot,
+      double groundIntakeSpeed,
+      double clawSpeed,
+      TargetPose targetPose) {
+    this(elevatorRot, wristRot, groundIntakeRot, groundIntakeSpeed, clawSpeed, targetPose, false);
+  }
+
   public Rotation2d getElevatorHeight() {
     return elevatorheight;
   }

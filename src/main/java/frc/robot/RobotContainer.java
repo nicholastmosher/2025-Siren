@@ -19,7 +19,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
 import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.commands.Drive.DriveToPose;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -69,6 +69,8 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  private final DriveToPose driveToPose;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -95,6 +97,8 @@ public class RobotContainer {
 
         groundIntake = new GroundIntake(new GroundIntakeIOFalconVortex(), stateHandler);
 
+        driveToPose = new DriveToPose(drive, new Pose2d());
+
         break;
 
       case SIM:
@@ -118,6 +122,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim(), stateHandler);
 
         groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
+
+        driveToPose = new DriveToPose(drive, new Pose2d());
 
         break;
 
@@ -144,6 +150,8 @@ public class RobotContainer {
         elevator = new Elevator(new ElevatorIOSim(), stateHandler);
 
         groundIntake = new GroundIntake(new GroundIntakeIOSim(), stateHandler);
+
+        driveToPose = new DriveToPose(drive, new Pose2d());
 
         break;
     }
@@ -184,11 +192,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    pilot
-        .rightTrigger()
-        .whileTrue(
-            DriveCommands.driveToPose(
-                drive, new Pose2d(new Translation2d(0, 0), Rotation2d.fromDegrees(0))));
+    pilot.rightTrigger().whileTrue(driveToPose);
   }
 
   /**
