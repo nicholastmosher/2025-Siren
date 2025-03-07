@@ -4,80 +4,117 @@
 
 package frc.robot.commands.Drive;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.lib.util.AllianceFlipUtil;
 import frc.robot.subsystems.drive.Drive;
+import java.util.List;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToPose extends Command {
   Drive drive;
   Pose2d target;
-
-  ProfiledPIDController xController;
-  ProfiledPIDController yController;
-  ProfiledPIDController rotController;
-
-  boolean isBlue;
-
-  /** Creates a new DriveToPose. */
-  public DriveToPose(Drive drive, Pose2d pose) {
+  PPHolonomicDriveController customPID;
+  PIDController customPIDX;
+  PIDController customPIDY;
+  PIDController customPIDR;
+  boolean usePathPlanner;
+  PathConstraints constraints;
+  List<Waypoint> waypoints;
+  Command pathplannerCommand;
+  /** Creates a new PathOnTheFlyToPose. */
+  public DriveToPose(Drive drive, Pose2d targetPose) {
     this.drive = drive;
-    addRequirements(drive);
+    
+    //addRequirements(this.drive);
 
-    this.target = pose;
 
-    xController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(1, 1));
-    yController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(1, 1));
-    rotController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(1, 1));
+    this.target = targetPose;
+
+    this.customPIDX = new PIDController(40, 0.1, 0.1);
+    this.customPIDY = new PIDController(40, 0.1, 0.1);
+    this.customPIDR = new PIDController(75, 0.1, 4);
+
+
+    this.usePathPlanner = true;
+
+    this.constraints = PathConstraints.unlimitedConstraints(12);
+    this.pathplannerCommand = new InstantCommand();
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.isBlue = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
 
-    if (!this.isBlue) {
-      this.target = AllianceFlipUtil.apply(this.target);
+    boolean alliance = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
+      if (!alliance) {
+        this.target = AllianceFlipUtil.apply(target);
+      }
+
+    if (Math.abs(drive.getPose().getX() - this.target.getX()) > 0.5
+        && Math.abs(drive.getPose().getY() - this.target.getY()) > 0.5) {
+      usePathPlanner = true;
+      this.waypoints =
+        PathPlannerPath.waypointsFromPoses(
+            this.drive.getPose().interpolate(target, 0.5),
+            target);
+      PathPlannerPath path =
+          new PathPlannerPath(
+              this.waypoints, constraints, null, new GoalEndState(0, this.target.getRotation()));
+
+      
+      this.pathplannerCommand = AutoBuilder.followPath(path);
+
+      this.pathplannerCommand.initialize();
+
+    } else {
+      usePathPlanner = false;
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d currentPose = drive.getPose();
-    boolean isFlipped =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red;
-
-    ChassisSpeeds speeds =
-        new ChassisSpeeds(
-            xController.calculate(currentPose.getX(), target.getX()),
-            yController.calculate(currentPose.getY(), target.getY()),
-            rotController.calculate(
-                currentPose.getRotation().getDegrees(), target.getRotation().getDegrees()));
-
-    drive.runVelocity(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            speeds,
-            false ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
+    if (usePathPlanner) {
+      this.pathplannerCommand.execute();
+    } else {
+      this.drive.runVelocity(
+          new ChassisSpeeds(
+              this.customPIDX.calculate(this.drive.getPose().getX(), this.target.getX()),
+              this.customPIDY.calculate(this.drive.getPose().getY(), this.target.getY()),
+              this.customPIDR.calculate(
+                  this.drive.getPose().getRotation().getRadians(),
+                  this.target.getRotation().getRadians())));
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.stop();
+    this.pathplannerCommand.end(interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+   if (usePathPlanner) {
+    return pathplannerCommand.isFinished();
+   } 
+
+   return false;
   }
 }

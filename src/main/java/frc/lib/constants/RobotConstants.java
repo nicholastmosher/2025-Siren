@@ -1,5 +1,9 @@
 package frc.lib.constants;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class RobotConstants {
@@ -74,5 +78,9 @@ public class RobotConstants {
   public static class GeneralConstants {
 
     public static boolean DEBUG = false;
+
+    public static Pose2d[] reefPoses = {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
+
+    public static Pose2d[] intakePoses = {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
   }
 }

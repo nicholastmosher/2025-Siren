@@ -293,49 +293,6 @@ public class DriveCommands {
                     })));
   }
 
-  public static Command PathToOrigin() {
-
-    List<Waypoint> waypoints =
-        PathPlannerPath.waypointsFromPoses(
-            new Pose2d(new Translation2d(0.02, 0), Rotation2d.fromDegrees(0)),
-            new Pose2d(new Translation2d(0.00, 0), Rotation2d.fromDegrees(0)));
-    PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-
-    PathPlannerPath path =
-        new PathPlannerPath(
-            waypoints,
-            constraints,
-            null, // The ideal starting state, this is only relevant for pre-planned paths, so can
-            // be null for on-the-fly paths.
-            new GoalEndState(
-                0.0,
-                Rotation2d.fromDegrees(
-                    0)) // Goal end state. You can set a holonomic rotation here. If using a
-            // differential drivetrain, the rotation will have no effect.
-            );
-
-    return AutoBuilder.followPath(path);
-  }
-
-  // public static Command driveToPose(Drive drive, Pose2d targetPose) {
-  //   if (targetPose == null) {
-  //     return new InstantCommand();
-  //   }
-  //   List<Waypoint> waypoints =
-  //       PathPlannerPath.waypointsFromPoses(
-  //           drive.getPose().interpolate(targetPose, 0.5), targetPose);
-  //   PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-
-  //   PathPlannerPath path =
-  //       new PathPlannerPath(
-  //           waypoints, constraints, null, new GoalEndState(0, targetPose.getRotation()));
-  //   if (isBlue) {
-  //     path = path.flipPath();
-  //   }
-
-  //   return AutoBuilder.followPath(path);
-  // }
-
   private static class WheelRadiusCharacterizationState {
     double[] positions = new double[4];
     Rotation2d lastAngle = new Rotation2d();
