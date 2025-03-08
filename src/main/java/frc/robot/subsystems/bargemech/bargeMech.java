@@ -4,14 +4,7 @@
 
 package frc.robot.subsystems.bargemech;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
-import org.littletonrobotics.junction.Logger;
 
 public class bargeMech extends SubsystemBase {
 
@@ -23,6 +16,7 @@ public class bargeMech extends SubsystemBase {
   }
 
   public void intake(double speed) {}
+
   public void outake(double speed) {}
 
   public void stopBarge() {
@@ -30,7 +24,5 @@ public class bargeMech extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-
-  }
+  public void periodic() {}
 }

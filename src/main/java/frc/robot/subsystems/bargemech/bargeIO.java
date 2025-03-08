@@ -12,7 +12,6 @@ public interface bargeIO {
 
   public void stopMotor();
 
-
   // Periodic updates for logging and other state handling
   public default void updateInputs(BargeIOInputs inputs) {}
   ;

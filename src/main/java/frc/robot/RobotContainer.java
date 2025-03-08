@@ -16,7 +16,6 @@ package frc.robot;
 import static frc.lib.constants.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -199,7 +198,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    pilot.leftTrigger().toggleOnTrue(intake);
+    pilot.leftTrigger().whileTrue(intake);
 
     copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
@@ -208,8 +207,8 @@ public class RobotContainer {
 
     // pilot.rightTrigger().whileTrue(score);
     pilot.rightTrigger().whileTrue(score);
-    pilot.leftTrigger().whileTrue(new PathPlannerAuto("LeftAuto"));
-    pilot.rightBumper().whileTrue(new PathPlannerAuto("RightAuto"));
+    // pilot.leftTrigger().whileTrue(new PathPlannerAuto("LeftAuto"));
+    // pilot.rightBumper().whileTrue(new PathPlannerAuto("RightAuto"));
   }
 
   /**
