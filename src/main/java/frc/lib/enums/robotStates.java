@@ -19,7 +19,7 @@ public enum robotStates {
           GroundIntakeConstants.staticSpeed,
           EndEffectorConstants.staticSpeed,
           TargetPose.NONE,
-              true)),
+          true)),
   RESTING(
       new robotstateconfig(
           ElevatorConstants.defaultheight,

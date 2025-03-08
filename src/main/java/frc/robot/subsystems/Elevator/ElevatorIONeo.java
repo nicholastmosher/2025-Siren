@@ -60,18 +60,8 @@ public class ElevatorIONeo implements ElevatorIO {
 
   @Override
   public void moveToPoint(Rotation2d targetRot) {
-    // if (bottomLimitSwitch.get()
-    //     && targetRot.getDegrees() < Rotation2d.fromRotations(encoder.getPosition()).getDegrees())
-    // {
-    //   stopElevator();
-    // }
-    // if (topLimitSwitch.get()
-    //     && targetRot.getDegrees() > Rotation2d.fromRotations(encoder.getPosition()).getDegrees())
-    // {
-    //   stopElevator();
-    // }
+
     leadpid.setReference(targetRot.getRotations(), ControlType.kPosition);
-    // pid2.setReference((-getEncoder()), ControlType.kMAXMotionPositionControl);
   }
 
   @Override

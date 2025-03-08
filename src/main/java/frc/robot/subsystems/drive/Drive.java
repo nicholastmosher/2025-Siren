@@ -137,7 +137,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(40, 0.1, 0.1), new PIDConstants(1.25, 0, 0.6)),
+            new PIDConstants(40, 0.1, 0.1), new PIDConstants(10, 0, 0.6)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -373,5 +373,35 @@ public class Drive extends SubsystemBase {
       new Translation2d(SwerveConstants.BackLeft.LocationX, SwerveConstants.BackLeft.LocationY),
       new Translation2d(SwerveConstants.BackRight.LocationX, SwerveConstants.BackRight.LocationY)
     };
+  }
+
+  public void ReconfigureAutoBuilder(
+      double translationp,
+      double translationi,
+      double translationd,
+      double rotationp,
+      double rotationi,
+      double rotationd) {
+    AutoBuilder.configure(
+        this::getPose,
+        this::setPose,
+        this::getChassisSpeeds,
+        this::runVelocity,
+        new PPHolonomicDriveController(
+            new PIDConstants(translationp, translationi, translationd),
+            new PIDConstants(rotationp, rotationi, rotationd)),
+        PP_CONFIG,
+        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        this);
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathPlannerLogging.setLogActivePathCallback(
+        (activePath) -> {
+          Logger.recordOutput(
+              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (targetPose) -> {
+          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
   }
 }

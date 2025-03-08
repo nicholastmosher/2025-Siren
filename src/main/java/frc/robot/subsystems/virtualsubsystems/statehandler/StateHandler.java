@@ -15,6 +15,7 @@ import frc.lib.util.VirtualSubsystem;
 public class StateHandler extends VirtualSubsystem {
   /** Creates a new StateHandler. */
   private robotstateconfig state;
+
   private LevelEnum chosenlevel;
 
   public StateHandler() {
@@ -25,30 +26,39 @@ public class StateHandler extends VirtualSubsystem {
   public robotstateconfig getState() {
     return this.state;
   }
-  public LevelEnum getChosenlevel(){
+
+  public LevelEnum getChosenlevel() {
     return this.chosenlevel;
   }
+
   public void setLevelEnum(LevelEnum level) {
     this.chosenlevel = level;
   }
+
   public void setElevatorHeight(Rotation2d elevatorheight) {
     this.setElevatorHeight(elevatorheight);
   }
+
   public void setWristRotation(Rotation2d wristRotation) {
     this.state.setWristRotation(wristRotation);
   }
+
   public void setGroundIntakeRot(Rotation2d groundIntakeRot) {
     this.state.setGroundIntakeRot(groundIntakeRot);
   }
+
   public void setGroundIntakeSpeed(double groundIntakeSpeed) {
     this.state.setGroundIntakeSpeed(groundIntakeSpeed);
   }
+
   public void setClawSpeed(double clawSpeed) {
     this.state.setClawSpeed(clawSpeed);
   }
+
   public void setTargetPose(TargetPose targetPose) {
     this.state.setTargetPose(targetPose);
   }
+
   public void setState(robotStates input) {
     this.state = input.getRobotStateConfig();
   }

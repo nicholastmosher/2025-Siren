@@ -1,15 +1,29 @@
 package frc.lib.constants;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class RobotConstants {
 
+  public static class DriveConstants {
+
+    public static final double alignP = 1.0;
+    public static final double alignI = 0.0;
+    public static final double alignD = 0.0;
+    public static final double maxSpeed = 9000.0;
+    public static final double maxAccel = 9000.0;
+    public static final double translationRange = 0.01;
+
+    public static final double headingP = 1.0;
+    public static final double headingI = 0.0;
+    public static final double headingD = 0.0;
+    public static final double maxHeadingSpeed = 9000.0;
+    public static final double maxHeadingAccel = 9000.0;
+    public static final double headingRange = 0.01;
+  }
+
   public static class IntakeConstants {
-    public static final int tiltMotorID = 1;
+    public static final int tiltMotorID = 51;
     public static final int spinMotorID = 2;
 
     public static final Rotation2d inactiveAngle = Rotation2d.fromDegrees(0);
@@ -39,7 +53,7 @@ public class RobotConstants {
 
     public static final double staticSpeed = 0.0;
     public static final double intakeSpeed = 0.0;
-    public static  final  double placeSpeed = 0.0;
+    public static final double placeSpeed = 0.0;
     public static final double centerForwardSpeed = 0.0;
     public static final double centerBackwardsSpeed = 0.0;
   }
@@ -48,7 +62,7 @@ public class RobotConstants {
     public static final int leadMotorID = 30;
     public static final int followerMotorID = 31;
     public static final int bottomlimitswitchID = 4;
-    public static final int toplimitswitchID = 5;
+    public static final int toplimitswitchID = 2;
 
     public static final double closeEnoughPercent = 0.01;
 
@@ -64,23 +78,36 @@ public class RobotConstants {
 
   public static class GroundIntakeConstants {
 
-    public static final int tiltMotorID = 1;
-    public static final int spinMotorID = 1;
+    public static final int tiltMotorID = 51;
+    public static final int spinMotorID = 34;
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = 0.0;
-    public static final double holdSpeed = 0.0;
+    public static final double intakeSpeed = 0.8;
+    public static final double holdSpeed = 0.1;
 
     public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakingangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-4.5);
+    public static final Rotation2d holdangle = Rotation2d.fromRotations(-2.5);
   }
 
   public static class GeneralConstants {
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
-    public static Pose2d[] reefPoses = {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
+    public static Pose2d[] reefPoses = {
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d(),
+      new Pose2d()
+    };
 
     public static Pose2d[] intakePoses = {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
   }

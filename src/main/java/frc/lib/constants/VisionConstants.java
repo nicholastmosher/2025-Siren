@@ -42,7 +42,7 @@ public class VisionConstants {
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
 
-  // front left camera
+  // back left camera
   public static Transform3d robotToCamera1 =
       new Transform3d(
           Units.inchesToMeters(11.317),
@@ -83,12 +83,7 @@ public class VisionConstants {
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
-  public static double[] cameraStdDevFactors =
-      new double[] {
-        0.5, // Camera 1
-        0.5, // Camera 2
-        0.8, 0.8, 0.8, 0.8
-      };
+  public static double[] cameraStdDevFactors = new double[] {1};
 
   // Multipliers to apply for MegaTag 2 observations
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
