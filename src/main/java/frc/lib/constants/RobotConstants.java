@@ -2,24 +2,25 @@ package frc.lib.constants;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 
 public class RobotConstants {
 
   public static class DriveConstants {
 
-    public static final double alignP = 1.0;
+    public static final double alignP = 1.5;
     public static final double alignI = 0.0;
     public static final double alignD = 0.0;
-    public static final double maxSpeed = 9000.0;
-    public static final double maxAccel = 9000.0;
-    public static final double translationRange = 0.01;
+    public static final double maxSpeed = 15.0;
+    public static final double maxAccel = 150.0;
+    public static final double translationRange = 0.02;
 
-    public static final double headingP = 1.0;
-    public static final double headingI = 0.0;
-    public static final double headingD = 0.0;
-    public static final double maxHeadingSpeed = 9000.0;
-    public static final double maxHeadingAccel = 9000.0;
-    public static final double headingRange = 0.01;
+    public static final double headingP = 0.125 / 4;
+    public static final double headingI = 0.005;
+    public static final double headingD = 0.000;
+    public static final double maxHeadingSpeed = 0.2;
+    public static final double maxHeadingAccel = 2;
+    public static final double headingRange = Units.degreesToRadians(2);
   }
 
   public static class IntakeConstants {
@@ -52,10 +53,10 @@ public class RobotConstants {
     public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.7);
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = 0.0;
-    public static final double placeSpeed = 0.0;
-    public static final double centerForwardSpeed = 0.0;
-    public static final double centerBackwardsSpeed = 0.0;
+    public static final double intakeSpeed = -0.5;
+    public static final double placeSpeed = -0.5;
+    public static final double centerForwardSpeed = -0.3;
+    public static final double centerBackwardsSpeed = 0.2;
   }
 
   public static class ElevatorConstants {

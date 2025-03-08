@@ -1,9 +1,10 @@
 package frc.robot.commands.Drive;
 
-import static frc.lib.constants.RobotConstants.GeneralConstants.intakePoses;
 import static frc.lib.constants.RobotConstants.GeneralConstants.reefPoses;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.lib.util.GeometryUtil;
@@ -32,11 +33,12 @@ public class ToClosestReefPoseCommand extends Command {
               .getTranslation()
               .getDistance(GeometryUtil.toTransform2d(reefPoses[i]).getTranslation());
       if (distance < closestDistance) {
-        closestpose = intakePoses[i];
+        closestpose =
+            new Pose2d(new Translation2d(11.9, 4.2), Rotation2d.fromDegrees(0)); // intakePoses[i];
       }
     }
 
-    driveToPose = new PathOnTheFlyToPose(this.drive, closestpose);
+    driveToPose = new AlignToPoseCommand(this.drive, closestpose);
     driveToPose.initialize();
   }
 

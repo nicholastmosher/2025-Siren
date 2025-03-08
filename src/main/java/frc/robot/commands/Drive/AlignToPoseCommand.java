@@ -2,17 +2,17 @@ package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.constants.RobotConstants;
 import frc.lib.util.AllianceFlipUtil;
+import frc.lib.util.GeometryUtil;
 import frc.lib.util.LoggedTunableNumber;
 import frc.robot.subsystems.drive.Drive;
+import org.littletonrobotics.junction.Logger;
 
 public class AlignToPoseCommand extends Command {
   private final Drive drive;
@@ -72,14 +72,16 @@ public class AlignToPoseCommand extends Command {
                 RobotConstants.DriveConstants.maxHeadingSpeed,
                 RobotConstants.DriveConstants.maxHeadingAccel));
     alignHeadingController.enableContinuousInput(-Math.PI, Math.PI);
-    alignHeadingController.setTolerance(Units.degreesToRadians(1.0));
+    alignHeadingController.setTolerance(RobotConstants.DriveConstants.headingRange);
     if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
       target = AllianceFlipUtil.apply(target);
     }
+    Logger.recordOutput("commands/targetpose", this.target);
   }
 
   @Override
   public void initialize() {
+    Logger.recordOutput("commands/targetpose", this.target);
     setTranslationPIDConstants(
         translationp.getAsDouble(), translationi.getAsDouble(), translationd.getAsDouble());
     setHeadingPIDConstants(headingp.getAsDouble(), headingi.getAsDouble(), headingd.getAsDouble());
@@ -87,6 +89,7 @@ public class AlignToPoseCommand extends Command {
 
   @Override
   public void execute() {
+    Logger.recordOutput("commands/targetpose", this.target);
     this.drive.runVelocity(
         ChassisSpeeds.fromFieldRelativeSpeeds(
             DriveCommands.driveFieldOriented(
@@ -96,7 +99,7 @@ public class AlignToPoseCommand extends Command {
                 this.alignHeadingController.calculate(
                     this.drive.getPose().getRotation().getRadians(),
                     this.target.getRotation().getRadians())),
-            false ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
+            drive.getRotation()));
   }
 
   @Override
@@ -110,30 +113,26 @@ public class AlignToPoseCommand extends Command {
     ;
   }
 
-  public final void setTranslationPIDConstants(double kp, double ki, double kd) {
+  public void setTranslationPIDConstants(double kp, double ki, double kd) {
     alignXController.setPID(kp, ki, kd);
     alignYController.setPID(kp, ki, kd);
   }
 
-  public final void setHeadingPIDConstants(double kp, double ki, double kd) {
+  public void setHeadingPIDConstants(double kp, double ki, double kd) {
     alignHeadingController.setPID(kp, ki, kd);
   }
 
-  public final double calculateTranslationX(double currentpose, double setpoint) {
-    return alignXController.calculate(currentpose, setpoint);
-  }
-
-  public final double calculateTranslationy(double currentpose, double setpoint) {
-    return alignYController.calculate(currentpose, setpoint);
-  }
-
-  public final double calculateHeading(double currentpose, double setpoint) {
-    return alignHeadingController.calculate(currentpose, setpoint);
-  }
-
-  public final boolean isAligned() {
-    return (alignXController.atGoal()
-        && alignYController.atGoal()
-        && alignHeadingController.atGoal());
+  public boolean isAligned() {
+    Logger.recordOutput("commands/targetdegrees", target.getRotation().getDegrees());
+    Logger.recordOutput("commands/actualdegree", this.drive.getRotation().getDegrees());
+    if (GeometryUtil.toTransform2d(this.drive.getPose())
+                .getTranslation()
+                .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
+            < 0.5
+        && target.getRotation().getDegrees() + 181 >= this.drive.getRotation().getDegrees() + 180
+        && target.getRotation().getDegrees() + 180 <= this.drive.getRotation().getDegrees() + 181) {
+      return true;
+    }
+    return false;
   }
 }

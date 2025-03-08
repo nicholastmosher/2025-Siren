@@ -19,7 +19,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
 import frc.lib.enums.LevelEnum;
-import frc.robot.commands.Drive.AlignToPoseCommand;
+import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.Drive.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -45,7 +44,7 @@ import frc.robot.subsystems.groundintake.GroundIntakeIOFalconVortex;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -72,8 +71,8 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
 
   // private final IntakeCommandGroup intake;
-  // private final ScoreCommandGroup score;
-  private final AlignToPoseCommand driveToPose;
+  private final ScoreCommandGroup score;
+  // private final AlignToPoseCommand driveToPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -91,11 +90,12 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                // new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                // new VisionIOPhotonVision(camera2Name, robotToCamera2) // ,
+                new VisionIOPhotonVision(camera1Name, robotToCamera1),
+                new VisionIOPhotonVision(camera2Name, robotToCamera2) // ,
                 // new VisionIOPhotonVision(camera3Name, robotToCamera3),
                 // new VisionIOPhotonVision(camera4Name, robotToCamera4),
-                new VisionIOLimelight(limelightName, drive::getRotation));
+                // new VisionIOLimelight(limelightName, drive::getRotation)
+                );
 
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
 
@@ -165,8 +165,10 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
-    // score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
-    driveToPose = new AlignToPoseCommand(drive, new Pose2d());
+    score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
+    // driveToPose =
+    //     new AlignToPoseCommand(
+    //         drive, new Pose2d(new Translation2d(11.74, 4.07), Rotation2d.fromDegrees(0)));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -180,9 +182,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-
-    double reduction = Math.pow(elevator.getPercentRaised(), 2);
-    double cappedreduction = Math.max(reduction, 0.70);
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -207,7 +206,7 @@ public class RobotContainer {
     copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
 
     // pilot.rightTrigger().whileTrue(score);
-    pilot.rightTrigger().whileTrue(driveToPose);
+    pilot.rightTrigger().whileTrue(score);
     pilot.leftTrigger().whileTrue(new PathPlannerAuto("LeftAuto"));
     pilot.rightBumper().whileTrue(new PathPlannerAuto("RightAuto"));
   }

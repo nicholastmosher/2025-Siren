@@ -45,18 +45,18 @@ public class VisionConstants {
   // back left camera
   public static Transform3d robotToCamera1 =
       new Transform3d(
-          Units.inchesToMeters(11.317),
-          Units.inchesToMeters(11.292),
+          Units.inchesToMeters(-11.317),
+          Units.inchesToMeters(-11.292),
           zMeters + Units.inchesToMeters(0.5), // TODO
-          new Rotation3d(rollRadians, Units.degreesToRadians(0), Units.degreesToRadians(-30)));
+          new Rotation3d(rollRadians, Units.degreesToRadians(-15), Units.degreesToRadians(150)));
 
   // front right camera
   public static Transform3d robotToCamera2 =
       new Transform3d(
-          Units.inchesToMeters(11.317),
-          Units.inchesToMeters(-11.292),
+          Units.inchesToMeters(-11.317),
+          Units.inchesToMeters(11.292),
           zMeters + Units.inchesToMeters(0.5), // TODO
-          new Rotation3d(rollRadians, Units.degreesToRadians(0), Units.degreesToRadians(30)));
+          new Rotation3d(rollRadians, Units.degreesToRadians(-15), Units.degreesToRadians(210)));
   // rear left camera
   public static Transform3d robotToCamera3 =
       new Transform3d(
@@ -83,7 +83,7 @@ public class VisionConstants {
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
-  public static double[] cameraStdDevFactors = new double[] {1};
+  public static double[] cameraStdDevFactors = new double[] {0.4, 0.4};
 
   // Multipliers to apply for MegaTag 2 observations
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
