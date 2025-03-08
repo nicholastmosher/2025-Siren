@@ -1,16 +1,13 @@
 package frc.robot.commands.Drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.constants.RobotConstants;
-import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.GeometryUtil;
-import frc.lib.util.LoggedTunableNumber;
 import frc.robot.subsystems.drive.Drive;
 import java.math.*;
 import org.littletonrobotics.junction.Logger;
@@ -19,16 +16,16 @@ public class AlignToPoseCommand extends Command {
   private final Drive drive;
   private Pose2d target;
 
-  private final LoggedTunableNumber translationp;
-  private final LoggedTunableNumber translationi;
-  private final LoggedTunableNumber translationd;
+  // private final LoggedTunableNumber translationp;
+  // private final LoggedTunableNumber translationi;
+  // private final LoggedTunableNumber translationd;
 
-  private final LoggedTunableNumber headingp;
-  private final LoggedTunableNumber headingi;
-  private final LoggedTunableNumber headingd;
+  // private final LoggedTunableNumber headingp;
+  // private final LoggedTunableNumber headingi;
+  // private final LoggedTunableNumber headingd;
 
-  private final ProfiledPIDController alignXController;
-  private final ProfiledPIDController alignYController;
+  private final PIDController alignXController;
+  private final PIDController alignYController;
   private final ProfiledPIDController alignHeadingController;
 
   public AlignToPoseCommand(Drive drive, Pose2d targetPose) {
@@ -38,30 +35,32 @@ public class AlignToPoseCommand extends Command {
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.drive);
 
-    translationp = new LoggedTunableNumber("translationp", RobotConstants.DriveConstants.alignP);
-    translationi = new LoggedTunableNumber("translationi", RobotConstants.DriveConstants.alignI);
-    translationd = new LoggedTunableNumber("translationd", RobotConstants.DriveConstants.alignD);
+    // translationp = new LoggedTunableNumber("translationp", RobotConstants.DriveConstants.alignP);
+    // translationi = new LoggedTunableNumber("translationi", RobotConstants.DriveConstants.alignI);
+    // translationd = new LoggedTunableNumber("translationd", RobotConstants.DriveConstants.alignD);
 
-    headingp = new LoggedTunableNumber("headingp", RobotConstants.DriveConstants.headingP);
-    headingi = new LoggedTunableNumber("headingi", RobotConstants.DriveConstants.headingI);
-    headingd = new LoggedTunableNumber("headingd", RobotConstants.DriveConstants.headingD);
+    // headingp = new LoggedTunableNumber("headingp", RobotConstants.DriveConstants.headingP);
+    // headingi = new LoggedTunableNumber("headingi", RobotConstants.DriveConstants.headingI);
+    // headingd = new LoggedTunableNumber("headingd", RobotConstants.DriveConstants.headingD);
 
     alignXController =
-        new ProfiledPIDController(
+        new PIDController(
             RobotConstants.DriveConstants.alignP,
             RobotConstants.DriveConstants.alignI,
-            RobotConstants.DriveConstants.alignD,
-            new TrapezoidProfile.Constraints(
-                RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel));
+            RobotConstants.DriveConstants.alignD // ,
+            // new TrapezoidProfile.Constraints(
+            //     RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel)
+            );
     alignXController.setTolerance(RobotConstants.DriveConstants.translationRange);
 
     alignYController =
-        new ProfiledPIDController(
+        new PIDController(
             RobotConstants.DriveConstants.alignP,
             RobotConstants.DriveConstants.alignI,
-            RobotConstants.DriveConstants.alignD,
-            new TrapezoidProfile.Constraints(
-                RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel));
+            RobotConstants.DriveConstants.alignD // ,
+            // new TrapezoidProfile.Constraints(
+            //     RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel)
+            );
     alignYController.setTolerance(RobotConstants.DriveConstants.translationRange);
 
     alignHeadingController =
@@ -74,33 +73,34 @@ public class AlignToPoseCommand extends Command {
                 RobotConstants.DriveConstants.maxHeadingAccel));
     alignHeadingController.enableContinuousInput(-Math.PI, Math.PI);
     alignHeadingController.setTolerance(RobotConstants.DriveConstants.headingRange);
-    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-      target = AllianceFlipUtil.apply(target);
-    }
+    // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+    //   target = AllianceFlipUtil.apply(target);
+    // }
     Logger.recordOutput("commands/targetpose", this.target);
   }
 
   @Override
   public void initialize() {
     Logger.recordOutput("commands/targetpose", this.target);
-    setTranslationPIDConstants(
-        translationp.getAsDouble(), translationi.getAsDouble(), translationd.getAsDouble());
-    setHeadingPIDConstants(headingp.getAsDouble(), headingi.getAsDouble(), headingd.getAsDouble());
+    // setTranslationPIDConstants(
+    //     translationp.getAsDouble(), translationi.getAsDouble(), translationd.getAsDouble());
+    // setHeadingPIDConstants(headingp.getAsDouble(), headingi.getAsDouble(),
+    // headingd.getAsDouble());
   }
 
   @Override
   public void execute() {
     Logger.recordOutput("commands/targetpose", this.target);
+    ChassisSpeeds commandedSpeeds =
+        DriveCommands.driveFieldOriented(
+            this.drive,
+            this.alignXController.calculate(this.drive.getPose().getX(), this.target.getX()),
+            this.alignYController.calculate(this.drive.getPose().getY(), this.target.getY()),
+            this.alignHeadingController.calculate(
+                this.drive.getPose().getRotation().getRadians(),
+                this.target.getRotation().getRadians()));
     this.drive.runVelocity(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            DriveCommands.driveFieldOriented(
-                this.drive,
-                this.alignXController.calculate(this.drive.getPose().getX(), this.target.getX()),
-                this.alignYController.calculate(this.drive.getPose().getY(), this.target.getY()),
-                this.alignHeadingController.calculate(
-                    this.drive.getPose().getRotation().getRadians(),
-                    this.target.getRotation().getRadians())),
-            drive.getRotation()));
+        ChassisSpeeds.fromFieldRelativeSpeeds(commandedSpeeds, drive.getRotation()));
   }
 
   @Override

@@ -26,16 +26,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
 import frc.lib.enums.LevelEnum;
+import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorIONeo;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorIONeo;
 import frc.robot.subsystems.endeffector.ClawIOVortex;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.endeffector.WristIONeo;
@@ -70,7 +71,7 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // private final IntakeCommandGroup intake;
+  private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
   // private final AlignToPoseCommand driveToPose;
 
@@ -164,7 +165,7 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
+    intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
     score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
     // driveToPose =
     //     new AlignToPoseCommand(
@@ -198,7 +199,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // pilot.leftTrigger().toggleOnTrue(intake);
+    pilot.leftTrigger().toggleOnTrue(intake);
 
     copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));

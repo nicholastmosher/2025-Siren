@@ -34,7 +34,7 @@ public class ToClosestReefPoseCommand extends Command {
               .getDistance(GeometryUtil.toTransform2d(reefPoses[i]).getTranslation());
       if (distance < closestDistance) {
         closestpose =
-            new Pose2d(new Translation2d(11.9, 4.2), Rotation2d.fromDegrees(0)); // intakePoses[i];
+            new Pose2d(new Translation2d(5.86, 4.2), Rotation2d.fromDegrees(0)); // intakePoses[i];
       }
     }
 
