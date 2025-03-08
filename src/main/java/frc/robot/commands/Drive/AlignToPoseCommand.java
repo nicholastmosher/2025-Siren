@@ -12,6 +12,7 @@ import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.GeometryUtil;
 import frc.lib.util.LoggedTunableNumber;
 import frc.robot.subsystems.drive.Drive;
+import java.math.*;
 import org.littletonrobotics.junction.Logger;
 
 public class AlignToPoseCommand extends Command {
@@ -129,8 +130,10 @@ public class AlignToPoseCommand extends Command {
                 .getTranslation()
                 .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
             < 0.5
-        && target.getRotation().getDegrees() + 181 >= this.drive.getRotation().getDegrees() + 180
-        && target.getRotation().getDegrees() + 180 <= this.drive.getRotation().getDegrees() + 181) {
+        && target.getRotation().getDegrees() + 180
+            >= Math.abs(this.drive.getRotation().getDegrees()) - 0.5
+        && target.getRotation().getDegrees() + 180
+            <= Math.abs(this.drive.getRotation().getDegrees() + 0.5)) {
       return true;
     }
     return false;

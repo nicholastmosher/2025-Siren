@@ -15,12 +15,12 @@ public class RobotConstants {
     public static final double maxAccel = 150.0;
     public static final double translationRange = 0.02;
 
-    public static final double headingP = 0.125 / 4;
-    public static final double headingI = 0.005;
+    public static final double headingP = 0.125 / 5.75;
+    public static final double headingI = 0.01;
     public static final double headingD = 0.000;
-    public static final double maxHeadingSpeed = 0.2;
-    public static final double maxHeadingAccel = 2;
-    public static final double headingRange = Units.degreesToRadians(2);
+    public static final double maxHeadingSpeed = 0.25;
+    public static final double maxHeadingAccel = 1;
+    public static final double headingRange = Units.degreesToRadians(1);
   }
 
   public static class IntakeConstants {

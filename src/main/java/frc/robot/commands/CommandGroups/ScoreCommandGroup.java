@@ -19,9 +19,9 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
       StateHandler stateHandler) {
     super(
         new ParallelDeadlineGroup(
-                new ToClosestReefPoseCommand(drive).withTimeout(4),
+                new ToClosestReefPoseCommand(drive).withTimeout(30),
                 new ElevatorToChosenHeight(elevator, endEffector, stateHandler))
-            .withTimeout(4),
+            .withTimeout(30),
         new PlaceAtChosenHeight(elevator, endEffector, stateHandler));
   }
 }
