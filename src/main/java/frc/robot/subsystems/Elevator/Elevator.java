@@ -9,8 +9,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.constants.RobotConstants;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
@@ -98,5 +100,15 @@ public class Elevator extends SubsystemBase {
 
     elevator.updateInputs(elevatorinputs);
     Logger.processInputs("Elevator", elevatorinputs);
+
+    Logger.recordOutput(
+        "CartesianPose1",
+        RobotConstants.GeneralConstants.getCartesianCoordinates(
+            Units.degreesToRadians(180), 4.4895, 4.026, 0.5, 0.5)[0]);
+
+    Logger.recordOutput(
+        "CartesianPose2",
+        RobotConstants.GeneralConstants.getCartesianCoordinates(
+            Units.degreesToRadians(180), 4.4895, 4.026, 0.5, 0.5)[1]);
   }
 }

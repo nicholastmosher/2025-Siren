@@ -96,6 +96,40 @@ public class RobotConstants {
 
   public static class GeneralConstants {
 
+    public static Pose2d[] getCartesianCoordinates(
+        double angle,
+        double centerOffsetX,
+        double centerOffsetY,
+        double poseOffset,
+        double poseOffsetBack) { // Left:trueRight:false
+      // Calculate x and y using trigonometric functions
+      double x = (0.8315 + poseOffsetBack) * Math.cos(angle) + centerOffsetX;
+      double y = (0.8315 + poseOffsetBack) * Math.sin(angle) + centerOffsetY;
+
+      // Compute the tangent line's direction
+      double tangentX = -Math.sin(angle); // Negative sine for perpendicular direction
+      double tangentY = Math.cos(angle); // Cosine for perpendicular direction
+
+      // Normalize the tangent direction
+      double magnitude = Math.sqrt(tangentX * tangentX + tangentY * tangentY);
+      tangentX /= magnitude;
+      tangentY /= magnitude;
+
+      // Calculate pose1 and pose2 positions along the tangent line
+      double x1 = x + tangentX * poseOffset;
+      double y1 = y + tangentY * poseOffset;
+
+      double x2 = x - tangentX * poseOffset;
+      double y2 = y - tangentY * poseOffset;
+
+      // Create Pose2d objects
+      Pose2d pose1 = new Pose2d(new Translation2d(x1, y1), Rotation2d.fromRadians(angle));
+      Pose2d pose2 = new Pose2d(new Translation2d(x2, y2), Rotation2d.fromRadians(angle));
+
+      // Return the coordinates as a Pose2d array
+      return new Pose2d[] {pose1, pose2};
+    }
+
     public static boolean DEBUG = true;
 
     public static Pose2d[] reefPoses = {
