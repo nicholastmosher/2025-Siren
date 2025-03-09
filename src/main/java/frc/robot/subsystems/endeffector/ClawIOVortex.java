@@ -2,7 +2,6 @@ package frc.robot.subsystems.endeffector;
 
 import com.ctre.phoenix6.configs.ProximityParamsConfigs;
 import com.ctre.phoenix6.hardware.CANrange;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -26,7 +25,7 @@ public class ClawIOVortex implements ClawIO {
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .closedLoop
-        .pid(0.5, 0, 0)
+        .pid(100, 0, 0)
         .minOutput(-1)
         .maxOutput(1)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -46,7 +45,7 @@ public class ClawIOVortex implements ClawIO {
 
   @Override
   public void setSpeed(double rpm) {
-    m_controller.setReference(rpm, ControlType.kMAXMotionVelocityControl);
+    motor.set(rpm);
   }
 
   @Override

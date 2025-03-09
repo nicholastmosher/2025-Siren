@@ -10,28 +10,19 @@ public class RobotConstants {
 
   public static class DriveConstants {
 
-    public static final double alignP = 1;
-    public static final double alignI = 0.0;
+    public static final double alignP = 0.8;
+    public static final double alignI = 0.25;
     public static final double alignD = 0.1;
     public static final double maxSpeed = 15.0;
     public static final double maxAccel = 150.0;
-    public static final double translationRange = 0.005;
+    public static final double translationRange = 0.05;
 
-    public static final double headingP = 0.125 / 4;
-    public static final double headingI = 0.0;
-    public static final double headingD = 0.1;
-    public static final double maxHeadingSpeed = 1;
-    public static final double maxHeadingAccel = 10;
-    public static final double headingRange = Units.degreesToRadians(1);
-  }
-
-  public static class IntakeConstants {
-    public static final int tiltMotorID = 51;
-    public static final int spinMotorID = 2;
-
-    public static final Rotation2d inactiveAngle = Rotation2d.fromDegrees(0);
-    public static final Rotation2d activeAngle = Rotation2d.fromDegrees(0);
-    public static final Rotation2d holdAngle = Rotation2d.fromDegrees(0);
+    public static final double headingP = 0.01125; // 0.125 / 22;
+    public static final double headingI = 0.000005;
+    public static final double headingD = 0.000;
+    public static final double maxHeadingSpeed = 2;
+    public static final double maxHeadingAccel = 100;
+    public static final double headingRange = Units.degreesToRadians(170);
   }
 
   public static class ClimberConstants {
@@ -55,10 +46,10 @@ public class RobotConstants {
     public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.72);
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = -6000;
-    public static final double placeSpeed = -6000;
-    public static final double centerForwardSpeed = -0.3 * 6000;
-    public static final double centerBackwardsSpeed = 0.3 * 6000;
+    public static final double intakeSpeed = -1;
+    public static final double placeSpeed = -1;
+    public static final double centerForwardSpeed = -0.3;
+    public static final double centerBackwardsSpeed = 0.3;
   }
 
   public static class ElevatorConstants {
@@ -133,8 +124,8 @@ public class RobotConstants {
     public static boolean DEBUG = true;
 
     public static Pose2d[] reefPoses = {
-      AllianceFlipUtil.apply(new Pose2d(new Translation2d(12.05, 3.90), Rotation2d.fromDegrees(0))),
-      AllianceFlipUtil.apply(new Pose2d(new Translation2d(12.05, 4.24), Rotation2d.fromDegrees(0))),
+      AllianceFlipUtil.apply(new Pose2d(new Translation2d(11.72, 4), Rotation2d.fromDegrees(0))),
+      AllianceFlipUtil.apply(new Pose2d(new Translation2d(11.72, 4), Rotation2d.fromDegrees(0))),
       new Pose2d(),
       new Pose2d(),
       new Pose2d(),

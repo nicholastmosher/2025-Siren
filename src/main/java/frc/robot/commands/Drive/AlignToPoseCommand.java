@@ -1,11 +1,12 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.constants.RobotConstants;
-import frc.lib.util.GeometryUtil;
 import frc.robot.subsystems.drive.Drive;
 import java.math.*;
 import org.littletonrobotics.junction.Logger;
@@ -24,7 +25,7 @@ public class AlignToPoseCommand extends Command {
 
   private final PIDController alignXController;
   private final PIDController alignYController;
-  private final PIDController alignHeadingController;
+  private final ProfiledPIDController alignHeadingController;
 
   public AlignToPoseCommand(Drive drive, Pose2d targetPose) {
     this.drive = drive;
@@ -62,10 +63,13 @@ public class AlignToPoseCommand extends Command {
     alignYController.setTolerance(RobotConstants.DriveConstants.translationRange);
 
     alignHeadingController =
-        new PIDController(
+        new ProfiledPIDController(
             RobotConstants.DriveConstants.headingP,
             RobotConstants.DriveConstants.headingI,
-            RobotConstants.DriveConstants.headingD);
+            RobotConstants.DriveConstants.headingD,
+            new TrapezoidProfile.Constraints(
+                RobotConstants.DriveConstants.maxHeadingSpeed,
+                RobotConstants.DriveConstants.maxHeadingSpeed));
     alignHeadingController.enableContinuousInput(-Math.PI, Math.PI);
     alignHeadingController.setTolerance(RobotConstants.DriveConstants.headingRange);
     // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
@@ -119,12 +123,21 @@ public class AlignToPoseCommand extends Command {
   }
 
   public boolean isAligned() {
+    Logger.recordOutput("headingisFinished", this.alignHeadingController.atSetpoint());
+    Logger.recordOutput("xisFinished", this.alignXController.atSetpoint());
+    Logger.recordOutput("yisFinished", this.alignYController.atSetpoint());
     Logger.recordOutput("commands/targetdegrees", target.getRotation().getDegrees());
     Logger.recordOutput("commands/actualdegree", this.drive.getRotation().getDegrees());
-    if (GeometryUtil.toTransform2d(this.drive.getPose())
-            .getTranslation()
-            .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
-        < 0.02) {
+    if (alignXController.atSetpoint()
+        && alignYController.atSetpoint()
+        && alignHeadingController.atGoal()
+    // && alignHeadingController.atSetpoint()
+
+    // GeometryUtil.toTransform2d(this.drive.getPose())
+    //       .getTranslation()
+    //       .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
+    //   < 0.02
+    ) {
       return true;
     }
     return false;
