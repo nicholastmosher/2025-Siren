@@ -1,10 +1,8 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.constants.RobotConstants;
 import frc.lib.util.GeometryUtil;
@@ -26,7 +24,7 @@ public class AlignToPoseCommand extends Command {
 
   private final PIDController alignXController;
   private final PIDController alignYController;
-  private final ProfiledPIDController alignHeadingController;
+  private final PIDController alignHeadingController;
 
   public AlignToPoseCommand(Drive drive, Pose2d targetPose) {
     this.drive = drive;
@@ -64,13 +62,10 @@ public class AlignToPoseCommand extends Command {
     alignYController.setTolerance(RobotConstants.DriveConstants.translationRange);
 
     alignHeadingController =
-        new ProfiledPIDController(
+        new PIDController(
             RobotConstants.DriveConstants.headingP,
             RobotConstants.DriveConstants.headingI,
-            RobotConstants.DriveConstants.headingD,
-            new TrapezoidProfile.Constraints(
-                RobotConstants.DriveConstants.maxHeadingSpeed,
-                RobotConstants.DriveConstants.maxHeadingAccel));
+            RobotConstants.DriveConstants.headingD);
     alignHeadingController.enableContinuousInput(-Math.PI, Math.PI);
     alignHeadingController.setTolerance(RobotConstants.DriveConstants.headingRange);
     // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
