@@ -132,6 +132,14 @@ public enum robotStates {
           GroundIntakeConstants.holdangle,
           GroundIntakeConstants.holdSpeed,
           EndEffectorConstants.staticSpeed,
+          TargetPose.NONE)),
+  GROUNDTHROW(
+      new robotstateconfig(
+          ElevatorConstants.defaultheight,
+          EndEffectorConstants.defaultrot,
+          GroundIntakeConstants.holdangle,
+          GroundIntakeConstants.throwSpeed,
+          EndEffectorConstants.staticSpeed,
           TargetPose.NONE));
 
   private robotstateconfig targetrobotstate;

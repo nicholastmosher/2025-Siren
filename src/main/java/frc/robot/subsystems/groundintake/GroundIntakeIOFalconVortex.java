@@ -25,14 +25,14 @@ public class GroundIntakeIOFalconVortex implements GroundIntakeIO {
 
     Slot0Configs pidConfigs =
         new Slot0Configs()
-            .withKP(0.3)
+            .withKP(0.8)
             .withKI(0)
             .withKD(0)
             .withGravityType(GravityTypeValue.Arm_Cosine)
-            .withKA(0.0)
+            .withKA(0.00)
             .withKS(0.00)
-            .withKV(0.0)
-            .withKG(0.0);
+            .withKV(1.08)
+            .withKG(0.17);
 
     FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(60);
 

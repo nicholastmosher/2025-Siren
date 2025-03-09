@@ -29,12 +29,12 @@ public class WristIONeo implements WristIO {
     config.absoluteEncoder.zeroOffset(0.2926049 + 0.3);
     config
         .closedLoop
-        .pid(0.6, 0, 0)
-        .minOutput(-0.6)
-        .maxOutput(0.6)
+        .pid(1.2, 0, 0)
+        .minOutput(-1)
+        .maxOutput(1)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .maxMotion
-        .allowedClosedLoopError(0.1)
+        .allowedClosedLoopError(0.05)
         .maxAcceleration(30000)
         .maxVelocity(5600);
 

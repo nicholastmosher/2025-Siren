@@ -48,17 +48,17 @@ public class RobotConstants {
     public static int intakecanrange = 41;
 
     public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.7);
-    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.815);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.85);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.72);
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = -0.5;
-    public static final double placeSpeed = -0.5;
-    public static final double centerForwardSpeed = -0.15;
-    public static final double centerBackwardsSpeed = 0.15;
+    public static final double intakeSpeed = -1;
+    public static final double placeSpeed = -1;
+    public static final double centerForwardSpeed = -0.3;
+    public static final double centerBackwardsSpeed = 0.3;
   }
 
   public static class ElevatorConstants {
@@ -85,12 +85,13 @@ public class RobotConstants {
     public static final int spinMotorID = 34;
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = 0.8;
+    public static final double intakeSpeed = 1;
+    public static final double throwSpeed = -1;
     public static final double holdSpeed = 0.1;
 
     public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-4.5);
-    public static final Rotation2d holdangle = Rotation2d.fromRotations(-2.5);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-9.5);
+    public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 
   public static class GeneralConstants {

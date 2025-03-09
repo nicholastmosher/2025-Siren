@@ -26,6 +26,8 @@ public class EndEffector extends SubsystemBase {
   private WristIOInputsAutoLogged wristIOInputsAutoLogged;
   private ClawIOInputsAutoLogged clawIOInputsAutoLogged;
 
+  private double targetAngle;
+
   /** Creates a new EndEffector. */
   public EndEffector(ClawIO clawimpl, WristIO wristimpl, StateHandler handler) {
     this.claw = clawimpl;
@@ -35,9 +37,11 @@ public class EndEffector extends SubsystemBase {
     this.wristIOInputsAutoLogged = new WristIOInputsAutoLogged();
     this.clawIOInputsAutoLogged = new ClawIOInputsAutoLogged();
 
-    profile = new TrapezoidProfile(new Constraints(0.5, 5));
+    profile = new TrapezoidProfile(new Constraints(10, 100));
     timer = new Timer();
     timer.start();
+
+    targetAngle = this.stateHandler.getState().getWristRotation().getRotations();
   }
 
   public void setWristAngle(Rotation2d rot) {
@@ -64,6 +68,11 @@ public class EndEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (targetAngle != this.stateHandler.getState().getWristRotation().getRotations()) {
+      timer.reset();
+      targetAngle = this.stateHandler.getState().getWristRotation().getRotations();
+    }
+
     wrist.setAngle(
         Rotation2d.fromRotations(
             profile.calculate(

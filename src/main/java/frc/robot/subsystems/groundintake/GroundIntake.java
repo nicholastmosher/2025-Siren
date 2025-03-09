@@ -5,7 +5,6 @@
 package frc.robot.subsystems.groundintake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.constants.RobotConstants;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 
 public class GroundIntake extends SubsystemBase {
@@ -19,6 +18,7 @@ public class GroundIntake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.gi.setAngle(RobotConstants.GroundIntakeConstants.defaultangle);
+    this.gi.setAngle(stateHandler.getState().getGroundIntakeRot());
+    this.gi.setSpeed(stateHandler.getState().getGroundIntakeSpeed());
   }
 }
