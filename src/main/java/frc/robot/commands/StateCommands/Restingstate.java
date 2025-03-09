@@ -21,7 +21,9 @@ public class Restingstate extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    this.stateHandler.setState(robotStates.RESTING);
+  }
 
   @Override
   public void execute() {}

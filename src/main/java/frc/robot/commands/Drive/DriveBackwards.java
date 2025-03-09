@@ -25,7 +25,7 @@ public class DriveBackwards extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.runVelocity(new ChassisSpeeds(-0.2, 0, 0));
+    drive.runVelocity(new ChassisSpeeds(-0.4, 0, 0));
   }
 
   // Called once the command ends or is interrupted.

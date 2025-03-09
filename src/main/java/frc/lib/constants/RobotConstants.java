@@ -11,17 +11,17 @@ public class RobotConstants {
 
     public static final double alignP = 0.8;
     public static final double alignI = 0.25;
-    public static final double alignD = 0.1;
+    public static final double alignD = 0.01;
     public static final double maxSpeed = 15.0;
     public static final double maxAccel = 150.0;
     public static final double translationRange = 0.05;
 
-    public static final double headingP = 0.0; // 0.125 / 22;
+    public static final double headingP = 0.5; // 0.125 / 22;
     public static final double headingI = 0.00000;
-    public static final double headingD = 0.000;
+    public static final double headingD = 0.01;
     public static final double maxHeadingSpeed = 2;
     public static final double maxHeadingAccel = 100;
-    public static final double headingRange = Units.degreesToRadians(160);
+    public static final double headingRange = Units.degreesToRadians(50);
   }
 
   public static class ClimberConstants {
@@ -37,7 +37,7 @@ public class RobotConstants {
     public static int frontcanrange = 40;
     public static int intakecanrange = 41;
 
-    public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.7);
+    public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.50);
     public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.8);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.72);

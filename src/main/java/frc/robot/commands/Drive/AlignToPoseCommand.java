@@ -1,10 +1,8 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.constants.RobotConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -25,7 +23,7 @@ public class AlignToPoseCommand extends Command {
 
   private final PIDController alignXController;
   private final PIDController alignYController;
-  private final ProfiledPIDController alignHeadingController;
+  private final PIDController alignHeadingController;
 
   public AlignToPoseCommand(Drive drive, Pose2d targetPose) {
     this.drive = drive;
@@ -63,13 +61,10 @@ public class AlignToPoseCommand extends Command {
     alignYController.setTolerance(RobotConstants.DriveConstants.translationRange);
 
     alignHeadingController =
-        new ProfiledPIDController(
+        new PIDController(
             RobotConstants.DriveConstants.headingP,
             RobotConstants.DriveConstants.headingI,
-            RobotConstants.DriveConstants.headingD,
-            new TrapezoidProfile.Constraints(
-                RobotConstants.DriveConstants.maxHeadingSpeed,
-                RobotConstants.DriveConstants.maxHeadingSpeed));
+            RobotConstants.DriveConstants.headingD);
     alignHeadingController.enableContinuousInput(-Math.PI, Math.PI);
     alignHeadingController.setTolerance(RobotConstants.DriveConstants.headingRange);
     // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
@@ -95,7 +90,7 @@ public class AlignToPoseCommand extends Command {
             this.drive,
             this.alignXController.calculate(this.drive.getPose().getX(), this.target.getX()),
             this.alignYController.calculate(this.drive.getPose().getY(), this.target.getY()),
-            this.alignHeadingController.calculate(
+            -this.alignHeadingController.calculate(
                 this.drive.getPose().getRotation().getRadians(),
                 this.target.getRotation().getRadians()));
     this.drive.runVelocity(
@@ -130,7 +125,7 @@ public class AlignToPoseCommand extends Command {
     Logger.recordOutput("commands/actualdegree", this.drive.getRotation().getDegrees());
     if (alignXController.atSetpoint()
         && alignYController.atSetpoint()
-        && alignHeadingController.atGoal()
+        && alignHeadingController.atSetpoint()
     // && alignHeadingController.atSetpoint()
 
     // GeometryUtil.toTransform2d(this.drive.getPose())
