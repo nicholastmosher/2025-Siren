@@ -127,13 +127,9 @@ public class AlignToPoseCommand extends Command {
     Logger.recordOutput("commands/targetdegrees", target.getRotation().getDegrees());
     Logger.recordOutput("commands/actualdegree", this.drive.getRotation().getDegrees());
     if (GeometryUtil.toTransform2d(this.drive.getPose())
-                .getTranslation()
-                .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
-            < 0.5
-        && target.getRotation().getDegrees() + 180
-            >= Math.abs(this.drive.getRotation().getDegrees()) - 0.5
-        && target.getRotation().getDegrees() + 180
-            <= Math.abs(this.drive.getRotation().getDegrees() + 0.5)) {
+            .getTranslation()
+            .getDistance(GeometryUtil.toTransform2d(target).getTranslation())
+        < 0.02) {
       return true;
     }
     return false;

@@ -35,14 +35,12 @@ public class ClawIOVortex implements ClawIO {
     m_controller = motor.getClosedLoopController();
 
     frontCaNrange = new CANrange(RobotConstants.EndEffectorConstants.frontcanrange);
-    frontCaNrange
-        .getConfigurator()
-        .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
+    frontCaNrange.getConfigurator().apply(new ProximityParamsConfigs().withProximityThreshold(0.1));
 
     intakeCaNrange = new CANrange(RobotConstants.EndEffectorConstants.intakecanrange);
     intakeCaNrange
         .getConfigurator()
-        .apply(new ProximityParamsConfigs().withProximityThreshold(0.15));
+        .apply(new ProximityParamsConfigs().withProximityThreshold(0.1));
   }
 
   @Override

@@ -30,8 +30,8 @@ public class WristIONeo implements WristIO {
     config
         .closedLoop
         .pid(0.6, 0, 0)
-        .minOutput(-0.3)
-        .maxOutput(0.3)
+        .minOutput(-0.6)
+        .maxOutput(0.6)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .maxMotion
         .allowedClosedLoopError(0.1)

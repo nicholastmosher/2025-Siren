@@ -3,16 +3,18 @@ package frc.robot.commands.Drive;
 import static frc.lib.constants.RobotConstants.GeneralConstants.reefPoses;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.GeometryUtil;
 import frc.robot.subsystems.drive.Drive;
 
 public class ToClosestReefPoseCommand extends Command {
   private final Drive drive;
   private Command driveToPose;
+  private boolean isNotBlue;
 
   public ToClosestReefPoseCommand(Drive drive) {
     this.drive = drive;
@@ -21,6 +23,7 @@ public class ToClosestReefPoseCommand extends Command {
     addRequirements(this.drive);
 
     driveToPose = new InstantCommand();
+    isNotBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
   }
 
   @Override
@@ -28,13 +31,17 @@ public class ToClosestReefPoseCommand extends Command {
     Pose2d closestpose = new Pose2d();
     double closestDistance = 900000000;
     for (int i = 0; i < reefPoses.length; i++) {
+      Pose2d checkingPose = reefPoses[i];
+      if (isNotBlue) {
+        checkingPose = AllianceFlipUtil.apply(checkingPose);
+      }
       double distance =
           GeometryUtil.toTransform2d(drive.getPose())
               .getTranslation()
-              .getDistance(GeometryUtil.toTransform2d(reefPoses[i]).getTranslation());
+              .getDistance(GeometryUtil.toTransform2d(checkingPose).getTranslation());
       if (distance < closestDistance) {
-        closestpose =
-            new Pose2d(new Translation2d(5.86, 4.2), Rotation2d.fromDegrees(0)); // intakePoses[i];
+        closestDistance = distance;
+        closestpose = checkingPose; // intakePoses[i];
       }
     }
 

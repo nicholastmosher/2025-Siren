@@ -43,5 +43,6 @@ public class Intake extends Command {
     if (interrupted) {
       this.stateHandler.setState(robotStates.RESTING);
     }
+    this.stateHandler.setState(robotStates.RESTING);
   }
 }

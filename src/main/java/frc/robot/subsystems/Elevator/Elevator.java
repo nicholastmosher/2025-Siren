@@ -26,6 +26,8 @@ public class Elevator extends SubsystemBase {
   private ElevatorFeedforward feedforward;
   private Timer profileTimer;
 
+  private double targetRotation;
+
   public Elevator(ElevatorIO elevator, StateHandler handler) {
     this.elevator = elevator;
     elevatorinputs = new ElevatorIOInputsAutoLogged();
@@ -35,6 +37,8 @@ public class Elevator extends SubsystemBase {
     feedforward = new ElevatorFeedforward(0, 0.0, 0);
     profileTimer = new Timer();
     profileTimer.start();
+
+    targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
   }
 
   public void moveElevator(double input) {
@@ -69,6 +73,11 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (this.targetRotation != this.stateHandler.getState().getElevatorHeight().getRotations()) {
+      profileTimer.reset();
+      this.targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
+    }
+
     if (stateHandler.getState().isDisabled()) {
       profileTimer.stop();
       elevator.stopElevator();

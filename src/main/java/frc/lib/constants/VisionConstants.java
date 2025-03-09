@@ -83,7 +83,7 @@ public class VisionConstants {
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
-  public static double[] cameraStdDevFactors = new double[] {0.4, 0.4};
+  public static double[] cameraStdDevFactors = new double[] {0.3, 0.3};
 
   // Multipliers to apply for MegaTag 2 observations
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve

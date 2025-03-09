@@ -26,7 +26,7 @@ public class IntakeCenterBackward extends Command {
 
   @Override
   public void initialize() {
-    this.stateHandler.setState(robotStates.INTAKECENTERFORWARD);
+    this.stateHandler.setState(robotStates.INTAKECENTERBACKWARD);
   }
 
   @Override

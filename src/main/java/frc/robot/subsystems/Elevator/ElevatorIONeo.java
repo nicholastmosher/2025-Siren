@@ -61,6 +61,13 @@ public class ElevatorIONeo implements ElevatorIO {
   @Override
   public void moveToPoint(Rotation2d targetRot) {
 
+    if (bottomLimitSwitch.get()) {
+      encoder.setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
+    }
+    if (topLimitSwitch.get()) {
+      encoder.setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
+    }
+
     leadpid.setReference(targetRot.getRotations(), ControlType.kPosition);
   }
 

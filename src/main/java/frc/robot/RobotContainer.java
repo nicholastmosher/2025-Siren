@@ -28,6 +28,7 @@ import frc.lib.enums.LevelEnum;
 import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.Drive.DriveCommands;
+import frc.robot.commands.StateCommands.PlaceAtChosenHeight;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorIONeo;
 import frc.robot.subsystems.drive.Drive;
@@ -72,6 +73,7 @@ public class RobotContainer {
 
   private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
+  private final PlaceAtChosenHeight placeAtChosenHeight;
   // private final AlignToPoseCommand driveToPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -166,6 +168,7 @@ public class RobotContainer {
 
     intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
     score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
+    placeAtChosenHeight = new PlaceAtChosenHeight(elevator, endEffector, stateHandler);
     // driveToPose =
     //     new AlignToPoseCommand(
     //         drive, new Pose2d(new Translation2d(11.74, 4.07), Rotation2d.fromDegrees(0)));
@@ -185,7 +188,10 @@ public class RobotContainer {
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive, () -> (pilot.getLeftY()), () -> (pilot.getLeftX()), () -> (pilot.getRightX())));
+            drive,
+            () -> (-pilot.getLeftY()),
+            () -> (-pilot.getLeftX()),
+            () -> (pilot.getRightX())));
 
     // Reset gyro to 0° when B button is pressed
     pilot
@@ -198,7 +204,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    pilot.leftTrigger().whileTrue(intake);
+    pilot.leftTrigger().onTrue(intake);
 
     copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
@@ -207,6 +213,7 @@ public class RobotContainer {
 
     // pilot.rightTrigger().whileTrue(score);
     pilot.rightTrigger().whileTrue(score);
+    pilot.rightBumper().onTrue(placeAtChosenHeight.withTimeout(1));
     // pilot.leftTrigger().whileTrue(new PathPlannerAuto("LeftAuto"));
     // pilot.rightBumper().whileTrue(new PathPlannerAuto("RightAuto"));
   }

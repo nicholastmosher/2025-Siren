@@ -35,6 +35,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -108,6 +109,9 @@ public class Drive extends SubsystemBase {
       };
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+
+  private SwerveDriveOdometry swerveDriveOdometry =
+      new SwerveDriveOdometry(kinematics, rawGyroRotation, lastModulePositions);
 
   // private SwerveDriveOdometry swerveDriveOdometry =
   //     new SwerveDriveOdometry(kinematics, rawGyroRotation, lastModulePositions);
@@ -218,7 +222,7 @@ public class Drive extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
-
+      swerveDriveOdometry.update(getRotation(), modulePositions);
       Logger.recordOutput("ZeroedPose", new Pose3d[] {new Pose3d()});
     }
 
