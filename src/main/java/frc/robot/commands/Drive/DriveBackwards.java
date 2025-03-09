@@ -4,12 +4,17 @@
 
 package frc.robot.commands.Drive;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.drive.Drive;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveBackwards extends Command {
+  Drive drive;
   /** Creates a new DriveBackwards. */
-  public DriveBackwards() {
+  public DriveBackwards(Drive drive) {
+    this.drive = drive;
+    addRequirements(this.drive);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -19,7 +24,9 @@ public class DriveBackwards extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    drive.runVelocity(new ChassisSpeeds(-0.2, 0, 0));
+  }
 
   // Called once the command ends or is interrupted.
   @Override

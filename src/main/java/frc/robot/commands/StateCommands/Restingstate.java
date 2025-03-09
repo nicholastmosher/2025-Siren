@@ -6,12 +6,12 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 
-public class ElevatorToChosenHeight extends Command {
+public class Restingstate extends Command {
   private final Elevator elevator;
   private final EndEffector endEffector;
   private final StateHandler stateHandler;
 
-  public ElevatorToChosenHeight(Elevator elevator, EndEffector endEffector, StateHandler handler) {
+  public Restingstate(Elevator elevator, EndEffector endEffector, StateHandler handler) {
     this.elevator = elevator;
     this.endEffector = endEffector;
     this.stateHandler = handler;
@@ -21,23 +21,18 @@ public class ElevatorToChosenHeight extends Command {
   }
 
   @Override
-  public void initialize() {
-    switch (this.stateHandler.getChosenlevel()) {
-      case L1 -> this.stateHandler.setState(robotStates.L1PREPARE);
-      case L2 -> this.stateHandler.setState(robotStates.L2PREPARE);
-      case L3 -> this.stateHandler.setState(robotStates.L3PREPARE);
-      case L4 -> this.stateHandler.setState(robotStates.L4PREPARE);
-    }
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {}
 
   @Override
   public boolean isFinished() {
-    return elevator.isCloseEnough();
+    return true;
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    this.stateHandler.setState(robotStates.RESTING);
+  }
 }

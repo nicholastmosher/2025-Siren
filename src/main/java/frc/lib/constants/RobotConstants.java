@@ -118,21 +118,24 @@ public class RobotConstants {
 
     public static boolean DEBUG = true;
 
-    public static Pose2d[] farSide = getCartesianCoordinates(0, 0.165, 0.44);
+    public static Pose2d[] zerodeg = getCartesianCoordinates(0, 0.165, 0.44);
+    public static Pose2d[] sixtydeg = getCartesianCoordinates(60, 0.165, 0.44);
+    public static Pose2d[] onetwentydeg = getCartesianCoordinates(120, 0.165, 0.44);
+    public static Pose2d[] oneeightydeg = getCartesianCoordinates(180, 0.165, 0.44);
+    public static Pose2d[] twofourtydeg = getCartesianCoordinates(240, 0.165, 0.44);
+    public static Pose2d[] threehundreddeg = getCartesianCoordinates(300, 0.165, 0.44);
 
     public static Pose2d[] reefPoses = {
-      farSide[1],
-      farSide[0],
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d(),
-      new Pose2d()
+      zerodeg[1],
+      zerodeg[0],
+      sixtydeg[1],
+      sixtydeg[0],
+      oneeightydeg[1],
+      oneeightydeg[0],
+      twofourtydeg[1],
+      twofourtydeg[0],
+      threehundreddeg[1],
+      threehundreddeg[0]
     };
 
     public static Pose2d[] intakePoses = {new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()};
