@@ -28,6 +28,7 @@ public class ToClosestReefPoseCommand extends Command {
 
   @Override
   public void initialize() {
+    isNotBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
     Pose2d closestpose = new Pose2d();
     double closestDistance = 900000000;
     for (int i = 0; i < reefPoses.length; i++) {

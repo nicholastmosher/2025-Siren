@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import frc.lib.util.AllianceFlipUtil;
 
 public class RobotConstants {
 
@@ -17,12 +16,12 @@ public class RobotConstants {
     public static final double maxAccel = 150.0;
     public static final double translationRange = 0.05;
 
-    public static final double headingP = 0.01125; // 0.125 / 22;
-    public static final double headingI = 0.000005;
+    public static final double headingP = 0.0; // 0.125 / 22;
+    public static final double headingI = 0.00000;
     public static final double headingD = 0.000;
     public static final double maxHeadingSpeed = 2;
     public static final double maxHeadingAccel = 100;
-    public static final double headingRange = Units.degreesToRadians(170);
+    public static final double headingRange = Units.degreesToRadians(160);
   }
 
   public static class ClimberConstants {
@@ -39,11 +38,11 @@ public class RobotConstants {
     public static int intakecanrange = 41;
 
     public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.7);
-    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.85);
+    public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.8);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.72);
-    public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.72);
-    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.72);
+    public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.73);
+    public static final Rotation2d L4rot = new Rotation2d().fromRotations(0.7);
 
     public static final double staticSpeed = 0.0;
     public static final double intakeSpeed = -1;
@@ -65,7 +64,7 @@ public class RobotConstants {
     public static final Rotation2d L1height = Rotation2d.fromRotations(0);
     public static final Rotation2d L2height = Rotation2d.fromRotations(-18.7);
     public static final Rotation2d dealgifyheight = Rotation2d.fromRotations(-(17.5));
-    public static final Rotation2d L3height = Rotation2d.fromRotations(-43);
+    public static final Rotation2d L3height = Rotation2d.fromRotations(-35.4);
     public static final Rotation2d L4height = Rotation2d.fromRotations(-70);
     public static final Rotation2d maxHeight = Rotation2d.fromRotations(72);
   }
@@ -88,14 +87,10 @@ public class RobotConstants {
   public static class GeneralConstants {
 
     public static Pose2d[] getCartesianCoordinates(
-        double angle,
-        double centerOffsetX,
-        double centerOffsetY,
-        double poseOffset,
-        double poseOffsetBack) { // Left:trueRight:false
+        double angle, double poseOffset, double poseOffsetBack) { // Left:trueRight:false
       // Calculate x and y using trigonometric functions
-      double x = (0.8315 + poseOffsetBack) * Math.cos(angle) + centerOffsetX;
-      double y = (0.8315 + poseOffsetBack) * Math.sin(angle) + centerOffsetY;
+      double x = (0.8315 + poseOffsetBack) * Math.cos(angle) + 4.4895;
+      double y = (0.8315 + poseOffsetBack) * Math.sin(angle) + 4.026;
 
       // Compute the tangent line's direction
       double tangentX = -Math.sin(angle); // Negative sine for perpendicular direction
@@ -123,9 +118,11 @@ public class RobotConstants {
 
     public static boolean DEBUG = true;
 
+    public static Pose2d[] farSide = getCartesianCoordinates(0, 0.165, 0.44);
+
     public static Pose2d[] reefPoses = {
-      AllianceFlipUtil.apply(new Pose2d(new Translation2d(11.72, 4), Rotation2d.fromDegrees(0))),
-      AllianceFlipUtil.apply(new Pose2d(new Translation2d(11.72, 4), Rotation2d.fromDegrees(0))),
+      farSide[1],
+      farSide[0],
       new Pose2d(),
       new Pose2d(),
       new Pose2d(),
