@@ -2,7 +2,7 @@ package frc.robot.commands.StateCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.enums.robotStates;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 
@@ -21,7 +21,10 @@ public class ElevatorToChosenHeight extends Command {
   }
 
   @Override
-  public void initialize() {
+  public void initialize() {}
+
+  @Override
+  public void execute() {
     switch (this.stateHandler.getChosenlevel()) {
       case L1 -> this.stateHandler.setState(robotStates.L1PREPARE);
       case L2 -> this.stateHandler.setState(robotStates.L2PREPARE);
@@ -29,9 +32,6 @@ public class ElevatorToChosenHeight extends Command {
       case L4 -> this.stateHandler.setState(robotStates.L4PREPARE);
     }
   }
-
-  @Override
-  public void execute() {}
 
   @Override
   public boolean isFinished() {

@@ -87,14 +87,16 @@ public class RobotConstants {
   public static class GeneralConstants {
 
     public static Pose2d[] getCartesianCoordinates(
-        double angle, double poseOffset, double poseOffsetBack) { // Left:trueRight:false
+        double angle, double poseOffset, double poseOffsetBack) { // Left:trueRight:falss
+
+      double radians = Units.degreesToRadians(angle);
       // Calculate x and y using trigonometric functions
-      double x = (0.8315 + poseOffsetBack) * Math.cos(angle) + 4.4895;
-      double y = (0.8315 + poseOffsetBack) * Math.sin(angle) + 4.026;
+      double x = (0.8315 + poseOffsetBack) * Math.cos(radians) + 4.4895;
+      double y = (0.8315 + poseOffsetBack) * Math.sin(radians) + 4.026;
 
       // Compute the tangent line's direction
-      double tangentX = -Math.sin(angle); // Negative sine for perpendicular direction
-      double tangentY = Math.cos(angle); // Cosine for perpendicular direction
+      double tangentX = -Math.sin(radians); // Negative sine for perpendicular direction
+      double tangentY = Math.cos(radians); // Cosine for perpendicular direction
 
       // Normalize the tangent direction
       double magnitude = Math.sqrt(tangentX * tangentX + tangentY * tangentY);
@@ -109,8 +111,8 @@ public class RobotConstants {
       double y2 = y - tangentY * poseOffset;
 
       // Create Pose2d objects
-      Pose2d pose1 = new Pose2d(new Translation2d(x1, y1), Rotation2d.fromRadians(angle));
-      Pose2d pose2 = new Pose2d(new Translation2d(x2, y2), Rotation2d.fromRadians(angle));
+      Pose2d pose1 = new Pose2d(new Translation2d(x1, y1), Rotation2d.fromRadians(radians));
+      Pose2d pose2 = new Pose2d(new Translation2d(x2, y2), Rotation2d.fromRadians(radians));
 
       // Return the coordinates as a Pose2d array
       return new Pose2d[] {pose1, pose2};
@@ -130,6 +132,8 @@ public class RobotConstants {
       zerodeg[0],
       sixtydeg[1],
       sixtydeg[0],
+      onetwentydeg[1],
+      onetwentydeg[0],
       oneeightydeg[1],
       oneeightydeg[0],
       twofourtydeg[1],

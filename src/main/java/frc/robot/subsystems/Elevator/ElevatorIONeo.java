@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Elevator;
+package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -37,6 +37,7 @@ public class ElevatorIONeo implements ElevatorIO {
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
     motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
+    motor2.getEncoder().setPosition(0);
 
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
@@ -54,7 +55,6 @@ public class ElevatorIONeo implements ElevatorIO {
 
     motor2config = new SparkMaxConfig();
     motor2config.apply(leadConfig);
-    motor2config.follow(leadMotor, true);
     motor2.configure(motor2config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -63,12 +63,15 @@ public class ElevatorIONeo implements ElevatorIO {
 
     if (bottomLimitSwitch.get()) {
       encoder.setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
+      motor2.getEncoder().setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
     }
     if (topLimitSwitch.get()) {
       encoder.setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
+      motor2.getEncoder().setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
     }
 
     leadpid.setReference(targetRot.getRotations(), ControlType.kPosition);
+    motor2.getClosedLoopController().setReference(targetRot.getRotations(), ControlType.kPosition);
   }
 
   @Override
