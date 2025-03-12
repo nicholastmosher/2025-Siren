@@ -13,6 +13,10 @@
 
 package frc.robot.commands.Drive;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,11 +30,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -110,10 +109,25 @@ public class DriveCommands {
   }
 
   /**
+   * Drive backwards at a fixed speed
+   */
+  public static Command driveBackwards(Drive drive) {
+    var speeds = new ChassisSpeeds(-0.4, 0, 0);
+    return driveChassisSpeeds(drive, speeds);
+  }
+
+  /**
+   * Drive according to the given ChassisSpeeds
+   */
+  public static Command driveChassisSpeeds(Drive drive, ChassisSpeeds speeds) {
+    return Commands.run(() -> drive.runVelocity(speeds), drive);
+  }
+
+  /**
    * Drive to the given target pose.
-   * 
-   * If the robot is far, it will use PathPlanner with dynamic waypoints.
-   * If the robot is near, it will use a custom PID controller.
+   *
+   * <p>If the robot is far, it will use PathPlanner with dynamic waypoints. If the robot is near,
+   * it will use a custom PID controller.
    */
   public static Command driveToPose(Drive drive, Pose2d target) {
     var deltaX = Math.abs(drive.getPose().getX() - target.getX());
@@ -126,22 +140,19 @@ public class DriveCommands {
     }
   }
 
+  /**
+   * Drive to the given target pose using PathPlanner.
+   */
   public static Command driveToPosePathPlanner(Drive drive, Pose2d target) {
-    var startPose = new Pose2d(
-      new Translation2d(5.38, 5.39),
-      Rotation2d.fromDegrees(62)
-    );
+    var startPose = new Pose2d(new Translation2d(5.38, 5.39), Rotation2d.fromDegrees(62));
     // Maybe use this for start pose instead?
     // var startPose = drive.getPose();
     var endPose = target;
     var waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
     var constraints = PathConstraints.unlimitedConstraints(12);
-    var path = new PathPlannerPath(
-      waypoints,
-      constraints,
-      null,
-      new GoalEndState(0, target.getRotation())
-    );
+    var path =
+        new PathPlannerPath(
+            waypoints, constraints, null, new GoalEndState(0, target.getRotation()));
 
     boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
     if (!isBlue) {
@@ -151,6 +162,9 @@ public class DriveCommands {
     return AutoBuilder.followPath(path);
   }
 
+  /**
+   * Drive to the target pose using three custom PID controllers (X, Y, Rotation)
+   */
   public static Command driveToPoseCustomPid(Drive drive, Pose2d target) {
     var xPid = new PIDController(40, 0.1, 0.1);
     xPid.setTolerance(0.01);
@@ -162,17 +176,11 @@ public class DriveCommands {
     rotPid.setTolerance(1);
     rotPid.enableContinuousInput(-180, 180);
 
-    return driveToPoseCustomPid(
-      drive,
-      target,
-      xPid,
-      yPid,
-      rotPid
-    );
+    return driveToPoseCustomPid(drive, target, xPid, yPid, rotPid);
   }
 
   public static Command driveToPoseCustomPid(
-    Drive drive, 
+    Drive drive,
     Pose2d target,
     PIDController xPid,
     PIDController yPid,
@@ -181,12 +189,10 @@ public class DriveCommands {
     var drivePose = drive.getPose();
     var xOutput = xPid.calculate(drivePose.getX(), target.getX());
     var yOutput = yPid.calculate(drivePose.getY(), target.getY());
-    var rotOutput = rotPid.calculate(
-      drivePose.getRotation().getRadians(),
-      target.getRotation().getRadians()
-    );
+    var rotOutput =
+        rotPid.calculate(drivePose.getRotation().getRadians(), target.getRotation().getRadians());
     var speeds = new ChassisSpeeds(xOutput, yOutput, rotOutput);
 
-    return Commands.run(() -> drive.runVelocity(speeds));
+    return Commands.run(() -> drive.runVelocity(speeds), drive);
   }
 }
