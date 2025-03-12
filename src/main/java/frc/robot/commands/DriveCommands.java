@@ -11,7 +11,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
-package frc.robot.commands.Drive;
+package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -108,17 +108,13 @@ public class DriveCommands {
     return speeds;
   }
 
-  /**
-   * Drive backwards at a fixed speed
-   */
+  /** Drive backwards at a fixed speed */
   public static Command driveBackwards(Drive drive) {
     var speeds = new ChassisSpeeds(-0.4, 0, 0);
     return driveChassisSpeeds(drive, speeds);
   }
 
-  /**
-   * Drive according to the given ChassisSpeeds
-   */
+  /** Drive according to the given ChassisSpeeds */
   public static Command driveChassisSpeeds(Drive drive, ChassisSpeeds speeds) {
     return Commands.run(() -> drive.runVelocity(speeds), drive);
   }
@@ -140,9 +136,7 @@ public class DriveCommands {
     }
   }
 
-  /**
-   * Drive to the given target pose using PathPlanner.
-   */
+  /** Drive to the given target pose using PathPlanner. */
   public static Command driveToPosePathPlanner(Drive drive, Pose2d target) {
     var startPose = new Pose2d(new Translation2d(5.38, 5.39), Rotation2d.fromDegrees(62));
     // Maybe use this for start pose instead?
@@ -162,9 +156,7 @@ public class DriveCommands {
     return AutoBuilder.followPath(path);
   }
 
-  /**
-   * Drive to the target pose using three custom PID controllers (X, Y, Rotation)
-   */
+  /** Drive to the target pose using three custom PID controllers (X, Y, Rotation) */
   public static Command driveToPoseCustomPid(Drive drive, Pose2d target) {
     var xPid = new PIDController(40, 0.1, 0.1);
     xPid.setTolerance(0.01);
@@ -180,12 +172,7 @@ public class DriveCommands {
   }
 
   public static Command driveToPoseCustomPid(
-    Drive drive,
-    Pose2d target,
-    PIDController xPid,
-    PIDController yPid,
-    PIDController rotPid
-  ) {
+      Drive drive, Pose2d target, PIDController xPid, PIDController yPid, PIDController rotPid) {
     var drivePose = drive.getPose();
     var xOutput = xPid.calculate(drivePose.getX(), target.getX());
     var yOutput = yPid.calculate(drivePose.getY(), target.getY());
