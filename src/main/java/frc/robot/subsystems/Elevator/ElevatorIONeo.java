@@ -71,7 +71,7 @@ public class ElevatorIONeo implements ElevatorIO {
     }
 
     leadpid.setReference(targetRot.getRotations(), ControlType.kPosition);
-    motor2.getClosedLoopController().setReference(targetRot.getRotations(), ControlType.kPosition);
+    motor2.getClosedLoopController().setReference(-targetRot.getRotations(), ControlType.kPosition);
   }
 
   @Override
