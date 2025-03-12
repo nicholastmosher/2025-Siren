@@ -7,28 +7,33 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.lib.constants.RobotConstants;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
+import frc.lib.util.BasePosition;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIONeo implements ElevatorIO {
 
   private final SparkMax leadMotor;
-  private final SparkMax motor2;
+  private final SparkMax followMotor;
 
   private final RelativeEncoder encoder;
 
-  private final SparkClosedLoopController leadpid;
+  private final SparkClosedLoopController controller;
   private final SparkMaxConfig leadConfig;
-  private final SparkMaxConfig motor2config;
+  private final SparkMaxConfig followConfig;
 
   private final DigitalInput bottomLimitSwitch;
   private final DigitalInput topLimitSwitch;
 
-  private final double rotationstoInches = 0.0;
+  private final double encoderUpperLimit = 0.0;
+  private final double encoderLowerLimit = 0.0;
+  // private final double rotationstoInches = 0.0;
 
   public ElevatorIONeo() {
 
@@ -36,26 +41,37 @@ public class ElevatorIONeo implements ElevatorIO {
     topLimitSwitch = new DigitalInput(RobotConstants.ElevatorConstants.toplimitswitchID);
 
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
-    motor2 = new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
-    motor2.getEncoder().setPosition(0);
+    followMotor =
+        new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
+    followMotor.getEncoder().setPosition(0);
 
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
-    leadpid = leadMotor.getClosedLoopController();
+
+    controller = leadMotor.getClosedLoopController();
 
     leadConfig = new SparkMaxConfig();
     leadConfig
-        .closedLoop
-        .pid(0.075, 0, 0)
-        .minOutput(-0.5)
-        .maxOutput(0.5)
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        // .apply(new EncoderConfig().inverted(true))
+        .apply(
+        new ClosedLoopConfig()
+            .pid(0.075, 0, 0)
+            .minOutput(-0.5)
+            .maxOutput(0.5)
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder));
 
     leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    motor2config = new SparkMaxConfig();
-    motor2config.apply(leadConfig);
-    motor2.configure(motor2config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    followConfig = new SparkMaxConfig();
+    followConfig.follow(leadMotor, true);
+    followConfig.apply(leadConfig);
+    followMotor.configure(
+        followConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  public void setTargetPosition(BasePosition position) {
+    double targetEncoderPosition = position.toRange(encoderLowerLimit, encoderUpperLimit);
+    controller.setReference(targetEncoderPosition, ControlType.kPosition);
   }
 
   @Override
@@ -63,15 +79,18 @@ public class ElevatorIONeo implements ElevatorIO {
 
     if (bottomLimitSwitch.get()) {
       encoder.setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
-      motor2.getEncoder().setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
+      // motor2
+      //     .getEncoder()
+      //     .setPosition(-RobotConstants.ElevatorConstants.intakeheight.getRotations());
     }
     if (topLimitSwitch.get()) {
       encoder.setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
-      motor2.getEncoder().setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
+      // motor2.getEncoder().setPosition(-RobotConstants.ElevatorConstants.L4height.getRotations());
     }
 
-    leadpid.setReference(targetRot.getRotations(), ControlType.kPosition);
-    motor2.getClosedLoopController().setReference(-targetRot.getRotations(), ControlType.kPosition);
+    controller.setReference(targetRot.getRotations(), ControlType.kPosition);
+    // motor2.getClosedLoopController().setReference(-targetRot.getRotations(),
+    // ControlType.kPosition);
   }
 
   @Override
@@ -92,7 +111,7 @@ public class ElevatorIONeo implements ElevatorIO {
     if (topLimitSwitch.get() && realinput > 0) {
       stopElevator();
     }
-
+    Logger.recordOutput("Elevator/encoder", encoder.getPosition());
     leadMotor.set(realinput);
   }
 

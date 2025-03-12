@@ -212,6 +212,9 @@ public class RobotContainer {
 
     pilot.leftTrigger().toggleOnTrue(intake);
 
+    elevator.setDefaultCommand(
+        new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
+
     copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
     copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));

@@ -19,17 +19,23 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.constants.RobotConstants;
+import frc.lib.util.AllianceFlipUtil;
+import frc.lib.util.GeometryUtil;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -181,5 +187,85 @@ public class DriveCommands {
     var speeds = new ChassisSpeeds(xOutput, yOutput, rotOutput);
 
     return Commands.run(() -> drive.runVelocity(speeds), drive);
+  }
+
+  public static Command alignToClosestNode(Drive drive) {
+    Pose2d closestpose = new Pose2d();
+    double closestDistance = 900000000;
+    for (int i = 0; i < RobotConstants.GeneralConstants.reefPoses.length; i++) {
+      Pose2d checkingPose = AllianceFlipUtil.apply(RobotConstants.GeneralConstants.reefPoses[i]);
+      double distance =
+          GeometryUtil.toTransform2d(drive.getPose())
+              .getTranslation()
+              .getDistance(GeometryUtil.toTransform2d(checkingPose).getTranslation());
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestpose = checkingPose;
+      }
+    }
+    Logger.recordOutput("command/targetpose", closestpose);
+    return alignToPose(drive, closestpose);
+  }
+
+  public static Command alignToPose(Drive drive, Pose2d target) {
+    var xPid =
+        new ProfiledPIDController(
+            RobotConstants.DriveConstants.alignP,
+            RobotConstants.DriveConstants.alignI,
+            RobotConstants.DriveConstants.alignD,
+            new TrapezoidProfile.Constraints(
+                RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel));
+    xPid.setTolerance(RobotConstants.DriveConstants.translationRange);
+
+    var yPid =
+        new ProfiledPIDController(
+            RobotConstants.DriveConstants.alignP,
+            RobotConstants.DriveConstants.alignI,
+            RobotConstants.DriveConstants.alignD,
+            new TrapezoidProfile.Constraints(
+                RobotConstants.DriveConstants.maxSpeed, RobotConstants.DriveConstants.maxAccel));
+    yPid.setTolerance(RobotConstants.DriveConstants.translationRange);
+
+    var rPid =
+        new ProfiledPIDController(
+            RobotConstants.DriveConstants.headingP,
+            RobotConstants.DriveConstants.headingI,
+            RobotConstants.DriveConstants.headingD,
+            new TrapezoidProfile.Constraints(
+                RobotConstants.DriveConstants.maxHeadingSpeed,
+                RobotConstants.DriveConstants.maxHeadingAccel));
+    rPid.enableContinuousInput(-Math.PI, Math.PI);
+    rPid.setTolerance(RobotConstants.DriveConstants.headingRange);
+
+    return alignToPose(drive, target, xPid, yPid, rPid);
+  }
+
+  public static Command alignToPose(
+      Drive drive,
+      Pose2d target,
+      ProfiledPIDController xPid,
+      ProfiledPIDController yPid,
+      ProfiledPIDController rPid) {
+    var initialPose = drive.getPose();
+    xPid.reset(initialPose.getX());
+    yPid.reset(initialPose.getY());
+    rPid.reset(initialPose.getRotation().getRadians());
+
+    return Commands.run(
+            () -> {
+              var drivePose = drive.getPose();
+
+              var xOut = xPid.calculate(drivePose.getX(), target.getX());
+              var yOut = yPid.calculate(drivePose.getY(), target.getY());
+              var rOut =
+                  -rPid.calculate(
+                      drivePose.getRotation().getRadians(), target.getRotation().getRadians());
+
+              var fieldRelativeSpeeds = DriveCommands.driveFieldOriented(drive, xOut, yOut, rOut);
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, drive.getRotation()));
+            },
+            drive)
+        .until(() -> xPid.atGoal() && yPid.atGoal() && rPid.atGoal());
   }
 }
