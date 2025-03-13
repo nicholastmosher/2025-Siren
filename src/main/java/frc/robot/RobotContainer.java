@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
+import frc.lib.util.BasePosition;
 import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.StateCommands.IntakeAlgae;
@@ -219,9 +220,9 @@ public class RobotContainer {
 
     pilot.leftTrigger().toggleOnTrue(intake);
 
-    // copilot
-    //     .b()
-         .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.5)), elevator));
+    copilot
+        .b()
+        .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.9)), elevator));
     // copilot
     //     .a()
     //     .whileTrue(Commands.run(() -> elevator.moveElevator(copilot.getRightY()), elevator))

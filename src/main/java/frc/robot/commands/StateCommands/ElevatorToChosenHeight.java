@@ -26,10 +26,22 @@ public class ElevatorToChosenHeight extends Command {
   @Override
   public void execute() {
     switch (this.stateHandler.getChosenlevel()) {
-      case L1: this.stateHandler.setState(robotStates.L1PREPARE); this.elevator.setTargetPosition(Elevator.CORAL_L1); break;
-      case L2:this.stateHandler.setState(robotStates.L2PREPARE); this.elevator.setTargetPosition(Elevator.CORAL_L2); break;
-      case L3:this.stateHandler.setState(robotStates.L3PREPARE); this.elevator.setTargetPosition(Elevator.CORAL_L3); break;
-      case L4:this.stateHandler.setState(robotStates.L4PREPARE); this.elevator.setTargetPosition(Elevator.CORAL_L4); break;
+      case L1:
+        this.stateHandler.setState(robotStates.L1PREPARE);
+        this.elevator.setTargetPosition(Elevator.CORAL_L1);
+        break;
+      case L2:
+        this.stateHandler.setState(robotStates.L2PREPARE);
+        this.elevator.setTargetPosition(Elevator.CORAL_L2);
+        break;
+      case L3:
+        this.stateHandler.setState(robotStates.L3PREPARE);
+        this.elevator.setTargetPosition(Elevator.CORAL_L3);
+        break;
+      case L4:
+        this.stateHandler.setState(robotStates.L4PREPARE);
+        this.elevator.setTargetPosition(Elevator.CORAL_L4);
+        break;
     }
   }
 
