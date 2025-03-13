@@ -221,7 +221,7 @@ public class RobotContainer {
 
     // copilot
     //     .b()
-    //     .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.5)), elevator));
+         .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.5)), elevator));
     // copilot
     //     .a()
     //     .whileTrue(Commands.run(() -> elevator.moveElevator(copilot.getRightY()), elevator))
