@@ -75,12 +75,12 @@ public class RobotConstants {
     public static final int spinMotorID = 34;
 
     public static final double staticSpeed = 0.0;
-    public static final double intakeSpeed = 1;
+    public static final double intakeSpeed = 0.8;
     public static final double throwSpeed = -1;
     public static final double holdSpeed = 0.1;
 
     public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-9.5);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-10.5);
     public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 

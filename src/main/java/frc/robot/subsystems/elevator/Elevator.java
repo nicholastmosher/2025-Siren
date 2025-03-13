@@ -10,10 +10,18 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
+import frc.lib.util.BasePosition;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
+  public static final BasePosition CORAL_L1 = new BasePosition(0.0);
+  public static final BasePosition CORAL_L2 = new BasePosition(0.25);
+  public static final BasePosition CORAL_L3 = new BasePosition(0.50);
+  public static final BasePosition CORAL_L4 = new BasePosition(1.0);
+  private final double encoderLowerLimit = 0.0;
+  private final double encoderUpperLimit = 280.0;
+
   /** Creates a new Elevator. */
   private final ElevatorIO elevator;
 
@@ -37,6 +45,14 @@ public class Elevator extends SubsystemBase {
     profileTimer.start();
 
     targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
+  }
+
+  public void setTargetPosition(BasePosition position) {
+    elevator.setTargetPosition(position);
+  }
+
+  public BasePosition getBasePosition() {
+    return elevator.getBasePosition();
   }
 
   public void moveElevator(double input) {
@@ -71,6 +87,8 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    elevator.periodic();
+
     if (this.targetRotation != this.stateHandler.getState().getElevatorHeight().getRotations()) {
       profileTimer.reset();
       this.targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
@@ -82,18 +100,21 @@ public class Elevator extends SubsystemBase {
     } else {
       profileTimer.start();
     }
-    // if (profileTimer.isRunning()) {
-    //  elevator.moveToPoint(
-    //      Rotation2d.fromRotations(
-    //          profile.calculate(
-    //                  profileTimer.getTimestamp(),
-    //                  new State(
-    //                      this.elevator.getEncoder().getPosition(),
-    //                      this.elevator.getEncoder().getVelocity()),
-    //                  new State(this.stateHandler.getState().getElevatorHeight().getRotations(),
-    // 0))
-    //              .position));
-    // }
+    if (profileTimer.isRunning()) {
+      // elevator.setTargetPosition(
+      //     new BasePosition(0.25)
+      //      Rotation2d.fromRotations(
+      //          profile.calculate(
+      //                  profileTimer.getTimestamp(),
+      //                  new State(
+      //                      this.elevator.getEncoder().getPosition(),
+      //                      this.elevator.getEncoder().getVelocity()),
+      //                  new
+      // State(this.stateHandler.getState().getElevatorHeight().getRotations(),
+      // 0))
+      //              .position)
+      // );
+    }
 
     elevator.updateInputs(elevatorinputs);
     Logger.processInputs("Elevator", elevatorinputs);

@@ -10,8 +10,8 @@ public class bargeIONeo implements bargeIO {
   // Constructor
   public bargeIONeo() {
 
-    motor1 = new SparkMax(35, MotorType.kBrushless);
-    motor2 = new SparkMax(36, MotorType.kBrushless);
+    motor1 = new SparkMax(10, MotorType.kBrushless);
+    motor2 = new SparkMax(11, MotorType.kBrushless);
   }
 
   @Override

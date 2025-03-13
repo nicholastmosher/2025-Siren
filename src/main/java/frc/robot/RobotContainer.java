@@ -24,13 +24,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
-import frc.lib.enums.LevelEnum;
 import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.CommandGroups.ScoreCommandGroup;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.StateCommands.IntakeAlgae;
 import frc.robot.commands.StateCommands.PlaceAtChosenHeight;
 import frc.robot.commands.StateCommands.ThrowAlgae;
+import frc.robot.subsystems.bargemech.bargeIONeo;
+import frc.robot.subsystems.bargemech.bargeMech;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -65,6 +65,7 @@ public class RobotContainer {
   private final Elevator elevator;
   private final EndEffector endEffector;
   private final GroundIntake groundIntake;
+  private final bargeMech barge;
 
   // Controller
   private final CommandXboxController pilot = new CommandXboxController(0);
@@ -109,6 +110,8 @@ public class RobotContainer {
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
+        barge = new bargeMech(new bargeIONeo());
+
         break;
 
       case SIM:
@@ -135,6 +138,8 @@ public class RobotContainer {
         groundIntake = new GroundIntake(new GroundIntakeIOFalconVortex(), stateHandler);
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
+
+        barge = new bargeMech(new bargeIONeo());
 
         break;
 
@@ -164,6 +169,8 @@ public class RobotContainer {
 
         endEffector = new EndEffector(new ClawIOVortex(), new WristIONeo(), stateHandler);
 
+        barge = new bargeMech(new bargeIONeo());
+
         break;
     }
 
@@ -192,12 +199,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
 
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> (-pilot.getLeftY()),
-            () -> (-pilot.getLeftX()),
-            () -> (pilot.getRightX())));
+    // drive.setDefaultCommand(
+    //     DriveCommands.joystickDrive(
+    //         drive,
+    //         () -> (-pilot.getLeftY()),
+    //         () -> (-pilot.getLeftX()),
+    //         () -> (pilot.getRightX())));
 
     // Reset gyro to 0° when B button is pressed
     pilot
@@ -212,13 +219,22 @@ public class RobotContainer {
 
     pilot.leftTrigger().toggleOnTrue(intake);
 
-    elevator.setDefaultCommand(
-        new InstantCommand(() -> elevator.moveElevator(copilot.getLeftY()), elevator));
+    // copilot
+    //     .b()
+    //     .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.5)), elevator));
+    // copilot
+    //     .a()
+    //     .whileTrue(Commands.run(() -> elevator.moveElevator(copilot.getRightY()), elevator))
+    //     .onFalse(Commands.run(() -> elevator.setTargetPosition(elevator.getBasePosition())));
+    // copilot.povDown().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L1)));
+    // copilot.povLeft().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L2)));
+    // copilot.povRight().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L3)));
+    // copilot.povUp().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L4)));
 
-    copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
-    copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
-    copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
-    copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+    // copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
+    // copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
+    // copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
+    // copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
 
     // pilot.rightTrigger().whileTrue(score);
     pilot.rightTrigger().whileTrue(score);
@@ -227,6 +243,8 @@ public class RobotContainer {
     pilot.x().whileTrue(throwAlgae);
     // pilot.leftTrigger().whileTrue(new PathPlannerAuto("LeftAuto"));
     // pilot.rightBumper().whileTrue(new PathPlannerAuto("RightAuto"));
+
+    barge.setDefaultCommand(new InstantCommand(() -> barge.move(copilot.getRightY()), barge));
   }
 
   /**

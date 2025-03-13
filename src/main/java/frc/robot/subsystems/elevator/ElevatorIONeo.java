@@ -31,8 +31,8 @@ public class ElevatorIONeo implements ElevatorIO {
   private final DigitalInput bottomLimitSwitch;
   private final DigitalInput topLimitSwitch;
 
-  private final double encoderUpperLimit = 0.0;
   private final double encoderLowerLimit = 0.0;
+  private final double encoderUpperLimit = 280.0;
   // private final double rotationstoInches = 0.0;
 
   public ElevatorIONeo() {
@@ -43,7 +43,6 @@ public class ElevatorIONeo implements ElevatorIO {
     leadMotor = new SparkMax(RobotConstants.ElevatorConstants.leadMotorID, MotorType.kBrushless);
     followMotor =
         new SparkMax(RobotConstants.ElevatorConstants.followerMotorID, MotorType.kBrushless);
-    followMotor.getEncoder().setPosition(0);
 
     encoder = leadMotor.getEncoder();
     encoder.setPosition(0);
@@ -69,9 +68,21 @@ public class ElevatorIONeo implements ElevatorIO {
         followConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
+  @Override
+  public void periodic() {
+    var encoderPosition = encoder.getPosition();
+    var basePosition =
+        BasePosition.fromRange(encoderLowerLimit, encoderUpperLimit, encoderPosition).getValue();
+    Logger.recordOutput("elevator/basePosition", basePosition);
+  }
+
   public void setTargetPosition(BasePosition position) {
     double targetEncoderPosition = position.toRange(encoderLowerLimit, encoderUpperLimit);
     controller.setReference(targetEncoderPosition, ControlType.kPosition);
+  }
+
+  public BasePosition getBasePosition() {
+    return BasePosition.fromRange(encoderLowerLimit, encoderUpperLimit, encoder.getPosition());
   }
 
   @Override
@@ -95,7 +106,7 @@ public class ElevatorIONeo implements ElevatorIO {
 
   @Override
   public void move(double input) {
-    double realinput = input * 0.2;
+    double realinput = input * 0.5;
 
     if (realinput > 0.15) {
       realinput = 0.15;

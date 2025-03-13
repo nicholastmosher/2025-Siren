@@ -2,6 +2,7 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.util.BasePosition;
 
 public class ElevatorIOSim implements ElevatorIO {
 
@@ -37,5 +38,23 @@ public class ElevatorIOSim implements ElevatorIO {
   public double getPercentRaised() {
     // TODO Auto-generated method stub
     return 0.0;
+  }
+
+  @Override
+  public void setTargetPosition(BasePosition position) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setTargetPosition'");
+  }
+
+  @Override
+  public void periodic() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'periodic'");
+  }
+
+  @Override
+  public BasePosition getBasePosition() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getBasePosition'");
   }
 }

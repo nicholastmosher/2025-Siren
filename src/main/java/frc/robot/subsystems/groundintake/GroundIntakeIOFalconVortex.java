@@ -56,7 +56,7 @@ public class GroundIntakeIOFalconVortex implements GroundIntakeIO {
 
   @Override
   public void setSpeed(double speed) {
-    spinMotor.set(speed * 0.3);
+    spinMotor.set(speed);
   }
 
   @Override

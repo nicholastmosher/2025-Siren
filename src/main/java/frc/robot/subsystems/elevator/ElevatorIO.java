@@ -6,6 +6,7 @@ package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.lib.util.BasePosition;
 import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
@@ -20,6 +21,8 @@ public interface ElevatorIO {
     boolean followerisConnected;
   }
 
+  public void periodic();
+
   public void move(double input);
 
   public void stopElevator();
@@ -29,6 +32,10 @@ public interface ElevatorIO {
   public void resetEncoder();
 
   public void moveToPoint(Rotation2d targetRot);
+
+  public void setTargetPosition(BasePosition position);
+
+  public BasePosition getBasePosition();
 
   public double getPercentRaised();
 

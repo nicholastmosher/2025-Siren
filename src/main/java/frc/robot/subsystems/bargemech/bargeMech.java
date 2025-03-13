@@ -15,9 +15,9 @@ public class bargeMech extends SubsystemBase {
     this.barge = b;
   }
 
-  public void intake(double speed) {}
-
-  public void outake(double speed) {}
+  public void move(double input) {
+    this.barge.intake(input);
+  }
 
   public void stopBarge() {
     this.barge.stopMotor();
