@@ -54,8 +54,8 @@ public class RobotConstants {
   public static class ElevatorConstants {
     public static final int leadMotorID = 30;
     public static final int followerMotorID = 31;
-    public static final int bottomlimitswitchID = 4;
-    public static final int toplimitswitchID = 2;
+    public static final int bottomlimitswitchID = 3;
+    public static final int toplimitswitchID = 1;
 
     public static final double closeEnoughPercent = 0.01;
 

@@ -53,5 +53,6 @@ public class ElevatorToChosenHeight extends Command {
   @Override
   public void end(boolean interrupted) {
     stateHandler.setState(robotStates.RESTING);
+    this.elevator.setTargetPosition(Elevator.BOTTOM);
   }
 }

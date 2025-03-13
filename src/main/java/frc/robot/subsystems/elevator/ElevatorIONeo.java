@@ -55,8 +55,8 @@ public class ElevatorIONeo implements ElevatorIO {
         .apply(
         new ClosedLoopConfig()
             .pid(0.075, 0, 0)
-            .minOutput(-0.5)
-            .maxOutput(0.5)
+            .minOutput(-0.7)
+            .maxOutput(0.7)
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder));
 
     leadMotor.configure(leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -77,6 +77,12 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   public void setTargetPosition(BasePosition position) {
+    if (bottomLimitSwitch.get()) {
+      encoder.setPosition(encoderLowerLimit);
+    }
+    if (topLimitSwitch.get()) {
+      encoder.setPosition(encoderUpperLimit);
+    }
     double targetEncoderPosition = position.toRange(encoderLowerLimit, encoderUpperLimit);
     controller.setReference(targetEncoderPosition, ControlType.kPosition);
   }

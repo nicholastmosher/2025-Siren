@@ -2,7 +2,6 @@ package frc.robot.commands.CommandGroups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Drive.ToClosestReefPoseCommand;
 import frc.robot.commands.StateCommands.*;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
@@ -19,7 +18,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
       StateHandler stateHandler) {
     super(
         new ParallelCommandGroup(
-            new ToClosestReefPoseCommand(drive),
+            // new ToClosestReefPoseCommand(drive),
             new ElevatorToChosenHeight(elevator, endEffector, stateHandler))
 
         // new ElevatorToChosenHeight(elevator, endEffector, stateHandler))

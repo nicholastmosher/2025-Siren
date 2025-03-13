@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.constants.SwerveConstants;
-import frc.lib.util.BasePosition;
+import frc.lib.enums.LevelEnum;
 import frc.robot.commands.CommandGroups.IntakeCommandGroup;
 import frc.robot.commands.CommandGroups.ScoreCommandGroup;
 import frc.robot.commands.StateCommands.IntakeAlgae;
@@ -220,9 +220,13 @@ public class RobotContainer {
 
     pilot.leftTrigger().toggleOnTrue(intake);
 
-    copilot
-        .b()
-        .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.9)), elevator));
+    // copilot
+    //     .b()
+    //     .onTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.9)), elevator));
+    // copilot
+    //     .a()
+    //     .whileTrue(Commands.run(() -> elevator.setTargetPosition(new BasePosition(0.0)),
+    // elevator));
     // copilot
     //     .a()
     //     .whileTrue(Commands.run(() -> elevator.moveElevator(copilot.getRightY()), elevator))
@@ -232,10 +236,10 @@ public class RobotContainer {
     // copilot.povRight().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L3)));
     // copilot.povUp().onTrue(Commands.run(() -> elevator.setTargetPosition(Elevator.CORAL_L4)));
 
-    // copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
-    // copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
-    // copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
-    // copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+    copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
+    copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
+    copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
+    copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
 
     // pilot.rightTrigger().whileTrue(score);
     pilot.rightTrigger().whileTrue(score);

@@ -5,8 +5,10 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
@@ -18,7 +20,8 @@ public class Elevator extends SubsystemBase {
   public static final BasePosition CORAL_L1 = new BasePosition(0.0);
   public static final BasePosition CORAL_L2 = new BasePosition(0.25);
   public static final BasePosition CORAL_L3 = new BasePosition(0.50);
-  public static final BasePosition CORAL_L4 = new BasePosition(1.0);
+  public static final BasePosition CORAL_L4 = new BasePosition(0.95);
+  public static final BasePosition BOTTOM = new BasePosition(0.0);
   private final double encoderLowerLimit = 0.0;
   private final double encoderUpperLimit = 280.0;
 
@@ -34,21 +37,24 @@ public class Elevator extends SubsystemBase {
 
   private double targetRotation;
 
+  private BasePosition ElevatorPositionNormalized;
+
   public Elevator(ElevatorIO elevator, StateHandler handler) {
     this.elevator = elevator;
     elevatorinputs = new ElevatorIOInputsAutoLogged();
     this.stateHandler = handler;
 
-    profile = new TrapezoidProfile(new Constraints(5000, 50000));
+    profile = new TrapezoidProfile(new Constraints(200, 2000));
     feedforward = new ElevatorFeedforward(0, 0.0, 0);
     profileTimer = new Timer();
     profileTimer.start();
 
     targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
+    ElevatorPositionNormalized = new BasePosition(0.0);
   }
 
   public void setTargetPosition(BasePosition position) {
-    elevator.setTargetPosition(position);
+    ElevatorPositionNormalized = position;
   }
 
   public BasePosition getBasePosition() {
@@ -101,19 +107,22 @@ public class Elevator extends SubsystemBase {
       profileTimer.start();
     }
     if (profileTimer.isRunning()) {
-      // elevator.setTargetPosition(
-      //     new BasePosition(0.25)
-      //      Rotation2d.fromRotations(
-      //          profile.calculate(
-      //                  profileTimer.getTimestamp(),
-      //                  new State(
-      //                      this.elevator.getEncoder().getPosition(),
-      //                      this.elevator.getEncoder().getVelocity()),
-      //                  new
-      // State(this.stateHandler.getState().getElevatorHeight().getRotations(),
-      // 0))
-      //              .position)
-      // );
+
+      Rotation2d targetRotation =
+          Rotation2d.fromRotations(
+              profile.calculate(
+                      profileTimer.getTimestamp(),
+                      new State(
+                          this.elevator.getEncoder().getPosition(),
+                          this.elevator.getEncoder().getVelocity()),
+                      new State(
+                          ElevatorPositionNormalized.toRange(encoderLowerLimit, encoderUpperLimit),
+                          0))
+                  .position);
+
+      elevator.setTargetPosition(
+          BasePosition.fromRange(
+              encoderLowerLimit, encoderUpperLimit, targetRotation.getRotations()));
     }
 
     elevator.updateInputs(elevatorinputs);
