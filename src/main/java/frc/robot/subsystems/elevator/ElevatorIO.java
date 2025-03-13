@@ -31,13 +31,9 @@ public interface ElevatorIO {
 
   public void resetEncoder();
 
-  public void moveToPoint(Rotation2d targetRot);
-
   public void setTargetPosition(BasePosition position);
 
   public BasePosition getBasePosition();
-
-  public double getPercentRaised();
 
   public default void updateInputs(ElevatorIOInputs inputs) {}
 }

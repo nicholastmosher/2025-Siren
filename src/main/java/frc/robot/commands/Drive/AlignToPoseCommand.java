@@ -124,9 +124,9 @@ public class AlignToPoseCommand extends Command {
   }
 
   public boolean isAligned() {
-    Logger.recordOutput("headingisFinished", this.alignHeadingController.atSetpoint());
-    Logger.recordOutput("xisFinished", this.alignXController.atSetpoint());
-    Logger.recordOutput("yisFinished", this.alignYController.atSetpoint());
+    Logger.recordOutput("headingisFinished", this.alignHeadingController.atGoal());
+    Logger.recordOutput("xisFinished", this.alignXController.atGoal());
+    Logger.recordOutput("yisFinished", this.alignYController.atGoal());
     Logger.recordOutput("commands/targetdegrees", target.getRotation().getDegrees());
     Logger.recordOutput("commands/actualdegree", this.drive.getRotation().getDegrees());
     if (alignXController.atGoal() && alignYController.atGoal() && alignHeadingController.atGoal()

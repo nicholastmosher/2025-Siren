@@ -11,36 +11,36 @@ import frc.lib.enums.TargetPose;
 /** Add your docs here. */
 public class robotstateconfig {
 
-  private Rotation2d elevatorheight;
   private Rotation2d wristRotation;
   private Rotation2d groundIntakeRot;
   private double groundIntakeSpeed;
   private double clawSpeed;
+  public double daSpeed;
   private TargetPose targetPose;
   private boolean disabled;
 
   public robotstateconfig(
-      Rotation2d elevatorRot,
       Rotation2d wristRot,
       Rotation2d groundIntakeRot,
       double groundIntakeSpeed,
       double clawSpeed,
+      double daSpeed,
       TargetPose targetPose,
       boolean disabled) {
-    this.elevatorheight = elevatorRot;
     this.wristRotation = wristRot;
     this.groundIntakeRot = groundIntakeRot;
     this.groundIntakeSpeed = groundIntakeSpeed;
     this.clawSpeed = clawSpeed;
+    this.daSpeed = daSpeed;
     this.targetPose = targetPose;
     this.disabled = disabled;
   }
 
   public robotstateconfig() {
     this(
-        RobotConstants.ElevatorConstants.defaultheight,
         RobotConstants.EndEffectorConstants.defaultrot,
         RobotConstants.GroundIntakeConstants.defaultangle,
+        0.0,
         0.0,
         0.0,
         TargetPose.NONE,
@@ -48,21 +48,13 @@ public class robotstateconfig {
   }
 
   public robotstateconfig(
-      Rotation2d elevatorRot,
       Rotation2d wristRot,
       Rotation2d groundIntakeRot,
       double groundIntakeSpeed,
       double clawSpeed,
+      double daSpeed,
       TargetPose targetPose) {
-    this(elevatorRot, wristRot, groundIntakeRot, groundIntakeSpeed, clawSpeed, targetPose, false);
-  }
-
-  public Rotation2d getElevatorHeight() {
-    return elevatorheight;
-  }
-
-  public void setElevatorHeight(Rotation2d elevatorheight) {
-    this.elevatorheight = elevatorheight;
+    this(wristRot, groundIntakeRot, groundIntakeSpeed, clawSpeed, daSpeed, targetPose, false);
   }
 
   public Rotation2d getWristRotation() {
@@ -83,6 +75,14 @@ public class robotstateconfig {
 
   public double getGroundIntakeSpeed() {
     return groundIntakeSpeed;
+  }
+
+  public void setDealgifySpeed(double daSpeed) {
+    this.daSpeed = daSpeed;
+  }
+
+  public double getDealgifySpeed() {
+    return this.daSpeed;
   }
 
   public void setGroundIntakeSpeed(double groundIntakeSpeed) {

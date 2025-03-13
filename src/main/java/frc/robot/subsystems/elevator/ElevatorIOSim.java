@@ -1,7 +1,6 @@
 package frc.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.util.BasePosition;
 
 public class ElevatorIOSim implements ElevatorIO {
@@ -26,18 +25,6 @@ public class ElevatorIOSim implements ElevatorIO {
   public void resetEncoder() {
     // TODO Auto-generated method stub
 
-  }
-
-  @Override
-  public void moveToPoint(Rotation2d targetRot) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public double getPercentRaised() {
-    // TODO Auto-generated method stub
-    return 0.0;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package frc.robot.commands.StateCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.constants.RobotConstants;
 import frc.lib.enums.robotStates;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
@@ -28,20 +29,31 @@ public class ElevatorToChosenHeight extends Command {
     switch (this.stateHandler.getChosenlevel()) {
       case L1:
         this.stateHandler.setState(robotStates.L1PREPARE);
-        this.elevator.setTargetPosition(Elevator.CORAL_L1);
+        this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L1);
         break;
       case L2:
         this.stateHandler.setState(robotStates.L2PREPARE);
-        this.elevator.setTargetPosition(Elevator.CORAL_L2);
+        this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L2);
         break;
       case L3:
         this.stateHandler.setState(robotStates.L3PREPARE);
-        this.elevator.setTargetPosition(Elevator.CORAL_L3);
+        this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L3);
         break;
       case L4:
         this.stateHandler.setState(robotStates.L4PREPARE);
-        this.elevator.setTargetPosition(Elevator.CORAL_L4);
+        this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L4);
         break;
+      case INTAKE:
+        this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.BOTTOM);
+        break;
+        // case DEALGIFYLOW:
+        //   this.stateHandler.setState(robotStates.DEALGIFYLOW);
+        //   this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.DEALGIFYLOW);
+        //   break;
+        // case DEALGIFYHIGH:
+        //   this.stateHandler.setState(robotStates.DEALGIFYHIGH);
+        //   this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.DEALGIFYHIGH);
+        //   break;
     }
   }
 
@@ -52,7 +64,9 @@ public class ElevatorToChosenHeight extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    stateHandler.setState(robotStates.RESTING);
-    this.elevator.setTargetPosition(Elevator.BOTTOM);
+    if (interrupted) {
+      stateHandler.setState(robotStates.RESTING);
+      this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.BOTTOM);
+    }
   }
 }

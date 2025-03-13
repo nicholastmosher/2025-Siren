@@ -11,19 +11,13 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.constants.RobotConstants;
 import frc.lib.constants.RobotConstants.ElevatorConstants;
 import frc.lib.util.BasePosition;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
-  public static final BasePosition CORAL_L1 = new BasePosition(0.0);
-  public static final BasePosition CORAL_L2 = new BasePosition(0.25);
-  public static final BasePosition CORAL_L3 = new BasePosition(0.50);
-  public static final BasePosition CORAL_L4 = new BasePosition(0.95);
-  public static final BasePosition BOTTOM = new BasePosition(0.0);
-  private final double encoderLowerLimit = 0.0;
-  private final double encoderUpperLimit = 280.0;
 
   /** Creates a new Elevator. */
   private final ElevatorIO elevator;
@@ -49,12 +43,13 @@ public class Elevator extends SubsystemBase {
     profileTimer = new Timer();
     profileTimer.start();
 
-    targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
     ElevatorPositionNormalized = new BasePosition(0.0);
   }
 
   public void setTargetPosition(BasePosition position) {
     ElevatorPositionNormalized = position;
+    profileTimer.reset();
+    profileTimer.start();
   }
 
   public BasePosition getBasePosition() {
@@ -74,31 +69,32 @@ public class Elevator extends SubsystemBase {
     this.elevator.resetEncoder();
   }
 
-  public double getPercentRaised() {
-    return elevator.getPercentRaised();
-  }
-
   public boolean isCloseEnough() {
 
     double encoderposition = elevator.getEncoder().getPosition();
-    double targetposition = this.stateHandler.getState().getElevatorHeight().getRotations();
 
-    if (targetposition < (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))
-        && targetposition > (encoderposition * (1 + ElevatorConstants.closeEnoughPercent))) {
+    if (Math.abs(
+            encoderposition
+                - ElevatorPositionNormalized.toRange(
+                    RobotConstants.ElevatorConstants.encoderLowerLimit,
+                    RobotConstants.ElevatorConstants.encoderUpperLimit))
+        < ElevatorConstants.closeEnoughRange) {
+      Logger.recordOutput("Elevator/closeenough", true);
+      Logger.recordOutput(
+          "difference",
+          encoderposition
+              - ElevatorPositionNormalized.toRange(
+                  RobotConstants.ElevatorConstants.encoderLowerLimit,
+                  RobotConstants.ElevatorConstants.encoderUpperLimit));
       return true;
     }
-
+    Logger.recordOutput("Elevator/closeenough", false);
     return false;
   }
 
   @Override
   public void periodic() {
     elevator.periodic();
-
-    if (this.targetRotation != this.stateHandler.getState().getElevatorHeight().getRotations()) {
-      profileTimer.reset();
-      this.targetRotation = this.stateHandler.getState().getElevatorHeight().getRotations();
-    }
 
     if (stateHandler.getState().isDisabled()) {
       profileTimer.stop();
@@ -116,13 +112,17 @@ public class Elevator extends SubsystemBase {
                           this.elevator.getEncoder().getPosition(),
                           this.elevator.getEncoder().getVelocity()),
                       new State(
-                          ElevatorPositionNormalized.toRange(encoderLowerLimit, encoderUpperLimit),
+                          ElevatorPositionNormalized.toRange(
+                              RobotConstants.ElevatorConstants.encoderLowerLimit,
+                              RobotConstants.ElevatorConstants.encoderUpperLimit),
                           0))
                   .position);
 
       elevator.setTargetPosition(
           BasePosition.fromRange(
-              encoderLowerLimit, encoderUpperLimit, targetRotation.getRotations()));
+              RobotConstants.ElevatorConstants.encoderLowerLimit,
+              RobotConstants.ElevatorConstants.encoderUpperLimit,
+              targetRotation.getRotations()));
     }
 
     elevator.updateInputs(elevatorinputs);

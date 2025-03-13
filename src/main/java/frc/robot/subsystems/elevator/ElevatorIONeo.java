@@ -10,10 +10,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.lib.constants.RobotConstants;
-import frc.lib.constants.RobotConstants.ElevatorConstants;
 import frc.lib.util.BasePosition;
 import org.littletonrobotics.junction.Logger;
 
@@ -54,7 +52,7 @@ public class ElevatorIONeo implements ElevatorIO {
         // .apply(new EncoderConfig().inverted(true))
         .apply(
         new ClosedLoopConfig()
-            .pid(0.075, 0, 0)
+            .pid(0.15, 0, 0)
             .minOutput(-1)
             .maxOutput(1)
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder));
@@ -92,25 +90,6 @@ public class ElevatorIONeo implements ElevatorIO {
   }
 
   @Override
-  public void moveToPoint(Rotation2d targetRot) {
-
-    if (bottomLimitSwitch.get()) {
-      encoder.setPosition(RobotConstants.ElevatorConstants.intakeheight.getRotations());
-      // motor2
-      //     .getEncoder()
-      //     .setPosition(-RobotConstants.ElevatorConstants.intakeheight.getRotations());
-    }
-    if (topLimitSwitch.get()) {
-      encoder.setPosition(RobotConstants.ElevatorConstants.L4height.getRotations());
-      // motor2.getEncoder().setPosition(-RobotConstants.ElevatorConstants.L4height.getRotations());
-    }
-
-    controller.setReference(targetRot.getRotations(), ControlType.kPosition);
-    // motor2.getClosedLoopController().setReference(-targetRot.getRotations(),
-    // ControlType.kPosition);
-  }
-
-  @Override
   public void move(double input) {
     double realinput = input * 0.5;
 
@@ -145,12 +124,6 @@ public class ElevatorIONeo implements ElevatorIO {
   @Override
   public void resetEncoder() {
     encoder.setPosition(0);
-  }
-
-  @Override
-  public double getPercentRaised() {
-
-    return (getEncoder().getPosition() / ElevatorConstants.maxHeight.getRotations());
   }
 
   @Override

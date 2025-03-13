@@ -1,6 +1,7 @@
 package frc.robot.commands.StateCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.constants.RobotConstants;
 import frc.lib.enums.robotStates;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
@@ -23,6 +24,7 @@ public class Restingstate extends Command {
   @Override
   public void initialize() {
     this.stateHandler.setState(robotStates.RESTING);
+    this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.BOTTOM);
   }
 
   @Override
@@ -36,5 +38,6 @@ public class Restingstate extends Command {
   @Override
   public void end(boolean interrupted) {
     this.stateHandler.setState(robotStates.RESTING);
+    this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.BOTTOM);
   }
 }

@@ -4,17 +4,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.lib.util.BasePosition;
 
 public class RobotConstants {
 
   public static class DriveConstants {
 
     public static final double alignP = 0.8;
-    public static final double alignI = 0.25;
+    public static final double alignI = 0.5;
     public static final double alignD = 0.01;
     public static final double maxSpeed = 15.0;
-    public static final double maxAccel = 150.0;
-    public static final double translationRange = 0.05;
+    public static final double maxAccel = 30;
+    public static final double translationRange = 0.03;
 
     public static final double headingP = 0.5; // 0.125 / 22;
     public static final double headingI = 0.00000;
@@ -30,6 +31,13 @@ public class RobotConstants {
     public static final int limitSwitchID = 1;
   }
 
+  public static class DealgifierConstants {
+
+    public static final int leadID = 10;
+    public static final int follower = 11;
+    public static final double speed = 0.5;
+  }
+
   public static class EndEffectorConstants {
 
     public static int wristmotorID = 32;
@@ -39,6 +47,7 @@ public class RobotConstants {
 
     public static final Rotation2d defaultrot = new Rotation2d().fromRotations(0.50);
     public static final Rotation2d intakerot = new Rotation2d().fromRotations(0.8);
+    public static final Rotation2d dealgifyrot = new Rotation2d().fromRotations(0.75);
     public static final Rotation2d L1rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L2rot = new Rotation2d().fromRotations(0.72);
     public static final Rotation2d L3rot = new Rotation2d().fromRotations(0.73);
@@ -57,16 +66,16 @@ public class RobotConstants {
     public static final int bottomlimitswitchID = 3;
     public static final int toplimitswitchID = 1;
 
-    public static final double closeEnoughPercent = 0.01;
-
-    public static final Rotation2d defaultheight = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakeheight = Rotation2d.fromRotations(0);
-    public static final Rotation2d L1height = Rotation2d.fromRotations(0);
-    public static final Rotation2d L2height = Rotation2d.fromRotations(18.7);
-    public static final Rotation2d dealgifyheight = Rotation2d.fromRotations((17.5));
-    public static final Rotation2d L3height = Rotation2d.fromRotations(35.4);
-    public static final Rotation2d L4height = Rotation2d.fromRotations(70);
-    public static final Rotation2d maxHeight = Rotation2d.fromRotations(72);
+    public static final BasePosition CORAL_L1 = new BasePosition(0.0);
+    public static final BasePosition CORAL_L2 = new BasePosition(0.25);
+    public static final BasePosition CORAL_L3 = new BasePosition(0.50);
+    public static final BasePosition CORAL_L4 = new BasePosition(0.95);
+    public static final BasePosition BOTTOM = new BasePosition(0.0);
+    public static final BasePosition DEALGIFYLOW = new BasePosition(0.0);
+    public static final BasePosition DEALGIFYHIGH = new BasePosition(0.0);
+    public static final double encoderLowerLimit = 0.0;
+    public static final double encoderUpperLimit = 280.0;
+    public static final double closeEnoughRange = 0.01 * ElevatorConstants.encoderUpperLimit;
   }
 
   public static class GroundIntakeConstants {
@@ -77,10 +86,10 @@ public class RobotConstants {
     public static final double staticSpeed = 0.0;
     public static final double intakeSpeed = 0.8;
     public static final double throwSpeed = -1;
-    public static final double holdSpeed = 0.1;
+    public static final double holdSpeed = 0.03;
 
     public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-10.5);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-11.5);
     public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 
