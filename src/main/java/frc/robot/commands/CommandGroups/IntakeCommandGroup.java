@@ -3,6 +3,7 @@ package frc.robot.commands.CommandGroups;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.enums.LevelEnum;
+import frc.robot.ToggleHandler;
 import frc.robot.commands.StateCommands.ElevatorToChosenHeight;
 import frc.robot.commands.StateCommands.Intake;
 import frc.robot.commands.StateCommands.IntakeCenterBackward;
@@ -19,14 +20,15 @@ public class IntakeCommandGroup extends SequentialCommandGroup {
       Elevator elevator,
       EndEffector endEffector,
       GroundIntake groundIntake,
-      StateHandler stateHandler) {
+      StateHandler stateHandler,
+      ToggleHandler elevatordisable) {
     super(
         // new ParallelDeadlineGroup(
         //     new Intake(elevator, endEffector, groundIntake, stateHandler),
         //     new ToIntakePoseCommand(drive)
         //     ),
         new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.INTAKE)),
-        new ElevatorToChosenHeight(elevator, endEffector, stateHandler),
+        new ElevatorToChosenHeight(elevator, endEffector, stateHandler, elevatordisable),
         new Intake(elevator, endEffector, groundIntake, stateHandler),
         new IntakeCenterForward(elevator, endEffector, groundIntake, stateHandler),
         new IntakeCenterBackward(elevator, endEffector, groundIntake, stateHandler));

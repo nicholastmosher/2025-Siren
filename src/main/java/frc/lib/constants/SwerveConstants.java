@@ -63,9 +63,9 @@ public class SwerveConstants {
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withStatorCurrentLimit(20)
+                  .withStatorCurrentLimit(30)
                   .withStatorCurrentLimitEnable(true)
-                  .withSupplyCurrentLimit(20)
+                  .withSupplyCurrentLimit(30)
                   .withSupplyCurrentLimitEnable(true));
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()

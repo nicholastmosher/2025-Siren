@@ -49,6 +49,7 @@ import frc.robot.subsystems.groundintake.GroundIntakeIOFalconVortex;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -68,6 +69,9 @@ public class RobotContainer {
   private final EndEffector endEffector;
   private final GroundIntake groundIntake;
   private final bargeMech barge;
+
+  private final ToggleHandler elevatorDisable = new ToggleHandler("elevatorDisable");
+  private final ToggleHandler alignDisable = new ToggleHandler("alignDisable");
 
   // Controller
   private final CommandXboxController pilot = new CommandXboxController(0);
@@ -100,11 +104,10 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(camera1Name, robotToCamera1),
-                new VisionIOPhotonVision(camera2Name, robotToCamera2) // ,
+                new VisionIOPhotonVision(camera2Name, robotToCamera2),
                 // new VisionIOPhotonVision(camera3Name, robotToCamera3),
                 // new VisionIOPhotonVision(camera4Name, robotToCamera4),
-                // new VisionIOLimelight(limelightName, drive::getRotation)
-                );
+                new VisionIOLimelight(limelightName, drive::getRotation));
 
         elevator = new Elevator(new ElevatorIONeo(), stateHandler);
 
@@ -179,9 +182,20 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    intake = new IntakeCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
-    score = new ScoreCommandGroup(drive, elevator, endEffector, groundIntake, stateHandler);
-    placeAtChosenHeight = new PlaceAtChosenHeight(elevator, endEffector, stateHandler);
+    intake =
+        new IntakeCommandGroup(
+            drive, elevator, endEffector, groundIntake, stateHandler, elevatorDisable);
+    score =
+        new ScoreCommandGroup(
+            drive,
+            elevator,
+            endEffector,
+            groundIntake,
+            stateHandler,
+            elevatorDisable,
+            alignDisable);
+    placeAtChosenHeight =
+        new PlaceAtChosenHeight(elevator, endEffector, stateHandler, elevatorDisable);
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
 
@@ -226,6 +240,9 @@ public class RobotContainer {
     copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
     copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
     copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+
+    copilot.povLeft().onTrue(new InstantCommand(() -> elevatorDisable.toggle()));
+    copilot.povUp().onTrue(new InstantCommand(() -> alignDisable.toggle()));
 
     pilot.rightTrigger().whileTrue(score);
     pilot.rightBumper().onTrue(placeAtChosenHeight.withTimeout(1));

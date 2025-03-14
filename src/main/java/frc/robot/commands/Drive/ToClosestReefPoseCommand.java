@@ -1,25 +1,26 @@
 package frc.robot.commands.Drive;
 
-import static frc.lib.constants.RobotConstants.GeneralConstants.reefPoses;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.lib.constants.RobotConstants;
 import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.GeometryUtil;
+import frc.robot.ToggleHandler;
 import frc.robot.subsystems.drive.Drive;
 
 public class ToClosestReefPoseCommand extends Command {
   private final Drive drive;
   private Command driveToPose;
   private boolean isNotBlue;
+  private ToggleHandler disable;
 
-  public ToClosestReefPoseCommand(Drive drive) {
+  public ToClosestReefPoseCommand(Drive drive, ToggleHandler disable) {
     this.drive = drive;
+    this.disable = disable;
     // each subsystem used by the command must be passed into the
     // addRequirements() method (which takes a vararg of Subsystem)
     addRequirements(this.drive);
-
     driveToPose = new InstantCommand();
   }
 
@@ -27,8 +28,8 @@ public class ToClosestReefPoseCommand extends Command {
   public void initialize() {
     Pose2d closestpose = new Pose2d();
     double closestDistance = 900000000;
-    for (int i = 0; i < reefPoses.length; i++) {
-      Pose2d checkingPose = AllianceFlipUtil.apply(reefPoses[i]);
+    for (int i = 0; i < RobotConstants.GeneralConstants.reefPoses.length; i++) {
+      Pose2d checkingPose = AllianceFlipUtil.apply(RobotConstants.GeneralConstants.reefPoses[i]);
       double distance =
           GeometryUtil.toTransform2d(drive.getPose())
               .getTranslation()
@@ -51,7 +52,7 @@ public class ToClosestReefPoseCommand extends Command {
   @Override
   public boolean isFinished() {
     // TODO: Make this return true when this Command no longer needs to run execute()
-    return driveToPose.isFinished();
+    return driveToPose.isFinished() || disable.get();
   }
 
   @Override

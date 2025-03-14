@@ -29,7 +29,7 @@ public class VisionConstants {
   public static String camera2Name = "alarmcamera2";
   public static String camera3Name = "alarmcamera3";
   public static String camera4Name = "alarmcamera4";
-  public static String limelightName = "limelight-front";
+  public static String limelightName = "limelight-intake";
 
   private static final double xMeters = Units.inchesToMeters(11.375);
   private static final double yMeters = Units.inchesToMeters(11.375);

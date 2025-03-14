@@ -35,7 +35,7 @@ public class ToIntakePoseCommand extends Command {
       }
     }
 
-    driveToPose = new PathOnTheFlyToPose(this.drive, closestpose);
+    driveToPose = new AlignToPoseCommand(this.drive, closestpose);
     driveToPose.initialize();
   }
 
