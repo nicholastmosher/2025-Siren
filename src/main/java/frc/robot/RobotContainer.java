@@ -16,6 +16,7 @@ package frc.robot;
 import static frc.lib.constants.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -78,10 +79,12 @@ public class RobotContainer {
   private final CommandXboxController copilot = new CommandXboxController(1);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser =
+    new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
   private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
+  private final ScoreCommandGroup score2;
   private final PlaceAtChosenHeight placeAtChosenHeight;
   private final IntakeAlgae intakeAlgae;
   private final ThrowAlgae throwAlgae;
@@ -179,9 +182,6 @@ public class RobotContainer {
         break;
     }
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
     intake =
         new IntakeCommandGroup(
             drive, elevator, endEffector, groundIntake, stateHandler, elevatorDisable);
@@ -194,10 +194,31 @@ public class RobotContainer {
             stateHandler,
             elevatorDisable,
             alignDisable);
+
+    score2 =
+        new ScoreCommandGroup(
+            drive,
+            elevator,
+            endEffector,
+            groundIntake,
+            stateHandler,
+            elevatorDisable,
+            alignDisable);
     placeAtChosenHeight =
         new PlaceAtChosenHeight(elevator, endEffector, stateHandler, elevatorDisable);
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
+
+    addAuto("Score", score2);
+    addAuto("Intake", intake);
+
+    // Set up auto routines
+    var defaultAuto = DriveCommands.driveBackwards(drive).withTimeout(5);
+    autoChooser.addDefaultOption("leave", defaultAuto);
+    addAuto("leave", defaultAuto);
+    addAuto("leftside1piece", AutoBuilder.buildAuto("LeftAuto"));
+    addAuto("rightside1piece", AutoBuilder.buildAuto("RightAuto"));
+    addAuto("middle1piece", AutoBuilder.buildAuto("MiddleAuto"));
 
     configureButtonBindings();
   }
@@ -250,6 +271,11 @@ public class RobotContainer {
     pilot.x().whileTrue(throwAlgae);
   }
 
+  public void addAuto(String name, Command command) {
+    NamedCommands.registerCommand(name, command);
+    autoChooser.addOption(name, command);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -257,6 +283,6 @@ public class RobotContainer {
    *     <p>n in autonomous
    */
   public Command getAutonomousCommand() {
-    return DriveCommands.driveBackwards(drive).withTimeout(5);
+    return autoChooser.get();
   }
 }
