@@ -182,6 +182,8 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
+    // autoChooser.addDefaultOpt, intake);
+
     intake =
         new IntakeCommandGroup(
             drive, elevator, endEffector, groundIntake, stateHandler, elevatorDisable);
@@ -257,6 +259,6 @@ public class RobotContainer {
    *     <p>n in autonomous
    */
   public Command getAutonomousCommand() {
-    return new InstantCommand();
+    return DriveCommands.driveBackwards(drive).withTimeout(5);
   }
 }
