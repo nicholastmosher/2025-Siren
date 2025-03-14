@@ -16,6 +16,9 @@ package frc.robot;
 import static frc.lib.constants.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -179,9 +182,6 @@ public class RobotContainer {
         break;
     }
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
     intake =
         new IntakeCommandGroup(
             drive, elevator, endEffector, groundIntake, stateHandler, elevatorDisable);
@@ -198,6 +198,19 @@ public class RobotContainer {
         new PlaceAtChosenHeight(elevator, endEffector, stateHandler, elevatorDisable);
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
+
+
+    NamedCommands.registerCommand("Score", score);
+    NamedCommands.registerCommand("Intake", intake);
+
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser.addDefaultOption("leave", DriveCommands.driveBackwards(drive).withTimeout(5));
+    autoChooser.addOption("leftside1piece", AutoBuilder.buildAuto("LeftAuto"));
+    autoChooser.addOption("rightside1piece", AutoBuilder.buildAuto("RightAuto"));
+    autoChooser.addOption("middle1piece", AutoBuilder.buildAuto("MiddleAuto"));
+
+    
 
     configureButtonBindings();
   }
