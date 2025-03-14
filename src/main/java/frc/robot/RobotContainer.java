@@ -85,6 +85,7 @@ public class RobotContainer {
 
   private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
+  private final ScoreCommandGroup score2;
   private final PlaceAtChosenHeight placeAtChosenHeight;
   private final IntakeAlgae intakeAlgae;
   private final ThrowAlgae throwAlgae;
@@ -194,13 +195,23 @@ public class RobotContainer {
             stateHandler,
             elevatorDisable,
             alignDisable);
+
+    score2 =
+            new ScoreCommandGroup(
+                drive,
+                elevator,
+                endEffector,
+                groundIntake,
+                stateHandler,
+                elevatorDisable,
+                alignDisable);
     placeAtChosenHeight =
         new PlaceAtChosenHeight(elevator, endEffector, stateHandler, elevatorDisable);
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
 
 
-    NamedCommands.registerCommand("Score", score);
+    NamedCommands.registerCommand("Score", score2);
     NamedCommands.registerCommand("Intake", intake);
 
     // Set up auto routines
