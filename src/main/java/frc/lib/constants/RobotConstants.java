@@ -67,8 +67,8 @@ public class RobotConstants {
     public static final int toplimitswitchID = 1;
 
     public static final BasePosition CORAL_L1 = new BasePosition(0.0);
-    public static final BasePosition CORAL_L2 = new BasePosition(0.25);
-    public static final BasePosition CORAL_L3 = new BasePosition(0.50);
+    public static final BasePosition CORAL_L2 = new BasePosition(0.225);
+    public static final BasePosition CORAL_L3 = new BasePosition(0.46);
     public static final BasePosition CORAL_L4 = new BasePosition(0.95);
     public static final BasePosition BOTTOM = new BasePosition(0.0);
     public static final BasePosition DEALGIFYLOW = new BasePosition(0.0);
