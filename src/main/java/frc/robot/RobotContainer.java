@@ -236,10 +236,10 @@ public class RobotContainer {
     //         () -> elevator.moveElevator(copilot.getLeftY()),
     //         elevator)); // Set elevator to bottom position on startup
 
-    copilot.a().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
-    copilot.b().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
-    copilot.y().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
-    copilot.x().onTrue(new InstantCommand(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+    copilot.a().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
+    copilot.b().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
+    copilot.y().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
+    copilot.x().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
 
     copilot.povLeft().onTrue(new InstantCommand(() -> elevatorDisable.toggle()));
     copilot.povUp().onTrue(new InstantCommand(() -> alignDisable.toggle()));
@@ -248,8 +248,6 @@ public class RobotContainer {
     pilot.rightBumper().onTrue(placeAtChosenHeight.withTimeout(1));
     pilot.leftBumper().whileTrue(intakeAlgae);
     pilot.x().whileTrue(throwAlgae);
-
-    barge.setDefaultCommand(new InstantCommand(() -> barge.move(copilot.getRightY()), barge));
   }
 
   /**

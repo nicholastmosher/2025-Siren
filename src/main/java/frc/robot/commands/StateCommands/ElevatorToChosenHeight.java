@@ -7,6 +7,7 @@ import frc.robot.ToggleHandler;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffector;
 import frc.robot.subsystems.virtualsubsystems.statehandler.StateHandler;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorToChosenHeight extends Command {
   private final Elevator elevator;
@@ -34,21 +35,26 @@ public class ElevatorToChosenHeight extends Command {
       case L1:
         this.stateHandler.setState(robotStates.L1PREPARE);
         this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L1);
+        Logger.recordOutput("Elevator/state", this.stateHandler.getChosenlevel());
         break;
       case L2:
         this.stateHandler.setState(robotStates.L2PREPARE);
         this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L2);
+        Logger.recordOutput("Elevator/state", this.stateHandler.getChosenlevel());
         break;
       case L3:
         this.stateHandler.setState(robotStates.L3PREPARE);
         this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L3);
+        Logger.recordOutput("Elevator/state", this.stateHandler.getChosenlevel());
         break;
       case L4:
         this.stateHandler.setState(robotStates.L4PREPARE);
         this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.CORAL_L4);
+        Logger.recordOutput("Elevator/state", this.stateHandler.getChosenlevel());
         break;
       case INTAKE:
         this.elevator.setTargetPosition(RobotConstants.ElevatorConstants.BOTTOM);
+        Logger.recordOutput("Elevator/state", this.stateHandler.getChosenlevel());
         break;
         // case DEALGIFYLOW:
         //   this.stateHandler.setState(robotStates.DEALGIFYLOW);
