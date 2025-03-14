@@ -79,7 +79,8 @@ public class RobotContainer {
   private final CommandXboxController copilot = new CommandXboxController(1);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser =
+    new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
   private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
@@ -208,15 +209,16 @@ public class RobotContainer {
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
 
-    NamedCommands.registerCommand("Score", score2);
-    NamedCommands.registerCommand("Intake", intake);
+    addAuto("Score", score2);
+    addAuto("Intake", intake);
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    autoChooser.addDefaultOption("leave", DriveCommands.driveBackwards(drive).withTimeout(5));
-    autoChooser.addOption("leftside1piece", AutoBuilder.buildAuto("LeftAuto"));
-    autoChooser.addOption("rightside1piece", AutoBuilder.buildAuto("RightAuto"));
-    autoChooser.addOption("middle1piece", AutoBuilder.buildAuto("MiddleAuto"));
+    var defaultAuto = DriveCommands.driveBackwards(drive).withTimeout(5);
+    autoChooser.addDefaultOption("leave", defaultAuto);
+    addAuto("leave", defaultAuto);
+    addAuto("leftside1piece", AutoBuilder.buildAuto("LeftAuto"));
+    addAuto("rightside1piece", AutoBuilder.buildAuto("RightAuto"));
+    addAuto("middle1piece", AutoBuilder.buildAuto("MiddleAuto"));
 
     configureButtonBindings();
   }
@@ -267,6 +269,11 @@ public class RobotContainer {
     pilot.rightBumper().onTrue(placeAtChosenHeight.withTimeout(1));
     pilot.leftBumper().whileTrue(intakeAlgae);
     pilot.x().whileTrue(throwAlgae);
+  }
+
+  public void addAuto(String name, Command command) {
+    NamedCommands.registerCommand(name, command);
+    autoChooser.addOption(name, command);
   }
 
   /**
