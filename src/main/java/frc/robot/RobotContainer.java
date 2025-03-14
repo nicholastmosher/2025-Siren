@@ -182,8 +182,6 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // autoChooser.addDefaultOpt, intake);
-
     intake =
         new IntakeCommandGroup(
             drive, elevator, endEffector, groundIntake, stateHandler, elevatorDisable);
