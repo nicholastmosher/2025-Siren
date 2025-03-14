@@ -32,7 +32,7 @@ public class StateCommands {
           stateHandler.setState(robotStates.RESTING);
         },
         // isFinished() -> bool
-        () -> false,
+        () -> endEffector.getfrontIntaked(),
         // Subsystems
         elevator,
         endEffector,
@@ -99,7 +99,7 @@ public class StateCommands {
         },
         // isFinished() -> bool
         () -> {
-          return endEffector.getfrontIntaked() && endEffector.getbackIntaked();
+          return !endEffector.getbackIntaked();
         },
         // Subsystems
         elevator, endEffector, groundIntake);
