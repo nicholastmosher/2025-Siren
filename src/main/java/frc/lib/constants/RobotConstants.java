@@ -89,7 +89,7 @@ public class RobotConstants {
     public static final double holdSpeed = 0.03;
 
     public static final Rotation2d defaultangle = Rotation2d.fromRotations(0);
-    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-11.5);
+    public static final Rotation2d intakingangle = Rotation2d.fromRotations(-10);
     public static final Rotation2d holdangle = Rotation2d.fromRotations(0);
   }
 
