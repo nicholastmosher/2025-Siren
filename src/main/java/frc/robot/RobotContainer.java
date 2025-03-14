@@ -79,8 +79,7 @@ public class RobotContainer {
   private final CommandXboxController copilot = new CommandXboxController(1);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser =
-    new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   private final IntakeCommandGroup intake;
   private final ScoreCommandGroup score;
@@ -208,6 +207,8 @@ public class RobotContainer {
         new PlaceAtChosenHeight(elevator, endEffector, stateHandler, elevatorDisable);
     intakeAlgae = new IntakeAlgae(groundIntake, stateHandler);
     throwAlgae = new ThrowAlgae(groundIntake, stateHandler);
+
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     addAuto("Score", score2);
     addAuto("Intake", intake);
