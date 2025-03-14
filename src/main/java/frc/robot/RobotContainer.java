@@ -236,10 +236,10 @@ public class RobotContainer {
     //         () -> elevator.moveElevator(copilot.getLeftY()),
     //         elevator)); // Set elevator to bottom position on startup
 
-    copilot.a().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
-    copilot.b().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
-    copilot.y().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
-    copilot.x().onTrue(Commands.run(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
+    copilot.a().onTrue(Commands.runOnce(() -> stateHandler.setLevelEnum(LevelEnum.L1)));
+    copilot.b().onTrue(Commands.runOnce(() -> stateHandler.setLevelEnum(LevelEnum.L2)));
+    copilot.y().onTrue(Commands.runOnce(() -> stateHandler.setLevelEnum(LevelEnum.L3)));
+    copilot.x().onTrue(Commands.runOnce(() -> stateHandler.setLevelEnum(LevelEnum.L4)));
 
     copilot.povLeft().onTrue(new InstantCommand(() -> elevatorDisable.toggle()));
     copilot.povUp().onTrue(new InstantCommand(() -> alignDisable.toggle()));
